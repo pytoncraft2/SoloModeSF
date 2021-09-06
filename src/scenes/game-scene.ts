@@ -77,14 +77,41 @@ export class GameScene extends Phaser.Scene {
       key: "walk",
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start:1, end: 5}),
       frameRate: 5,
+      repeat: -1
+    });
+
+
+    this.anims.create({
+      key: "idle",
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start:5, end: 5}),
+      frameRate: 1,
       repeat: 0
     });
 
-    var keyObj = this.input.keyboard.addKey('W');  // Get key object
+
+    var keyObj = this.cursorKeys.left
 keyObj.on('down', function(event) {
   console.log("DOOOWN")
-});
-keyObj.on('up', function(event) { console.log("UPPP") });
+  this.girlMap.setVelocityX(-300);
+  this.girlMap.flipX = true
+  this.girlMap.anims.play('walk',true)
+
+
+    // this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
+      // this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
+        // this.girlMap.setVelocityX(0)
+
+        // this.girlMap.anims.play('goback')
+},this);
+keyObj.on('up', function(event) {
+  console.log("UPPP")
+  this.girlMap.setVelocityX(0)
+  // this.girlMap.flipX = false
+  this.girlMap.anims.play('idle')
+  // this.girlMap.anims.play('walk',true)
+  // this.girlMap.anims.play('walk')
+  // this.girlMap.anims.setFrame('attack1')
+},this);
   }
 
   public update(): void {
@@ -94,18 +121,19 @@ keyObj.on('up', function(event) { console.log("UPPP") });
 
 
 // console.log(this.girlMap.texture.get());
-    this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')/*, this.girlMap.play('walk')*/) :
-      this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk') /*, this.girlMap.play('walk')*/) :
+/*
+    this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
+      this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
         this.girlMap.setVelocityX(0)
 
     if (this.cursorKeys.up.isDown) {
-      if (this.girlMap.x < 605 /*&& this.girlMap.y > 405*/) {
+      if (this.girlMap.x < 605) {
         this.girlMap.scale = this.girlMap.scale - 0.003;
         this.girlMap.y -= 2;
         this.girlMap.depth = this.girlMap.depth - 1;
         this.girlMap.anims.play('goback')
       }
-      if (this.girlMap.x > 605 /*&& this.girlMap.scale >= 0.223*/) {
+      if (this.girlMap.x > 605) {
         this.girlMap.scale = this.girlMap.scale - 0.003;
         this.girlMap.y -= 2;
         this.girlMap.depth = this.girlMap.depth - 1;
@@ -148,6 +176,7 @@ keyObj.on('up', function(event) { console.log("UPPP") });
     if (this.cursorKeys.space.isDown) {
       // console.log('espace');
     }
+    */
 
 
 
