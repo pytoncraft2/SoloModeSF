@@ -11,9 +11,11 @@ export class GameScene extends Phaser.Scene {
   public speed = 200;
 
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  private yKey: Phaser.Input.Keyboard.Key;
   private aKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
   public girlMap: Phaser.Physics.Arcade.Sprite;
+  public follow: boolean;
 
 
   private doors: Phaser.Physics.Arcade.Image;
@@ -42,17 +44,23 @@ export class GameScene extends Phaser.Scene {
     // this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
     //   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
     // });
+    this.follow = true;
 
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
     this.physics.add.existing(this.girlMap);
     this.girlMap.setScale(0.4)
     this.add.image(940, 390, 'bg').setDepth(-54);
+
+
     // this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
 
     // This is a nice helper Phaser provides to create listeners for some of the most common keys.
     this.cursorKeys = this.input.keyboard.createCursorKeys();
+    this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
+
+
 
     this.anims.create({
       key: 'attack',
@@ -100,6 +108,11 @@ export class GameScene extends Phaser.Scene {
     var goRight = this.cursorKeys.right
     var goFront = this.cursorKeys.down
     var goBack = this.cursorKeys.up
+    var following = this.yKey
+
+    following.on('down' ,function() {
+      this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
+    },this)
 
     goLeft.on('down', function() {
       this.girlMap.setVelocityX(-300);
