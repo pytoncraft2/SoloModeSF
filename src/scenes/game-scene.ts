@@ -82,10 +82,17 @@ export class GameScene extends Phaser.Scene {
 
 
     this.anims.create({
-      key: "idle",
+      key: "idle_walk",
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start: 5, end: 5 }),
       frameRate: 1,
-      repeat: 0
+      repeat: -1
+    });
+
+    this.anims.create({
+      key: "idle_attack",
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 1 }),
+      frameRate: 1,
+      repeat: -1
     });
 
 
@@ -101,7 +108,7 @@ export class GameScene extends Phaser.Scene {
     }, this);
     goLeft.on('up', function() {
       this.girlMap.setVelocityX(0)
-      this.girlMap.anims.play('idle')
+      this.girlMap.anims.play('idle_walk')
     }, this);
 
 
@@ -162,6 +169,11 @@ export class GameScene extends Phaser.Scene {
         if (this.aKey.isDown) {
           this.girlMap.anims.play('attack');
           this.girlMap.setSize(900, 900);
+          this.girlMap.on('animationcomplete', () => {
+            this.girlMap.setFrame('pas_jkd')
+          })
+
+
         }
 
         if (this.tKey.isDown) {
