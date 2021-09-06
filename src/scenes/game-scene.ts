@@ -15,6 +15,7 @@ export class GameScene extends Phaser.Scene {
   private aKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
   private ennemy: Phaser.Physics.Arcade.Sprite;
+  private bird: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
 
@@ -52,6 +53,8 @@ export class GameScene extends Phaser.Scene {
 // this.girlMap.body.setAllowGravity(false)
 // body.allowGravity = false
 // this.girlMap.body.allowGravity(false)
+    this.bird = this.physics.add.sprite(300, 400, 'bird').setDepth(1).setDragX(900);
+
     this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 1000);
     this.add.image(940, 390, 'bg').setDepth(-54);
 
@@ -107,6 +110,15 @@ export class GameScene extends Phaser.Scene {
       repeat: -1
     });
 
+    this.load.spritesheet('bird', 'assets/personnages/bird/bird.png', {
+      frameWidth: 240,
+      frameHeight:320
+    })
+
+
+
+
+
 
     var goLeft = this.cursorKeys.left
     var goRight = this.cursorKeys.right
@@ -161,6 +173,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public update(): void {
+      this.physics.accelerateToObject(this.girlMap, this.bird, 200, 200, 1000);
 
         if (this.cursorKeys.up.isDown) {
           if (this.girlMap.x < 605) {
