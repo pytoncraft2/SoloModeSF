@@ -46,6 +46,9 @@ export class GameScene extends Phaser.Scene {
 
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
+
+    this.physics.add.collider(this.girlMap, this.ennemy)
+    // function col(e) {}
     this.add.image(940, 390, 'bg').setDepth(-54);
 
 
@@ -188,7 +191,7 @@ export class GameScene extends Phaser.Scene {
 
         if (this.aKey.isDown) {
           this.girlMap.anims.play('attack');
-          this.girlMap.setSize(900, 900);
+          // this.girlMap.setSize(900, 900);
           this.girlMap.on('animationcomplete', () => {
             this.girlMap.setFrame('pas_jkd')
           })
