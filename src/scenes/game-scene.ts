@@ -43,8 +43,9 @@ export class GameScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'attack',
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start:1, end: 4})
-      // 'profil2', 'position_a1', 'position_a2', 'position_a3', 'profil2'
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start:1, end: 4}),
+      frameRate: 6,
+      repeat: 0
     });
   }
 
@@ -82,6 +83,12 @@ export class GameScene extends Phaser.Scene {
       // alert("coucou")
       // this.girlMap.play('attack1');
       this.girlMap.anims.play('attack');
+      this.girlMap.on('animationcomplete', () => {
+  console.log("FINI")
+
+      })
+
+
       this.girlMap.setSize(900, 900);
       console.log("ccc")
       // this.girlMap.attack = true;
