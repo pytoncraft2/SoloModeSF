@@ -117,10 +117,10 @@ export class GameScene extends Phaser.Scene {
 
 
     goBack.on('down', function() {
-      this.girlMap.scale = this.girlMap.scale - 0.1;
+      // this.girlMap.scale = this.girlMap.scale - 0.1;
       this.girlMap.setVelocityY(-100)
       // this.girlMap.y -= 2;
-      this.girlMap.depth = this.girlMap.depth - 1;
+      // this.girlMap.depth = this.girlMap.depth - 1;
       this.girlMap.anims.play('goback')
 
     }, this);
@@ -132,13 +132,14 @@ export class GameScene extends Phaser.Scene {
 
 
     goFront.on('down', function() {
-      this.girlMap.scale = this.girlMap.scale + 0.003;
+      // this.girlMap.scale = this.girlMap.scale + 0.003;
       // this.girlMap.y += 2;
-      this.girlMap.depth += 1;
+      this.girlMap.setVelocityY(100)
+      // this.girlMap.depth += 1;
       this.girlMap.anims.play('front')
     }, this);
     goFront.on('up', function() {
-      // this.girlMap.setVelocityX(0)
+      this.girlMap.setVelocityY(0)
       this.girlMap.anims.play('idle')
     }, this);
 
@@ -149,36 +150,36 @@ export class GameScene extends Phaser.Scene {
   public update(): void {
 
 
+
     // var frameNames = this.textures.get('dessinatrice1').getFrameNames();
 
 
     // console.log(this.girlMap.texture.get());
-    /*
-        this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
-          this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
-            this.girlMap.setVelocityX(0)
+        // this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
+          // this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
+            // this.girlMap.setVelocityX(0)
 
         if (this.cursorKeys.up.isDown) {
           if (this.girlMap.x < 605) {
             this.girlMap.scale = this.girlMap.scale - 0.003;
-            this.girlMap.y -= 2;
+            // this.girlMap.y -= 2;
             this.girlMap.depth = this.girlMap.depth - 1;
-            this.girlMap.anims.play('goback')
+            // this.girlMap.anims.play('goback')
           }
           if (this.girlMap.x > 605) {
             this.girlMap.scale = this.girlMap.scale - 0.003;
-            this.girlMap.y -= 2;
+            // this.girlMap.y -= 2;
             this.girlMap.depth = this.girlMap.depth - 1;
-            this.girlMap.anims.play('goback')
+            // this.girlMap.anims.play('goback')
           }
         }
 
         //bigger
         if (this.cursorKeys.down.isDown ) {
           this.girlMap.scale = this.girlMap.scale + 0.003;
-          this.girlMap.y += 2;
+          // this.girlMap.y += 2;
           this.girlMap.depth += 1;
-            this.girlMap.anims.play('front')
+            // this.girlMap.anims.play('front')
         }
 
 
@@ -186,14 +187,6 @@ export class GameScene extends Phaser.Scene {
           // alert("coucou")
           // this.girlMap.play('attack1');
           this.girlMap.anims.play('attack');
-          this.girlMap.on('animationcomplete', () => {
-      console.log("FINI")
-
-      this.girlMap.setFrame('attack1')
-
-
-          })
-
 
           this.girlMap.setSize(900, 900);
           console.log("ccc")
@@ -208,7 +201,6 @@ export class GameScene extends Phaser.Scene {
         if (this.cursorKeys.space.isDown) {
           // console.log('espace');
         }
-        */
 
 
 
