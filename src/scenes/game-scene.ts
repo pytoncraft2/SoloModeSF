@@ -14,6 +14,7 @@ export class GameScene extends Phaser.Scene {
   private yKey: Phaser.Input.Keyboard.Key;
   private aKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
+  private ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
 
@@ -24,22 +25,9 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+    // this.cameras.main.fadeIn(4000);
     // this.cameras.main.setBounds(-2074, 0, 3574, 666);
     // this.physics.world.setBounds(-2074, 0, 3574, 666);
-    // this.cameras.main.fadeIn(4000);
-    // this.cameras.main.startFollow(this.girlMap);
-    // this.girlMap.body.allowGravity = false;
-
-    // this.girlMap.setCollideWorldBounds(true);
-    // this.girlMap.body.setAllowGravity(false)
-    // body.allowGravity = false
-    // this.girlMap.body.allowGravity(false)
-
-    //  Resize the Spine dimensions because the original skeleton includes the shine bone,
-    //  rendering a simple bounds check useless. Not all Spine objects will require this, but this one does.
-    //
-    // this.girlMap.body.allowGravity = false
-    // this.girlMap.body.allowGravity(false)
 
     // this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
     //   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
@@ -47,8 +35,24 @@ export class GameScene extends Phaser.Scene {
     this.follow = true;
 
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
+
+
+    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face2').setOrigin(0.5, 0.5).setScale(0.5).setDragX(900)
+
+
     this.physics.add.existing(this.girlMap);
-    this.girlMap.setScale(0.4)
+    this.physics.add.existing(this.ennemy);
+    // this.physics.accelerateToObject(self.bird, self.player, );
+
+    this.girlMap.setScale(0.4).setVelocityX(0)
+    this.ennemy.setScale(0.4).setVelocityX(0)
+    // this.girlMap.body.allowGravity = false;
+
+// this.girlMap.setCollideWorldBounds(true);
+// this.girlMap.body.setAllowGravity(false)
+// body.allowGravity = false
+// this.girlMap.body.allowGravity(false)
+    this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 1000);
     this.add.image(940, 390, 'bg').setDepth(-54);
 
 
