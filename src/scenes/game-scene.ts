@@ -147,11 +147,11 @@ export class GameScene extends Phaser.Scene {
 
         if (this.cursorKeys.up.isDown) {
           if (this.girlMap.x < 605) {
-            this.girlMap.scale = this.girlMap.scale - 0.003;
+            this.girlMap.scale = this.girlMap.scale - 0.001;
             this.girlMap.depth = this.girlMap.depth - 1;
           }
           if (this.girlMap.x > 605) {
-            this.girlMap.scale = this.girlMap.scale - 0.003;
+            this.girlMap.scale = this.girlMap.scale - 0.001;
             this.girlMap.depth = this.girlMap.depth - 1;
           this.girlMap.on('animationcomplete', () => {
             this.girlMap.setFrame('dos7')
@@ -161,7 +161,7 @@ export class GameScene extends Phaser.Scene {
         }
 
         if (this.cursorKeys.down.isDown ) {
-          this.girlMap.scale = this.girlMap.scale + 0.003;
+          this.girlMap.scale = this.girlMap.scale + 0.001;
           this.girlMap.depth += 1;
           this.girlMap.on('animationcomplete', () => {
             this.girlMap.setFrame('face1')
