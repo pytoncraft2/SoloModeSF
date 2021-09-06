@@ -134,7 +134,6 @@ export class GameScene extends Phaser.Scene {
 
 
     goBack.on('down', function() {
-      this.girlMap.setVelocityY(-160)
       this.girlMap.anims.play('goback')
 
     }, this);
@@ -144,7 +143,6 @@ export class GameScene extends Phaser.Scene {
 
 
     goFront.on('down', function() {
-      this.girlMap.setVelocityY(160)
       this.girlMap.anims.play('front')
     }, this);
     goFront.on('up', function() {
@@ -153,8 +151,8 @@ export class GameScene extends Phaser.Scene {
     }, this);
     // self.physics.add.existing(self.zone);
 // this.girlMap.body.friction.x = 0;
-this.girlMap.body.allowGravity = false;
-this.girlMap.body.immovable = true;
+// this.girlMap.body.allowGravity = false;
+// this.girlMap.body.immovable = true;
   }
 
   public update(): void {
@@ -163,11 +161,12 @@ this.girlMap.body.immovable = true;
 
     this.girlMap.setVelocityY(0)
         if (this.cursorKeys.up.isDown) {
-          if (this.girlMap.x < 605) {
-            this.girlMap.scale = this.girlMap.scale - 0.001;
-            this.girlMap.depth = this.girlMap.depth - 1;
-          }
+          // if (this.girlMap.x < 605) {
+          //   this.girlMap.scale = this.girlMap.scale - 0.001;
+          //   this.girlMap.depth = this.girlMap.depth - 1;
+          // }
           if (this.girlMap.x > 605) {
+            this.girlMap.y = this.girlMap.y - 2;
             this.girlMap.scale = this.girlMap.scale - 0.001;
             this.girlMap.depth = this.girlMap.depth - 1;
           this.girlMap.on('animationcomplete', () => {
@@ -179,6 +178,7 @@ this.girlMap.body.immovable = true;
 
         if (this.cursorKeys.down.isDown ) {
           this.girlMap.scale = this.girlMap.scale + 0.001;
+          this.girlMap.y += 2;
           this.girlMap.depth += 1;
           this.girlMap.on('animationcomplete', () => {
             this.girlMap.setFrame('face1')
