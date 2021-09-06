@@ -261,7 +261,7 @@
             }
         },
         {
-            "filename": "position_a1",
+            "filename": "attack2",
             "frame": {
                 "w": 787,
                 "h": 969,
@@ -274,7 +274,7 @@
             }
         },
         {
-            "filename": "position_a2",
+            "filename": "attack3",
             "frame": {
                 "w": 787,
                 "h": 969,
@@ -287,7 +287,7 @@
             }
         },
         {
-            "filename": "position_a3",
+            "filename": "attack4",
             "frame": {
                 "w": 787,
                 "h": 969,
@@ -313,7 +313,7 @@
             }
         },
         {
-            "filename": "profil2",
+            "filename": "attack1",
             "frame": {
                 "w": 429,
                 "h": 969,

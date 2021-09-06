@@ -13,8 +13,7 @@ export class GameScene extends Phaser.Scene {
   private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
   private aKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
-  private player: Phaser.Physics.Arcade.Sprite
-  // private girlImage: Phaser.Physics.Arcade.Sprite;
+  private girlImage: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
 
 
@@ -35,8 +34,6 @@ export class GameScene extends Phaser.Scene {
     // this.girlMap = this.physics.add.sprite(, 'girl');
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
     this.add.image(-300, 350, 'bg').setDepth(-54);
-    this.player = this.physics.add.sprite(100, 450, 'dude');
-
     this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
 
     // This is a nice helper Phaser provides to create listeners for some of the most common keys.
@@ -45,66 +42,69 @@ export class GameScene extends Phaser.Scene {
     this.tKey = this.input.keyboard.addKey('T');
 
     this.anims.create({
-    key: 'left',
-    frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-    frameRate: 10,
-    repeat: -1
-});
-
-this.anims.create({
-    key: 'turn',
-    frames: [ { key: 'dude', frame: 4 } ],
-    frameRate: 20
-});
-
-this.anims.create({
-    key: 'right',
-    frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-    frameRate: 10,
-    repeat: -1
-});
-
-this.anims.create({
-  key: 'attack1',
-  frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'face', start:1, end: 2})
-});
-
-this.player.setBounce(0.2);
-this.player.setCollideWorldBounds(true);
-this.add.image(956, 490,'dessinatrice1', 'face2');
-
-
+      key: 'attack',
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start:1, end: 4})
+      // 'profil2', 'position_a1', 'position_a2', 'position_a3', 'profil2'
+    });
   }
 
   public update(): void {
 
+
+    this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true/*, this.girlMap.play('walk')*/) :
+      this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false/*, this.girlMap.play('walk')*/) :
+        this.girlMap.setVelocityX(0)
+
+    if (this.cursorKeys.up.isDown) {
+      if (this.girlMap.x < 605 /*&& this.girlMap.y > 405*/) {
+        this.girlMap.scale = this.girlMap.scale - 0.003;
+        this.girlMap.y -= 2;
+        this.girlMap.depth = this.girlMap.depth - 1;
+        // this.girlMap.play('goback')
+      }
+      if (this.girlMap.x > 605 /*&& this.girlMap.scale >= 0.223*/) {
+        this.girlMap.scale = this.girlMap.scale - 0.003;
+        this.girlMap.y -= 2;
+        this.girlMap.depth = this.girlMap.depth - 1;
+        // this.girlMap.play('goback')
+      }
+    }
+
+    //bigger
+    if (this.cursorKeys.down.isDown ) {
+      this.girlMap.scale = this.girlMap.scale + 0.003;
+      this.girlMap.y += 2;
+      this.girlMap.depth += 1;
+    }
+
+
+    if (this.aKey.isDown) {
+      // alert("coucou")
+      // this.girlMap.play('attack1');
+      this.girlMap.anims.play('attack');
+      this.girlMap.setSize(900, 900);
+      console.log("ccc")
+      // this.girlMap.attack = true;
+      // this.girlMap.wall = true;
+    }
+
+    if (this.tKey.isDown) {
+      // this.girlMap.play('heal');
+    }
+
+    if (this.cursorKeys.space.isDown) {
+      // console.log('espace');
+    }
+
+
+
+
+
+
     // Every frame, we create a new velocity for the sprite based on what keys the this.girlMap is holding down.
     const velocity = new Phaser.Math.Vector2(0, 0);
-// and later in your game ...
-    if (this.cursorKeys.left.isDown)
-    {
-        this.player.setVelocityX(-160);
-
-        this.player.anims.play('left', true);
-    }
-    else if (this.cursorKeys.right.isDown)
-    {
-        this.player.setVelocityX(160);
-
-        this.player.anims.play('right', true);
-    }
-    else
-    {
-        this.player.setVelocityX(0);
-
-        this.player.anims.play('turn');
-    }
-
-    if (this.cursorKeys.up.isDown && this.player.body.touching.down)
-    {
-        this.player.setVelocityY(-330);
-    }
-
     // We normalize the velocity so that the this.girlMap is always moving at the same speed, regardless of direction.
+    const normalizedVelocity = velocity.normalize();
+    // this.girlMap.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
   }
 }
