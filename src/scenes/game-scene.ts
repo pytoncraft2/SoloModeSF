@@ -28,23 +28,23 @@ export class GameScene extends Phaser.Scene {
     // this.cameras.main.startFollow(this.girlMap);
     // this.girlMap.body.allowGravity = false;
 
-// this.girlMap.setCollideWorldBounds(true);
-// this.girlMap.body.setAllowGravity(false)
-// body.allowGravity = false
-// this.girlMap.body.allowGravity(false)
+    // this.girlMap.setCollideWorldBounds(true);
+    // this.girlMap.body.setAllowGravity(false)
+    // body.allowGravity = false
+    // this.girlMap.body.allowGravity(false)
 
     //  Resize the Spine dimensions because the original skeleton includes the shine bone,
     //  rendering a simple bounds check useless. Not all Spine objects will require this, but this one does.
-  //
+    //
     // this.girlMap.body.allowGravity = false
-// this.girlMap.body.allowGravity(false)
+    // this.girlMap.body.allowGravity(false)
 
-// this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
-//   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
-// });
+    // this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
+    //   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
+    // });
 
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
-  this.physics.add.existing(this.girlMap);
+    this.physics.add.existing(this.girlMap);
     this.girlMap.setScale(0.4)
     this.add.image(-300, 350, 'bg').setDepth(-54);
     this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
@@ -56,26 +56,26 @@ export class GameScene extends Phaser.Scene {
 
     this.anims.create({
       key: 'attack',
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start:1, end: 4}),
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 4 }),
       frameRate: 6,
       repeat: 0
     });
     this.anims.create({
       key: "goback",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'dos', start:1, end: 7}),
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'dos', start: 1, end: 7 }),
       frameRate: 7,
       repeat: 0
     });
 
     this.anims.create({
       key: "front",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'face', start:1, end: 5}),
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'face', start: 1, end: 5 }),
       frameRate: 6,
       repeat: 0
     });
     this.anims.create({
       key: "walk",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start:1, end: 5}),
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start: 1, end: 5 }),
       frameRate: 5,
       repeat: -1
     });
@@ -83,35 +83,67 @@ export class GameScene extends Phaser.Scene {
 
     this.anims.create({
       key: "idle",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start:5, end: 5}),
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start: 5, end: 5 }),
       frameRate: 1,
       repeat: 0
     });
 
 
-    var keyObj = this.cursorKeys.left
-keyObj.on('down', function(event) {
-  console.log("DOOOWN")
-  this.girlMap.setVelocityX(-300);
-  this.girlMap.flipX = true
-  this.girlMap.anims.play('walk',true)
+    var goLeft = this.cursorKeys.left
+    var goRight = this.cursorKeys.right
+    var goFront = this.cursorKeys.down
+    var goBack = this.cursorKeys.up
+
+    goLeft.on('down', function() {
+      this.girlMap.setVelocityX(-300);
+      this.girlMap.flipX = true
+      this.girlMap.anims.play('walk', true)
+    }, this);
+    goLeft.on('up', function() {
+      this.girlMap.setVelocityX(0)
+      this.girlMap.anims.play('idle')
+    }, this);
 
 
-    // this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
-      // this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
-        // this.girlMap.setVelocityX(0)
+    goRight.on('down', function() {
+      this.girlMap.setVelocityX(300);
+      this.girlMap.flipX = false
+      this.girlMap.anims.play('walk', true)
+    }, this);
+    goRight.on('up', function() {
+      this.girlMap.setVelocityX(0)
+      this.girlMap.anims.play('idle')
+    }, this);
 
-        // this.girlMap.anims.play('goback')
-},this);
-keyObj.on('up', function(event) {
-  console.log("UPPP")
-  this.girlMap.setVelocityX(0)
-  // this.girlMap.flipX = false
-  this.girlMap.anims.play('idle')
-  // this.girlMap.anims.play('walk',true)
-  // this.girlMap.anims.play('walk')
-  // this.girlMap.anims.setFrame('attack1')
-},this);
+
+    goBack.on('down', function() {
+      this.girlMap.scale = this.girlMap.scale - 0.1;
+      this.girlMap.setVelocityY(-100)
+      // this.girlMap.y -= 2;
+      this.girlMap.depth = this.girlMap.depth - 1;
+      this.girlMap.anims.play('goback')
+
+    }, this);
+    goBack.on('up', function() {
+      // this.girlMap.setVelocityX(0)
+      this.girlMap.setVelocityY(0)
+      this.girlMap.anims.play('idle')
+    }, this);
+
+
+    goFront.on('down', function() {
+      this.girlMap.scale = this.girlMap.scale + 0.003;
+      // this.girlMap.y += 2;
+      this.girlMap.depth += 1;
+      this.girlMap.anims.play('front')
+    }, this);
+    goFront.on('up', function() {
+      // this.girlMap.setVelocityX(0)
+      this.girlMap.anims.play('idle')
+    }, this);
+
+
+
   }
 
   public update(): void {
@@ -120,63 +152,63 @@ keyObj.on('up', function(event) {
     // var frameNames = this.textures.get('dessinatrice1').getFrameNames();
 
 
-// console.log(this.girlMap.texture.get());
-/*
-    this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
-      this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
-        this.girlMap.setVelocityX(0)
+    // console.log(this.girlMap.texture.get());
+    /*
+        this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
+          this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
+            this.girlMap.setVelocityX(0)
 
-    if (this.cursorKeys.up.isDown) {
-      if (this.girlMap.x < 605) {
-        this.girlMap.scale = this.girlMap.scale - 0.003;
-        this.girlMap.y -= 2;
-        this.girlMap.depth = this.girlMap.depth - 1;
-        this.girlMap.anims.play('goback')
-      }
-      if (this.girlMap.x > 605) {
-        this.girlMap.scale = this.girlMap.scale - 0.003;
-        this.girlMap.y -= 2;
-        this.girlMap.depth = this.girlMap.depth - 1;
-        this.girlMap.anims.play('goback')
-      }
-    }
+        if (this.cursorKeys.up.isDown) {
+          if (this.girlMap.x < 605) {
+            this.girlMap.scale = this.girlMap.scale - 0.003;
+            this.girlMap.y -= 2;
+            this.girlMap.depth = this.girlMap.depth - 1;
+            this.girlMap.anims.play('goback')
+          }
+          if (this.girlMap.x > 605) {
+            this.girlMap.scale = this.girlMap.scale - 0.003;
+            this.girlMap.y -= 2;
+            this.girlMap.depth = this.girlMap.depth - 1;
+            this.girlMap.anims.play('goback')
+          }
+        }
 
-    //bigger
-    if (this.cursorKeys.down.isDown ) {
-      this.girlMap.scale = this.girlMap.scale + 0.003;
-      this.girlMap.y += 2;
-      this.girlMap.depth += 1;
-        this.girlMap.anims.play('front')
-    }
-
-
-    if (this.aKey.isDown) {
-      // alert("coucou")
-      // this.girlMap.play('attack1');
-      this.girlMap.anims.play('attack');
-      this.girlMap.on('animationcomplete', () => {
-  console.log("FINI")
-
-  this.girlMap.setFrame('attack1')
+        //bigger
+        if (this.cursorKeys.down.isDown ) {
+          this.girlMap.scale = this.girlMap.scale + 0.003;
+          this.girlMap.y += 2;
+          this.girlMap.depth += 1;
+            this.girlMap.anims.play('front')
+        }
 
 
-      })
+        if (this.aKey.isDown) {
+          // alert("coucou")
+          // this.girlMap.play('attack1');
+          this.girlMap.anims.play('attack');
+          this.girlMap.on('animationcomplete', () => {
+      console.log("FINI")
+
+      this.girlMap.setFrame('attack1')
 
 
-      this.girlMap.setSize(900, 900);
-      console.log("ccc")
-      // this.girlMap.attack = true;
-      // this.girlMap.wall = true;
-    }
+          })
 
-    if (this.tKey.isDown) {
-      // this.girlMap.play('heal');
-    }
 
-    if (this.cursorKeys.space.isDown) {
-      // console.log('espace');
-    }
-    */
+          this.girlMap.setSize(900, 900);
+          console.log("ccc")
+          // this.girlMap.attack = true;
+          // this.girlMap.wall = true;
+        }
+
+        if (this.tKey.isDown) {
+          // this.girlMap.play('heal');
+        }
+
+        if (this.cursorKeys.space.isDown) {
+          // console.log('espace');
+        }
+        */
 
 
 
