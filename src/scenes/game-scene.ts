@@ -14,6 +14,7 @@ export class GameScene extends Phaser.Scene {
   public yKey: Phaser.Input.Keyboard.Key;
   public aKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
+  // public followed: Phaser.Input.Keyboard.Key;
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
@@ -66,7 +67,7 @@ export class GameScene extends Phaser.Scene {
       key: 'attack',
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 4 }),
       frameRate: 6,
-      repeat: 0
+      repeat: -1
     });
     this.anims.create({
       key: "goback",
@@ -156,10 +157,22 @@ export class GameScene extends Phaser.Scene {
 // this.girlMap.body.friction.x = 0;
 // this.girlMap.body.allowGravity = false;
 // this.girlMap.body.immovable = true;
+
+this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 0)
+
+var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (el)
+{
+    this.ennemy.body.stop();
+    this.ennemy.anims.play('attack', true)
+    // this.followed = false
+    console.log("Touché")
+
+    this.physics.world.removeCollider(collider);
+}, null, this);
   }
 
   public update(): void {
-    this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 0);
+    // this.followed ?  : this.followed = false
 
 
     this.girlMap.setVelocityY(0)
