@@ -117,25 +117,18 @@ export class GameScene extends Phaser.Scene {
 
 
     goBack.on('down', function() {
-      // this.girlMap.scale = this.girlMap.scale - 0.1;
       this.girlMap.setVelocityY(-100)
-      // this.girlMap.y -= 2;
-      // this.girlMap.depth = this.girlMap.depth - 1;
       this.girlMap.anims.play('goback')
 
     }, this);
     goBack.on('up', function() {
-      // this.girlMap.setVelocityX(0)
       this.girlMap.setVelocityY(0)
       this.girlMap.anims.play('idle')
     }, this);
 
 
     goFront.on('down', function() {
-      // this.girlMap.scale = this.girlMap.scale + 0.003;
-      // this.girlMap.y += 2;
       this.girlMap.setVelocityY(100)
-      // this.girlMap.depth += 1;
       this.girlMap.anims.play('front')
     }, this);
     goFront.on('up', function() {
@@ -149,66 +142,32 @@ export class GameScene extends Phaser.Scene {
 
   public update(): void {
 
-
-
-    // var frameNames = this.textures.get('dessinatrice1').getFrameNames();
-
-
-    // console.log(this.girlMap.texture.get());
-        // this.cursorKeys.left.isDown ? (this.girlMap.setVelocityX(-300), this.girlMap.flipX = true, this.girlMap.anims.play('walk')) :
-          // this.cursorKeys.right.isDown ? (this.girlMap.setVelocityX(300), this.girlMap.flipX = false, this.girlMap.anims.play('walk')) :
-            // this.girlMap.setVelocityX(0)
-
         if (this.cursorKeys.up.isDown) {
           if (this.girlMap.x < 605) {
             this.girlMap.scale = this.girlMap.scale - 0.003;
-            // this.girlMap.y -= 2;
             this.girlMap.depth = this.girlMap.depth - 1;
-            // this.girlMap.anims.play('goback')
           }
           if (this.girlMap.x > 605) {
             this.girlMap.scale = this.girlMap.scale - 0.003;
-            // this.girlMap.y -= 2;
             this.girlMap.depth = this.girlMap.depth - 1;
-            // this.girlMap.anims.play('goback')
           }
         }
 
-        //bigger
         if (this.cursorKeys.down.isDown ) {
           this.girlMap.scale = this.girlMap.scale + 0.003;
-          // this.girlMap.y += 2;
           this.girlMap.depth += 1;
-            // this.girlMap.anims.play('front')
         }
 
 
         if (this.aKey.isDown) {
-          // alert("coucou")
-          // this.girlMap.play('attack1');
           this.girlMap.anims.play('attack');
-
           this.girlMap.setSize(900, 900);
-          console.log("ccc")
-          // this.girlMap.attack = true;
-          // this.girlMap.wall = true;
         }
 
         if (this.tKey.isDown) {
-          // this.girlMap.play('heal');
         }
 
         if (this.cursorKeys.space.isDown) {
-          // console.log('espace');
         }
-
-
-
-
-
-
-    // Every frame, we create a new velocity for the sprite based on what keys the this.girlMap is holding down.
-    // We normalize the velocity so that the this.girlMap is always moving at the same speed, regardless of direction.
-    // this.girlMap.setVelocity(normalizedVelocity.x * this.speed, normalizedVelocity.y * this.speed);
   }
 }
