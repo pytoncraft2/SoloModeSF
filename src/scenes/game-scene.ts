@@ -46,8 +46,8 @@ export class GameScene extends Phaser.Scene {
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
     this.physics.add.existing(this.girlMap);
     this.girlMap.setScale(0.4)
-    this.add.image(-300, 350, 'bg').setDepth(-54);
-    this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
+    this.add.image(940, 390, 'bg').setDepth(-54);
+    // this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
 
     // This is a nice helper Phaser provides to create listeners for some of the most common keys.
     this.cursorKeys = this.input.keyboard.createCursorKeys();
@@ -124,7 +124,7 @@ export class GameScene extends Phaser.Scene {
 
 
     goBack.on('down', function() {
-      this.girlMap.setVelocityY(-150)
+      this.girlMap.setVelocityY(-160)
       this.girlMap.anims.play('goback')
 
     }, this);
@@ -134,16 +134,13 @@ export class GameScene extends Phaser.Scene {
 
 
     goFront.on('down', function() {
-      this.girlMap.setVelocityY(150)
+      this.girlMap.setVelocityY(160)
       this.girlMap.anims.play('front')
     }, this);
     goFront.on('up', function() {
       this.girlMap.setVelocityY(0)
       this.girlMap.anims.play('idle')
     }, this);
-
-
-
   }
 
   public update(): void {
@@ -169,7 +166,6 @@ export class GameScene extends Phaser.Scene {
           this.girlMap.on('animationcomplete', () => {
             this.girlMap.setFrame('face1')
           })
-
         }
 
 
@@ -179,8 +175,6 @@ export class GameScene extends Phaser.Scene {
           this.girlMap.on('animationcomplete', () => {
             this.girlMap.setFrame('pas_jkd')
           })
-
-
         }
 
         if (this.tKey.isDown) {
