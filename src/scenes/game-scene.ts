@@ -10,11 +10,11 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class GameScene extends Phaser.Scene {
   public speed = 200;
 
-  private cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
-  private yKey: Phaser.Input.Keyboard.Key;
-  private aKey: Phaser.Input.Keyboard.Key;
-  private tKey: Phaser.Input.Keyboard.Key;
-  private ennemy: Phaser.Physics.Arcade.Sprite;
+  public cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  public yKey: Phaser.Input.Keyboard.Key;
+  public aKey: Phaser.Input.Keyboard.Key;
+  public tKey: Phaser.Input.Keyboard.Key;
+  public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
 
@@ -151,12 +151,17 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.setVelocityY(0)
       this.girlMap.anims.play('idle')
     }, this);
+    // self.physics.add.existing(self.zone);
+// this.girlMap.body.friction.x = 0;
+this.girlMap.body.allowGravity = false;
+this.girlMap.body.immovable = true;
   }
 
   public update(): void {
     this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 0);
 
 
+    this.girlMap.setVelocityY(0)
         if (this.cursorKeys.up.isDown) {
           if (this.girlMap.x < 605) {
             this.girlMap.scale = this.girlMap.scale - 0.001;
