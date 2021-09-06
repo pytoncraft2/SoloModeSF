@@ -76,38 +76,6 @@ export class BootScene extends Phaser.Scene {
     this.load.image('bg2', 'assets/fond/bgMenu.png');
     this.load.atlas('dessinatrice1', 'assets/personnages/dessinatrice1/dessinatrice1.png', 'assets/personnages/dessinatrice1/dessinatrice1_atlas.json');
     // Source: Open Game Art
-    this.load.image('girl', 'assets/sprites/dessinatrice1_.png');
-    this.anims.create({
-    key: "attack1_dessinatrice1",
-    frames: this.anims.generateFrameNumbers('dessinatrice1', {
-        frames: [0, 1, 2, 3, 3]
-    }),
-    frameRate: 6,
-    repeat: 0
-});
-this.anims.create({
-    key: "goback_dessinatrice1",
-    frames: this.anims.generateFrameNumbers('dessinatrice1', {
-        frames: [1,2,3,4]
-    }),
-    frameRate: 7,
-    repeat: 0
-});
-this.anims.create({
-    key: "front_dessinatrice1",
-    frames: this.anims.generateFrameNumbers('dessinatrice1', {
-        frames: [1,2,3,4]
-    }),
-    frameRate: 6,
-    repeat: 0
-});
-this.anims.create({
-    key: "walk_dessinatrice1",
-    frames: this.anims.generateFrameNumbers('dessinatrice1', {
-        frames: [1,2,3,4]
-    }),
-    frameRate: 5,
-    repeat: 0
-});
+    // this.load.image('girl', 'assets/sprites/dessinatrice1_.png');
   }
 }
