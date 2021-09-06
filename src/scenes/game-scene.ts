@@ -119,23 +119,22 @@ export class GameScene extends Phaser.Scene {
     }, this);
     goRight.on('up', function() {
       this.girlMap.setVelocityX(0)
-      this.girlMap.anims.play('idle')
+      this.girlMap.anims.play('idle_walk')
     }, this);
 
 
     goBack.on('down', function() {
-      this.girlMap.setVelocityY(-100)
+      this.girlMap.setVelocityY(-150)
       this.girlMap.anims.play('goback')
 
     }, this);
     goBack.on('up', function() {
       this.girlMap.setVelocityY(0)
-      this.girlMap.anims.play('idle')
     }, this);
 
 
     goFront.on('down', function() {
-      this.girlMap.setVelocityY(100)
+      this.girlMap.setVelocityY(150)
       this.girlMap.anims.play('front')
     }, this);
     goFront.on('up', function() {
@@ -157,12 +156,20 @@ export class GameScene extends Phaser.Scene {
           if (this.girlMap.x > 605) {
             this.girlMap.scale = this.girlMap.scale - 0.003;
             this.girlMap.depth = this.girlMap.depth - 1;
+          this.girlMap.on('animationcomplete', () => {
+            this.girlMap.setFrame('dos7')
+          })
+
           }
         }
 
         if (this.cursorKeys.down.isDown ) {
           this.girlMap.scale = this.girlMap.scale + 0.003;
           this.girlMap.depth += 1;
+          this.girlMap.on('animationcomplete', () => {
+            this.girlMap.setFrame('face1')
+          })
+
         }
 
 
