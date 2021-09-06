@@ -38,7 +38,7 @@ export class GameScene extends Phaser.Scene {
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
 
 
-    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face2').setOrigin(0.5, 0.5).setScale(0.5).setDragX(900)
+    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(900)
 
 
     this.physics.add.existing(this.girlMap);
@@ -47,6 +47,9 @@ export class GameScene extends Phaser.Scene {
 
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
+    // this.ennemy.anims.play('walk')
+    this.ennemy.anims.play('walk', true)
+
 
     this.physics.add.collider(this.girlMap, this.ennemy)
     // function col(e) {}
@@ -111,6 +114,7 @@ export class GameScene extends Phaser.Scene {
     var goBack = this.cursorKeys.up
     var following = this.yKey
 
+      this.ennemy.anims.play('walk', true)
     following.on('down' ,function() {
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
     },this)
