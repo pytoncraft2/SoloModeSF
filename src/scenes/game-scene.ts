@@ -165,7 +165,7 @@ export class GameScene extends Phaser.Scene {
 
 
 
-var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (e: Phaser.Physics.Arcade.Sprite,n)
+var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (e: Phaser.Physics.Arcade.Sprite,n: Phaser.Physics.Arcade.Sprite)
 {
 
 e.setAlpha(0.8)
@@ -183,6 +183,8 @@ e.setAlpha(0.8)
     this.ennemy.anims.play('attack')
     this.ennemy.on('animationcomplete', () => {
     this.ennemy.anims.play('walk')
+    this.ennemy.flipX = !n.flipX
+// e.body.velocity.x > 0 ? n.flipX = true : n.flipX = false
 
 // this.physics.world.removeCollider(collider);
   this.goToTarget()
@@ -203,7 +205,7 @@ this.goToTarget()
   }
 
   public stopTarget() {
-    this.physics.add.collider(this.girlMap, this.ennemy)
+    this.physics.add.overlap(this.girlMap, this.ennemy)
   }
 
   public update(): void {
