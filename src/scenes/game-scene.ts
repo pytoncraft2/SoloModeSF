@@ -69,7 +69,7 @@ export class GameScene extends Phaser.Scene {
       key: 'attack',
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 4 }),
       frameRate: 6,
-      repeat: 1
+      repeat: 0
     });
     this.anims.create({
       key: "goback",
@@ -168,7 +168,6 @@ export class GameScene extends Phaser.Scene {
 var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (e: Phaser.Physics.Arcade.Sprite,n: Phaser.Physics.Arcade.Sprite)
 {
 
-e.setAlpha(0.8)
   // if (.anim == 'attack1') {
   //   count++;
   //   console.log(count);
@@ -183,12 +182,18 @@ e.setAlpha(0.8)
     this.ennemy.anims.play('attack')
     this.ennemy.on('animationcomplete', () => {
     this.ennemy.anims.play('walk')
+    if (e.anims.getFrameName() === "attack1") {
+    e.setAlpha(0.4)
     this.ennemy.flipX = !n.flipX
+    }
+    console.log()
+
+
+  this.goToTarget()
+this.stopTarget()
 // e.body.velocity.x > 0 ? n.flipX = true : n.flipX = false
 
 // this.physics.world.removeCollider(collider);
-  this.goToTarget()
-this.stopTarget()
 
 })
 
