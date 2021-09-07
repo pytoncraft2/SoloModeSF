@@ -165,7 +165,7 @@ export class GameScene extends Phaser.Scene {
 
 
 
-var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (el)
+var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function ()
 {
     this.ennemy.body.stop();
     this.ennemy.anims.play('attack', true)
@@ -176,10 +176,25 @@ var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (el)
 }, null, this);
   }
 
+  public goToTarget() {
+    this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 0)
+  }
+
+  public stopTarget() {
+
+  }
+
   public update(): void {
     // this.followed ?  : this.followed = false
 
-if (this.ennemy.body.touching.none) this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 0) ;
+    // console.log(this.ennemy.x)
+    if (this.ennemy.x < this.girlMap.x) {
+    this.ennemy.body.stop()
+    this.ennemy.x += 3
+  } else if(this.ennemy.x > this.girlMap.x) {
+    this.ennemy.x -= 3
+  }
+
         if (this.cursorKeys.up.isDown) {
           // if (this.girlMap.x < 605) {
           //   this.girlMap.scale = this.girlMap.scale - 0.001;
