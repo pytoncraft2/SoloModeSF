@@ -184,12 +184,13 @@ e.setAlpha(0.8)
     this.ennemy.on('animationcomplete', () => {
     this.ennemy.anims.play('walk')
 
+// this.physics.world.removeCollider(collider);
   this.goToTarget()
 this.stopTarget()
+
 })
 
     // this.followed = false
-    console.log("Touché")
 
     // this.physics.world.removeCollider(collider);
 }, null, this);
@@ -256,8 +257,6 @@ this.goToTarget()
         }
 
         if (this.cursorKeys.space.isDown) {
-          this.goToTarget()
-          this.stopTarget()
         }
   }
 }
