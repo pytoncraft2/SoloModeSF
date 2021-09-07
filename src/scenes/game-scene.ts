@@ -51,7 +51,6 @@ export class GameScene extends Phaser.Scene {
     this.ennemy.anims.play('walk', true)
 
 
-    this.physics.add.collider(this.girlMap, this.ennemy)
     // function col(e) {}
     this.add.image(940, 390, 'bg').setDepth(-54);
 
@@ -70,7 +69,7 @@ export class GameScene extends Phaser.Scene {
       key: 'attack',
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 4 }),
       frameRate: 6,
-      repeat: -1
+      repeat: 1
     });
     this.anims.create({
       key: "goback",
@@ -165,15 +164,37 @@ export class GameScene extends Phaser.Scene {
 
 
 
-var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function ()
+
+var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (e: Phaser.Physics.Arcade.Sprite,n)
 {
+
+e.setAlpha(0.8)
+  // if (.anim == 'attack1') {
+  //   count++;
+  //   console.log(count);
+  //   if (count == 20) {
+  //     player2.alpha = player2.alpha - 0.2;
+  //     count = 0;
+  //   }
+  // }
+
+
     this.ennemy.body.stop();
-    this.ennemy.anims.play('attack', true)
+    this.ennemy.anims.play('attack')
+    this.ennemy.on('animationcomplete', () => {
+    this.ennemy.anims.play('walk')
+
+  this.goToTarget()
+this.stopTarget()
+})
+
     // this.followed = false
     console.log("Touché")
 
-    this.physics.world.removeCollider(collider);
+    // this.physics.world.removeCollider(collider);
 }, null, this);
+
+this.goToTarget()
   }
 
   public goToTarget() {
@@ -181,25 +202,27 @@ var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function ()
   }
 
   public stopTarget() {
-
+    this.physics.add.collider(this.girlMap, this.ennemy)
   }
 
   public update(): void {
     // this.followed ?  : this.followed = false
 
     // console.log(this.ennemy.x)
-    if (this.ennemy.x < this.girlMap.x) {
-    this.ennemy.body.stop()
-    this.ennemy.x += 3
-  } else if(this.ennemy.x > this.girlMap.x) {
-    this.ennemy.x -= 3
-  }
+  //   if (this.ennemy.x < this.girlMap.x) {
+  //   this.ennemy.body.stop()
+  //   this.ennemy.x += 4
+  // } else if(this.ennemy.x > this.girlMap.x) {
+  //   this.ennemy.x -= 4
+  // }
 
         if (this.cursorKeys.up.isDown) {
           // if (this.girlMap.x < 605) {
           //   this.girlMap.scale = this.girlMap.scale - 0.001;
           //   this.girlMap.depth = this.girlMap.depth - 1;
           // }
+
+
           if (this.girlMap.x > 605) {
             this.girlMap.y = this.girlMap.y - 2;
             this.girlMap.scale = this.girlMap.scale - 0.001;
@@ -233,6 +256,8 @@ var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function ()
         }
 
         if (this.cursorKeys.space.isDown) {
+          this.goToTarget()
+          this.stopTarget()
         }
   }
 }
