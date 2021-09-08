@@ -21,7 +21,7 @@ export class GameScene extends Phaser.Scene {
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
-  public zone: Phaser.GameObjects.GameObject
+  public zone: Phaser.GameObjects.Zone
 
 
   private doors: Phaser.Physics.Arcade.Image;
@@ -42,7 +42,7 @@ export class GameScene extends Phaser.Scene {
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setSize(220,220);
 
 
-    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(900)
+    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100)
 
 
     this.physics.add.existing(this.girlMap);
@@ -117,14 +117,19 @@ export class GameScene extends Phaser.Scene {
     });
 
 
-    this.zone = this.add.zone(956, 480, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
 
     // this.zone.body.velocity.x = 0;
     // this.zone.body.gameObject = false;
     // this.zone.body = true;
     // this.zone.body.setDepth(3,3)
     this.physics.add.existing(this.zone);
-      // this.zone.body.move = false;
+    this.physics.world.enable(this.zone);
+
+      this.zone.body.velocity.y = 0;
+      this.zone.body.position.x = 0;
+      this.zone.body.position.y = 0;
+      // console.log(this.zone.);
     // this.players.add(this.player);
     this.physics.add.collider(this.girlMap, this.zone);
 
@@ -138,7 +143,7 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.body.velocity.y = 0;
       this.girlMap.body.allowGravity = false;
     // }
-  });
+  },this);
 
     this.keyObj2.on('up', function(event) {
       // if (keyObj.isDown) {
@@ -147,20 +152,20 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.body.allowGravity = true;
 
     // }
-  });
+  },this);
 
   this.keyObj3 = this.input.keyboard.addKey('DOWN');  // Get key object
     this.keyObj3.on('down', function(event) {
       // if (keyObj.isDown) {
       this.zone.body.velocity.y = 300;
     // }
-  });
+  },this);
 
     this.keyObj3.on('up', function(event) {
       // if (keyObj.isDown) {
       this.zone.body.velocity.y = 0;
     // }
-  });
+  },this);
 
     // var goLeft = this.cursors.left
     // var goRight = this.cursors.right
