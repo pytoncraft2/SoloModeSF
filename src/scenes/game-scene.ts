@@ -19,7 +19,7 @@ export class GameScene extends Phaser.Scene {
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
-  private spaceBar: Phaser.Input.Keyboard.KeyboardPlugin
+  private spaceBar: Phaser.Input.Keyboard.Key
   // public followed: Phaser.Input.Keyboard.Key;
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
@@ -82,7 +82,7 @@ export class GameScene extends Phaser.Scene {
 
     // This is a nice helper Phaser provides to create listeners for some of the most common keys.
     this.cursors = this.input.keyboard.createCursorKeys();
-    this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
@@ -387,9 +387,9 @@ else
     this.girlMap.anims.play('idle_walk');
 }
 
-if (this.cursors.up.isDown && this.girlMap.body.touching.down)
+if (this.spaceBar.isDown && this.girlMap.body.touching.down)
 {
-    this.girlMap.setVelocityY(-330);
+    this.girlMap.setVelocityY(-530);
 }
 // if (this.cursors.up.isDown && this.girlMap.body.touching.down)
 // {
