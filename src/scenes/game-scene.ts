@@ -22,6 +22,8 @@ export class GameScene extends Phaser.Scene {
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
   public zone: Phaser.GameObjects.Zone
+  public map: any;
+
 
 
   private doors: Phaser.Physics.Arcade.Image;
@@ -37,9 +39,12 @@ export class GameScene extends Phaser.Scene {
     // this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
     //   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
     // });
+    const objects = this.map.getObjectLayer("objects").objects as any[];
+
+
     this.follow = true;
 
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setSize(220,220);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setSize(220,220).setVelocityY(203);
 
 
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100)
