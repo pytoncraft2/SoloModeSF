@@ -10,7 +10,7 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class GameScene extends Phaser.Scene {
   public speed = 200;
 
-  public cursorKeys: Phaser.Types.Input.Keyboard.CursorKeys;
+  public cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public yKey: Phaser.Input.Keyboard.Key;
   public aKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
@@ -45,7 +45,7 @@ export class GameScene extends Phaser.Scene {
     // this.physics.add.existing(this.ennemy);
     this.physics.world.enable(this.girlMap);
 
-    // this.physics.accelerateToObject(self.bird, self.player, );
+    // this.physics.accelerateToObject(self.bird, self.this.girlMap, );
 
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
@@ -60,7 +60,7 @@ export class GameScene extends Phaser.Scene {
     // this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
 
     // This is a nice helper Phaser provides to create listeners for some of the most common keys.
-    this.cursorKeys = this.input.keyboard.createCursorKeys();
+    this.cursors = this.input.keyboard.createCursorKeys();
     this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
@@ -109,10 +109,10 @@ export class GameScene extends Phaser.Scene {
     });
 
 
-    var goLeft = this.cursorKeys.left
-    var goRight = this.cursorKeys.right
-    var goFront = this.cursorKeys.down
-    var goBack = this.cursorKeys.up
+    var goLeft = this.cursors.left
+    var goRight = this.cursors.right
+    var goFront = this.cursors.down
+    var goBack = this.cursors.up
     var following = this.yKey
 
       this.ennemy.anims.play('walk', true)
@@ -225,8 +225,8 @@ this.goToTarget()
   // } else if(this.ennemy.x > this.girlMap.x) {
   //   this.ennemy.x -= 4
   // }
-
-        if (this.cursorKeys.up.isDown) {
+/*
+        if (this.cursors.up.isDown) {
           // if (this.girlMap.x < 605) {
           //   this.girlMap.scale = this.girlMap.scale - 0.001;
           //   this.girlMap.depth = this.girlMap.depth - 1;
@@ -244,7 +244,7 @@ this.goToTarget()
           }
         }
 
-        if (this.cursorKeys.down.isDown ) {
+        if (this.cursors.down.isDown ) {
           this.girlMap.scale = this.girlMap.scale + 0.001;
           this.girlMap.y += 2;
           this.girlMap.depth += 1;
@@ -265,7 +265,7 @@ this.goToTarget()
         if (this.tKey.isDown) {
         }
 
-        if (this.cursorKeys.space.isDown) {
+        if (this.cursors.space.isDown) {
         }
         // if (this.ennemy.body.touching.right) {
         //   this.ennemy.flipX = false;
@@ -282,5 +282,30 @@ this.goToTarget()
         } else if (this.girlMap.body.touching.right && this.girlMap.flipX === false) {
           this.ennemy.flipX = false;
         }
+        */
+        if (this.cursors.left.isDown)
+{
+    this.girlMap.setVelocityX(-160);
+
+    this.girlMap.anims.play('walk', true);
+}
+else if (this.cursors.right.isDown)
+{
+    // this.girlMap.setVelocityX(160);
+    this.girlMap.setVelocityY(-330);
+
+    this.girlMap.anims.play('walk', true);
+}
+else
+{
+    this.girlMap.setVelocityX(0);
+
+    this.girlMap.anims.play('idle_walk');
+}
+
+if (this.cursors.up.isDown && this.girlMap.body.touching.down)
+{
+    this.girlMap.setVelocityY(-330);
+}
   }
 }
