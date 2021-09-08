@@ -47,7 +47,7 @@ export class GameScene extends Phaser.Scene {
 
     this.follow = true;
 
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setSize(220,220).setVelocityY(203);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
 
 
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
@@ -146,8 +146,8 @@ this.zone.depth = 30;
     // this.zone.body.gameObject = false;
     // this.zone.body = true;
     // this.zone.body.setDepth(3,3)
-    // this.physics.add.existing(this.zone);
-    // this.physics.world.enable(this.zone);
+    this.physics.add.existing(this.zone);
+    this.physics.world.enable(this.zone);
 
       // console.log(this.zone.);
     // this.players.add(this.player);
