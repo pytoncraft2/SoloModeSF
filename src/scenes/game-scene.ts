@@ -14,10 +14,14 @@ export class GameScene extends Phaser.Scene {
   public yKey: Phaser.Input.Keyboard.Key;
   public aKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
+  public keyObj: Phaser.Input.Keyboard.Key
+  public keyObj2: Phaser.Input.Keyboard.Key
+  public keyObj3: Phaser.Input.Keyboard.Key
   // public followed: Phaser.Input.Keyboard.Key;
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
+  public zone: Phaser.GameObjects.GameObject
 
 
   private doors: Phaser.Physics.Arcade.Image;
@@ -45,7 +49,7 @@ export class GameScene extends Phaser.Scene {
     // this.physics.add.existing(this.ennemy);
     this.physics.world.enable(this.girlMap);
 
-    // this.physics.accelerateToObject(self.bird, self.this.girlMap, );
+    // this.physics.accelerateToObject(this.bird, this.this.girlMap, );
 
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
@@ -55,6 +59,10 @@ export class GameScene extends Phaser.Scene {
 
     // function col(e) {}
     this.add.image(940, 390, 'bg').setDepth(-54);
+
+
+
+
 
 
     // this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
@@ -109,56 +117,101 @@ export class GameScene extends Phaser.Scene {
     });
 
 
-    var goLeft = this.cursors.left
-    var goRight = this.cursors.right
-    var goFront = this.cursors.down
-    var goBack = this.cursors.up
-    var following = this.yKey
+    this.zone = this.add.zone(956, 480, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+
+    // this.zone.body.velocity.x = 0;
+    // this.zone.body.gameObject = false;
+    // this.zone.body = true;
+    // this.zone.body.setDepth(3,3)
+    this.physics.add.existing(this.zone);
+      // this.zone.body.move = false;
+    // this.players.add(this.player);
+    this.physics.add.collider(this.girlMap, this.zone);
+
+    this.keyObj = this.input.keyboard.addKey('SPACE');  // Get key object
+    this.keyObj.on('down', function(event) { this.girlMap.setVelocityY(-400); });
+
+    this.keyObj2 = this.input.keyboard.addKey('UP');  // Get key object
+    this.keyObj2.on('down', function(event) {
+      // if (keyObj.isDown) {
+      this.zone.body.velocity.y = -300;
+      this.girlMap.body.velocity.y = 0;
+      this.girlMap.body.allowGravity = false;
+    // }
+  });
+
+    this.keyObj2.on('up', function(event) {
+      // if (keyObj.isDown) {
+      this.zone.body.velocity.y = 0;
+      this.girlMap.body.velocity.y = 0;
+      this.girlMap.body.allowGravity = true;
+
+    // }
+  });
+
+  this.keyObj3 = this.input.keyboard.addKey('DOWN');  // Get key object
+    this.keyObj3.on('down', function(event) {
+      // if (keyObj.isDown) {
+      this.zone.body.velocity.y = 300;
+    // }
+  });
+
+    this.keyObj3.on('up', function(event) {
+      // if (keyObj.isDown) {
+      this.zone.body.velocity.y = 0;
+    // }
+  });
+
+    // var goLeft = this.cursors.left
+    // var goRight = this.cursors.right
+    // var goFront = this.cursors.down
+    // var goBack = this.cursors.up
+    // var following = this.yKey
 
       this.ennemy.anims.play('walk', true)
-    following.on('down' ,function() {
-      this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
-    },this)
+    // following.on('down' ,function() {
+    //   this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
+    // },this)
 
-    goLeft.on('down', function() {
-      this.girlMap.setVelocityX(-300);
-      this.girlMap.flipX = true
-      this.girlMap.anims.play('walk', true)
-    }, this);
-    goLeft.on('up', function() {
-      this.girlMap.setVelocityX(0)
-      this.girlMap.anims.play('idle_walk')
-    }, this);
-
-
-    goRight.on('down', function() {
-      this.girlMap.setVelocityX(300);
-      this.girlMap.flipX = false
-      this.girlMap.anims.play('walk', true)
-    }, this);
-    goRight.on('up', function() {
-      this.girlMap.setVelocityX(0)
-      this.girlMap.anims.play('idle_walk')
-    }, this);
-
-
-    goBack.on('down', function() {
-      this.girlMap.anims.play('goback')
-
-    }, this);
-    goBack.on('up', function() {
-      this.girlMap.setVelocityY(0)
-    }, this);
-
-
-    goFront.on('down', function() {
-      this.girlMap.anims.play('front')
-    }, this);
-    goFront.on('up', function() {
-      this.girlMap.setVelocityY(0)
-      this.girlMap.anims.play('idle')
-    }, this);
-    // self.physics.add.existing(self.zone);
+    // goLeft.on('down', function() {
+    //   this.girlMap.setVelocityX(-300);
+    //   this.girlMap.flipX = true
+    //   this.girlMap.anims.play('walk', true)
+    // }, this);
+    // goLeft.on('up', function() {
+    //   this.girlMap.setVelocityX(0)
+    //   this.girlMap.anims.play('idle_walk')
+    // }, this);
+    //
+    //
+    // goRight.on('down', function() {
+    //   this.girlMap.setVelocityX(300);
+    //   this.girlMap.flipX = false
+    //   this.girlMap.anims.play('walk', true)
+    // }, this);
+    // goRight.on('up', function() {
+    //   this.girlMap.setVelocityX(0)
+    //   this.girlMap.anims.play('idle_walk')
+    // }, this);
+    //
+    //
+    // goBack.on('down', function() {
+    //   this.girlMap.anims.play('goback')
+    //
+    // }, this);
+    // goBack.on('up', function() {
+    //   this.girlMap.setVelocityY(0)
+    // }, this);
+    //
+    //
+    // goFront.on('down', function() {
+    //   this.girlMap.anims.play('front')
+    // }, this);
+    // goFront.on('up', function() {
+    //   this.girlMap.setVelocityY(0)
+    //   this.girlMap.anims.play('idle')
+    // }, this);
+    // this.physics.add.existing(this.zone);
 // this.girlMap.body.friction.x = 0;
 // this.girlMap.body.allowGravity = false;
 // this.girlMap.body.immovable = true;
@@ -205,7 +258,7 @@ this.stopTarget()
 }, null, this);
 
 this.goToTarget()
-  }
+}
 
   public goToTarget() {
     this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 200)
@@ -283,6 +336,7 @@ this.goToTarget()
           this.ennemy.flipX = false;
         }
         */
+
         if (this.cursors.left.isDown)
 {
     this.girlMap.setVelocityX(-160);
@@ -291,8 +345,7 @@ this.goToTarget()
 }
 else if (this.cursors.right.isDown)
 {
-    // this.girlMap.setVelocityX(160);
-    this.girlMap.setVelocityY(-330);
+    this.girlMap.setVelocityX(160);
 
     this.girlMap.anims.play('walk', true);
 }
