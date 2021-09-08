@@ -19,6 +19,7 @@ export class GameScene extends Phaser.Scene {
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
+  private spaceBar: Phaser.Input.Keyboard.KeyboardPlugin
   // public followed: Phaser.Input.Keyboard.Key;
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
@@ -81,6 +82,7 @@ export class GameScene extends Phaser.Scene {
 
     // This is a nice helper Phaser provides to create listeners for some of the most common keys.
     this.cursors = this.input.keyboard.createCursorKeys();
+    this.spaceBar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
@@ -153,9 +155,9 @@ this.zone.depth = 30;
     // this.players.add(this.player);
     this.physics.add.collider(this.girlMap, this.zone);
 
-    this.keyObj = this.input.keyboard.addKey('SPACE');  // Get key object
-    this.keyObj.on('down', function(event) { this.girlMap.setVelocityY(-400); });
-
+    // this.keyObj = this.input.keyboard.addKey('SPACE');  // Get key object
+    // this.keyObj.on('down', function(event) { this.girlMap.setVelocityY(-400); });
+/*
     this.keyObj2 = this.input.keyboard.addKey('UP');  // Get key object
     this.keyObj2.on('down', function(event) {
       // if (keyObj.isDown) {
@@ -186,6 +188,7 @@ this.zone.depth = 30;
       this.zone.body.velocity.y = 0;
     // }
   },this);
+  */
 
     // var goLeft = this.cursors.left
     // var goRight = this.cursors.right
@@ -365,12 +368,15 @@ this.goToTarget()
         if (this.cursors.left.isDown)
 {
     this.girlMap.setVelocityX(-160);
+    // this.zone.setVelocityX(-160);
+    this.zone.x = this.girlMap.x;
 
     this.girlMap.anims.play('walk', true);
 }
 else if (this.cursors.right.isDown)
 {
     this.girlMap.setVelocityX(160);
+    this.zone.x = this.girlMap.x;
 
     this.girlMap.anims.play('walk', true);
 }
@@ -385,5 +391,9 @@ if (this.cursors.up.isDown && this.girlMap.body.touching.down)
 {
     this.girlMap.setVelocityY(-330);
 }
+// if (this.cursors.up.isDown && this.girlMap.body.touching.down)
+// {
+//     this.girlMap.setVelocityY(-330);
+// }
   }
 }
