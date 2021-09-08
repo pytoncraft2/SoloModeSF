@@ -9,6 +9,8 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class GameScene extends Phaser.Scene {
   public speed = 200;
+  body!: Phaser.Physics.Arcade.Body
+
 
   public cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public yKey: Phaser.Input.Keyboard.Key;
@@ -21,7 +23,7 @@ export class GameScene extends Phaser.Scene {
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
-  public zone: Phaser.GameObjects.Zone
+  private zone: Phaser.Physics.Arcade.Body
   public map: any;
 
 
@@ -39,15 +41,20 @@ export class GameScene extends Phaser.Scene {
     // this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
     //   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
     // });
-    const objects = this.map.getObjectLayer("objects").objects as any[];
+    // const objects = this.map.getObjectLayer("objects").objects as any[];
 
+    // console.log(objects)
 
     this.follow = true;
 
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setSize(220,220).setVelocityY(203);
 
 
-    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100)
+    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
+
+
+  // self.zone.body.move = false;
+// self.players.add(self.player);
 
 
     this.physics.add.existing(this.girlMap);
@@ -122,18 +129,26 @@ export class GameScene extends Phaser.Scene {
     });
 
 
-    this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5) ;
+
+    // self.zone = this.add.zone(playerInfo.x, playerInfo.y +210).setSize(150, 40).setOrigin(0.5, 0.5);
+
+  // self.zone.body.move = false;
+// self.players.add(self.player);
+this.physics.add.existing(this.zone);
+this.zone.body.friction.x = 0;
+this.zone.body.allowGravity = false;
+this.zone.body.immovable = true;
+this.zone.depth = 30;
+// this.physics.add.collider(this.player, this.zone);
 
     // this.zone.body.velocity.x = 0;
     // this.zone.body.gameObject = false;
     // this.zone.body = true;
     // this.zone.body.setDepth(3,3)
-    this.physics.add.existing(this.zone);
-    this.physics.world.enable(this.zone);
+    // this.physics.add.existing(this.zone);
+    // this.physics.world.enable(this.zone);
 
-      this.zone.body.velocity.y = 0;
-      this.zone.body.position.x = 0;
-      this.zone.body.position.y = 0;
       // console.log(this.zone.);
     // this.players.add(this.player);
     this.physics.add.collider(this.girlMap, this.zone);
