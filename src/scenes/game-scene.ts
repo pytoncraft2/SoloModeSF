@@ -35,14 +35,16 @@ export class GameScene extends Phaser.Scene {
     // });
     this.follow = true;
 
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setSize(220,220);
 
 
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(900)
 
 
     this.physics.add.existing(this.girlMap);
-    this.physics.add.existing(this.ennemy);
+    // this.physics.add.existing(this.ennemy);
+    this.physics.world.enable(this.girlMap);
+
     // this.physics.accelerateToObject(self.bird, self.player, );
 
     this.girlMap.setScale(0.4)
@@ -182,10 +184,10 @@ var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function (e: 
     this.ennemy.anims.play('attack')
     this.ennemy.on('animationcomplete', () => {
     this.ennemy.anims.play('walk')
-    if (e.anims.getFrameName() === "attack1") {
+    // if (e.anims.getFrameName() === "attack1") {
     e.setAlpha(0.4)
-    this.ennemy.flipX = !n.flipX
-    }
+    // this.ennemy.flipX = !n.flipX
+    // }
     console.log()
 
 
@@ -206,7 +208,7 @@ this.goToTarget()
   }
 
   public goToTarget() {
-    this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 0)
+    this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 200)
   }
 
   public stopTarget() {
@@ -264,6 +266,21 @@ this.goToTarget()
         }
 
         if (this.cursorKeys.space.isDown) {
+        }
+        // if (this.ennemy.body.touching.right) {
+        //   this.ennemy.flipX = false;
+        // }
+
+        if (this.girlMap.body.touching.left && this.girlMap.flipX === true) {
+          this.ennemy.flipX = false;
+        } else if (this.girlMap.body.touching.left && this.girlMap.flipX === false) {
+          this.ennemy.flipX = true;
+        }
+
+        if (this.girlMap.body.touching.right && this.girlMap.flipX === true) {
+          this.ennemy.flipX = true;
+        } else if (this.girlMap.body.touching.right && this.girlMap.flipX === false) {
+          this.ennemy.flipX = false;
         }
   }
 }
