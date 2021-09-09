@@ -162,7 +162,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
     },this)
 
-    this.r4 = this.add.ellipse(10, 90, 100, 20, 0x0009).setAlpha(0.5);
+    this.r4 = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
+
     // console.log(r4)
   }
 
