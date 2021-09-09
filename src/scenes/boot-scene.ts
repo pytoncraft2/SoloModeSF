@@ -77,10 +77,11 @@ export class BootScene extends Phaser.Scene {
     this.load.atlas('ennemy', 'assets/personnages/dessinatrice2/dessinatrice2.png', 'assets/personnages/dessinatrice2/dessinatrice2_atlas.json');
     this.load.atlas('dessinatrice1', 'assets/personnages/dessinatrice1/dessinatrice1.png', 'assets/personnages/dessinatrice1/dessinatrice1_atlas.json');
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('bird', 'assets/personnages/bird/bird.png', {
-frameWidth: 240,
-frameHeight:320
-})
+    this.load.image('barrel', 'assets/barrel.png')
+//     this.load.spritesheet('bird', 'assets/personnages/bird/bird.png', {
+// frameWidth: 240,
+// frameHeight:320
+// })
 
     // Source: Open Game Art
     // this.load.image('girl', 'assets/sprites/dessinatrice1_.png');
