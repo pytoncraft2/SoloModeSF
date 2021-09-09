@@ -1,6 +1,3 @@
-import { Input } from 'phaser';
-import { getGameWidth, getGameHeight } from '../helpers';
-
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -9,8 +6,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 
 export class GameScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
-  public speed = 200;
-
 
   public cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public yKey: Phaser.Input.Keyboard.Key;
@@ -20,7 +15,6 @@ export class GameScene extends Phaser.Scene {
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
-  // public followed: Phaser.Input.Keyboard.Key;
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public follow: boolean;
@@ -97,11 +91,12 @@ export class GameScene extends Phaser.Scene {
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.world.enableBody(this.zone);
-
+    if(this.zone.body instanceof Phaser.Physics.Arcade.Body) {
     this.zone.body.friction.x = 0;
     this.zone.body.allowGravity = false;
     this.zone.body.immovable = true;
     this.zone.depth = 30;
+  }
     this.physics.add.collider(this.girlMap, this.zone);
     this.ennemy.anims.play('walk', true)
 
@@ -145,6 +140,7 @@ export class GameScene extends Phaser.Scene {
     }
     else if (this.spaceBar.isDown) {
 
+      this.zone.x = this.girlMap.x;
       if (!this.girlMap.anims.getFrameName().includes("jump")) {
         this.girlMap.anims.play('jump');
         this.ennemy.on('animationcomplete', () => {
