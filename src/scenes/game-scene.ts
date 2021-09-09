@@ -36,7 +36,7 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
-    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
+    this.ennemy = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
 
 
     this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2)
@@ -153,7 +153,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     // }, null, this);
 
         this.ennemy.anims.play('walk', true)
-        this.physics.moveToObject(this.ennemy, this.girlMap, 10, 2000)
+        this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
 
     var following = this.yKey
 
@@ -178,14 +178,6 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.girlMap.setVelocityX(0);
       if (!this.girlMap.anims.getFrameName().includes("attack1")) {
         this.girlMap.anims.play("attack", true)
-            if (this.ennemy.isTinted)
-            {
-                this.ennemy.clearTint();
-            }
-            else
-            {
-                this.ennemy.setTintFill(0xffffff);
-            }
       }
     }
     else if (this.cursors.left.isDown) {
@@ -282,6 +274,15 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
 
     if (this.tKey.isDown) {
+      if (this.ennemy.isTinted)
+{
+    this.ennemy.clearTint();
+}
+else
+{
+    this.ennemy.setTintFill(0xffffff);
+}
+
       // this.barrel.alpha = 0.4;
       // this.barrel.x = this.girlMap.x
       // this.physics.moveToObject(this.barrel, this.girlMap, 200);
