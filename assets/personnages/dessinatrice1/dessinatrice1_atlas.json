@@ -209,7 +209,7 @@
             }
         },
         {
-            "filename": "pas_jkd",
+            "filename": "run1",
             "frame": {
                 "w": 445,
                 "h": 969,
@@ -222,7 +222,7 @@
             }
         },
         {
-            "filename": "pas_jkd2",
+            "filename": "run2",
             "frame": {
                 "w": 865,
                 "h": 969,
@@ -235,7 +235,7 @@
             }
         },
         {
-            "filename": "pas_jkd3",
+            "filename": "run4",
             "frame": {
                 "w": 865,
                 "h": 969,
@@ -248,7 +248,7 @@
             }
         },
         {
-            "filename": "pas_jkd4",
+            "filename": "run3",
             "frame": {
                 "w": 865,
                 "h": 969,

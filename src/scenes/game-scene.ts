@@ -16,6 +16,7 @@ export class GameScene extends Phaser.Scene {
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
+  public cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
@@ -47,6 +48,7 @@ export class GameScene extends Phaser.Scene {
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
+    this.cKey = this.input.keyboard.addKey('CTRL');
     this.aKey = this.input.keyboard.addKey('A');
     this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
@@ -110,6 +112,13 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       repeat: -1
     });
 
+    this.anims.create({
+      key: "run",
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'run', start: 1, end: 4 }),
+      frameRate: 6,
+      repeat: -1
+    })
+
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.ennemyzone = this.add.zone(356, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
@@ -161,7 +170,6 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
   public update(time, delta): void {
 
-
         // this.ennemyzone.y - 30
         this.ennemyzone.x = this.ennemy.x
 
@@ -172,28 +180,54 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       }
     }
     else if (this.cursors.left.isDown) {
-      this.girlMap.setVelocityX(-300);
+this.r4.scaleX = 1, this.r4.scaleY = 1
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
       this.r4.y = this.zone.y - 30
       this.girlMap.flipX = true;
+      if (this.cKey.isDown) {
 
+
+      this.girlMap.anims.play('run', true);
+      this.girlMap.setVelocityX(-400);
+    } else {
       this.girlMap.anims.play('walk', true);
+      this.girlMap.setVelocityX(-300);
+    }
+
+
+
+
     }
     else if (this.cursors.right.isDown) {
-      this.girlMap.setVelocityX(300);
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
       this.r4.y = this.zone.y - 30
 
       this.girlMap.flipX = false;
+      if (this.cKey.isDown) {
+      this.girlMap.anims.play('run', true);
+      this.girlMap.setVelocityX(400);
+    } else {
       this.girlMap.anims.play('walk', true);
+      this.girlMap.setVelocityX(300);
+    }
     }
     else if (this.spaceBar.isDown) {
       // this.cameras.main.shake(100);
       // this.controls.update(delta)
 
 
+      this.tweens.add({
+        targets: this.r4,
+        scaleX: 0.25,
+        scaleY: 0.5,
+        repeat: 0,
+         duration: 200,
+         onCompleteParams:[this.r4.scaleX = 1, this.r4.scaleY = 1]
+      });
+
+      // this.tweens.killTweensOf(this.r4)
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
       this.r4.y = this.zone.y - 30
@@ -248,6 +282,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       // this.physics.moveToObject(this.barrel, this.girlMap, 200);
 
     }
+
 
 
 
