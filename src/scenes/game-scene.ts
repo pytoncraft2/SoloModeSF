@@ -168,7 +168,7 @@ export class GameScene extends Phaser.Scene {
 
       }
       if (this.girlMap.body.touching.down) {
-        this.girlMap.setVelocityY(-530);
+        this.girlMap.setVelocityY(-590);
       }
 
     }
@@ -180,6 +180,8 @@ export class GameScene extends Phaser.Scene {
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
       this.zone.body.position.y -= 2
+      this.r4.depth -= 1;
+      this.girlMap.depth -= 1;
       this.r4.y = this.zone.y -30
       this.r4.x = this.zone.x
       if (!this.girlMap.anims.getFrameName().includes("jump")) {
@@ -195,11 +197,16 @@ export class GameScene extends Phaser.Scene {
 
       if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
         this.girlMap.y += 2;
+      this.r4.depth += 1;
+      this.girlMap.depth += 1;
         this.r4.y = this.zone.y -30
         this.r4.x = this.zone.x
         this.zone.y += 2;
       }
     }
 
+    // console.log(this.barrel.depth)
+    // console.log("_______________")
+    // console.log(this.r4.depth)
   }
 }
