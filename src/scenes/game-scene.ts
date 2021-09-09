@@ -221,7 +221,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
           scaleY: 0.5,
           yoyo: true,
           repeat: 0,
-           duration: 200,
+           duration: 600,
         });
       }
 
