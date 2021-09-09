@@ -116,9 +116,9 @@ export class GameScene extends Phaser.Scene {
     });
     this.anims.create({
       key: "jump",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'jump', start: 2, end: 2 }),
-      frameRate: 5,
-      repeat: -1
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'jump', start: 0, end: 5 }),
+      frameRate: 7,
+      repeat: 1
     });
 
     this.anims.create({
@@ -384,7 +384,22 @@ else if (this.cursors.right.isDown)
     this.girlMap.setVelocityX(300);
     this.zone.x = this.girlMap.x;
 
-    this.girlMap.flipX = false;
+    // this.girlMap.flipX = false;
+}
+else if (this.spaceBar.isDown)
+{
+
+    if (!this.girlMap.anims.getFrameName().includes("jump")) {
+  this.girlMap.anims.play('jump');
+  this.ennemy.on('animationcomplete', () => {
+this.ennemy.anims.play('walk')
+})
+
+    }
+  if (this.girlMap.body.touching.down) {
+    this.girlMap.setVelocityY(-530);
+  }
+
 }
 else
 {
@@ -393,14 +408,6 @@ else
     this.girlMap.anims.play('idle_walk');
 }
 
-if (this.spaceBar.isDown)
-{
-  this.girlMap.anims.play('jump', true);
-  if (this.girlMap.body.touching.down) {
-    this.girlMap.setVelocityY(-530);
-  }
-
-}
 // if (this.cursors.up.isDown && this.girlMap.body.touching.down)
 // {
 //     this.girlMap.setVelocityY(-330);
