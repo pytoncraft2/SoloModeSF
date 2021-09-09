@@ -51,7 +51,6 @@ export class GameScene extends Phaser.Scene {
     this.cKey = this.input.keyboard.addKey('CTRL');
     this.aKey = this.input.keyboard.addKey('A');
     this.yKey = this.input.keyboard.addKey('Y');
-    this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
     const controlConfig = {
     camera: this.cameras.main,
@@ -179,6 +178,14 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.girlMap.setVelocityX(0);
       if (!this.girlMap.anims.getFrameName().includes("attack1")) {
         this.girlMap.anims.play("attack", true)
+            if (this.ennemy.isTinted)
+            {
+                this.ennemy.clearTint();
+            }
+            else
+            {
+                this.ennemy.setTintFill(0xffffff);
+            }
       }
     }
     else if (this.cursors.left.isDown) {
