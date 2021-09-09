@@ -35,6 +35,7 @@ export class GameScene extends Phaser.Scene {
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
     this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setImmovable(true)
+    // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
     this.ennemy.anims.play('walk', true)
@@ -112,6 +113,13 @@ export class GameScene extends Phaser.Scene {
     }, null, this);
     this.ennemy.anims.play('walk', true)
 
+    var following = this.yKey
+
+      this.ennemy.anims.play('walk', true)
+    following.on('down' ,function() {
+      this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
+    },this)
+
     var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function(e: Phaser.Physics.Arcade.Sprite, n: Phaser.Physics.Arcade.Sprite) {
       this.ennemy.body.stop();
       this.ennemy.anims.play('attack')
@@ -164,6 +172,7 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.anims.play('walk', true);
     }
     else if (this.spaceBar.isDown) {
+      this.cameras.main.shake(100);
 
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
