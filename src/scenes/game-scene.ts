@@ -43,7 +43,7 @@ export class GameScene extends Phaser.Scene {
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
-    this.physics.moveToObject(this.ennemy, this.girlMap, 200);
+    // this.physics.moveToObject(this.ennemy, this.girlMap, 200);
     this.ennemy.anims.play('walk', true)
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -154,10 +154,10 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     // }, null, this);
 
         this.ennemy.anims.play('walk', true)
+        this.physics.moveToObject(this.ennemy, this.girlMap, 10, 2000)
 
     var following = this.yKey
 
-      this.ennemy.anims.play('walk', true)
     following.on('down' ,function() {
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
     },this)
@@ -279,6 +279,17 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       // this.barrel.x = this.girlMap.x
       // this.physics.moveToObject(this.barrel, this.girlMap, 200);
 
+    }
+
+    var distance = Phaser.Math.Distance.Between(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
+
+    //  4 is our distance tolerance, i.e. how close the source can get to the target
+    //  before it is considered as being there. The faster it moves, the more tolerance is required.
+    if (distance < 4)
+    {
+        this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
+        this.ennemy.anims.play("attack",true)
+        console.log("yyy")
     }
 
 
