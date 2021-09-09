@@ -35,7 +35,7 @@ export class GameScene extends Phaser.Scene {
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setAngularVelocity(100)
+    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
@@ -119,7 +119,17 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.barrel.body.allowGravity = false;
     }
     this.physics.add.collider(this.girlMap, this.zone);
-    var t = this.physics.add.collider(this.girlMap, this.barrel)
+    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:any, b: Phaser.Physics.Arcade.Sprite) {
+
+      if(g.anims.getFrameName() === "attack1") {
+        b.setAngularVelocity(100)
+        // b.body.touching.left && b.setAngularVelocity(100).setDragX(60).setVelocityX(100)
+        // b.body.touching.right && b.setAngularVelocity(-100).setDragX(-60).setVelocityX(-100)
+      }
+      this.r4.y = this.girlMap.y + 210
+
+    }, null, this);
+
         this.ennemy.anims.play('walk', true)
 
     var following = this.yKey
@@ -231,6 +241,13 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         this.r4.x = this.zone.x
         this.zone.y += 2;
       }
+    }
+
+    if (this.tKey.isDown) {
+      this.barrel.alpha = 0.4;
+      // this.barrel.x = this.girlMap.x
+      this.physics.moveToObject(this.barrel, this.girlMap, 200);
+
     }
 
 
