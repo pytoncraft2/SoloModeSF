@@ -35,7 +35,7 @@ export class GameScene extends Phaser.Scene {
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2)
+    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setAngularVelocity(100)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
@@ -119,12 +119,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.barrel.body.allowGravity = false;
     }
     this.physics.add.collider(this.girlMap, this.zone);
-    var t = this.physics.add.collider(this.girlMap, this.barrel, function() {
-
-      this.r4.y = this.girlMap.y + 210
-
-    }, null, this);
-    this.ennemy.anims.play('walk', true)
+    var t = this.physics.add.collider(this.girlMap, this.barrel)
+        this.ennemy.anims.play('walk', true)
 
     var following = this.yKey
 
