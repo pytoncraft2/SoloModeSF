@@ -9,6 +9,7 @@ export class GameScene extends Phaser.Scene {
 
   public cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public yKey: Phaser.Input.Keyboard.Key;
+  public controls: any;
   public aKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
   public r4: Phaser.GameObjects.Ellipse
@@ -46,6 +47,18 @@ export class GameScene extends Phaser.Scene {
     this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
+    const controlConfig = {
+    camera: this.cameras.main,
+    left: this.cursors.left,
+    right: this.cursors.right,
+    up: this.cursors.up,
+    down: this.cursors.down,
+    acceleration: 0.06,
+    drag: 0.0005,
+    maxSpeed: 1.0
+};
+
+this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
     this.anims.create({
       key: 'attack',
@@ -145,7 +158,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.overlap(this.girlMap, this.ennemy)
   }
 
-  public update(): void {
+  public update(time, delta): void {
 
     if (this.aKey.isDown) {
       this.girlMap.setVelocityX(0);
@@ -172,7 +185,9 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.anims.play('walk', true);
     }
     else if (this.spaceBar.isDown) {
-      this.cameras.main.shake(100);
+      // this.cameras.main.shake(100);
+      // this.controls.update(delta)
+
 
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
@@ -202,7 +217,7 @@ export class GameScene extends Phaser.Scene {
       this.r4.y = this.zone.y - 30
       this.r4.x = this.zone.x
       // if (!this.girlMap.anims.getFrameName().includes("dos")) {
-      this.girlMap.anims.play('goback');
+      this.girlMap.anims.play('goback', true);
       this.ennemy.on('animationcomplete', () => {
         this.ennemy.anims.play('walk')
       })
