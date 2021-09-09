@@ -281,6 +281,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
     }
 
+    this.ennemyzone.y = this.zone.y
+
     var distance = Phaser.Math.Distance.Between(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
 
     //  4 is our distance tolerance, i.e. how close the source can get to the target
