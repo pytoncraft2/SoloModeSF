@@ -127,6 +127,7 @@ export class GameScene extends Phaser.Scene {
     if (this.cursors.left.isDown) {
       this.girlMap.setVelocityX(-300);
       this.zone.x = this.girlMap.x;
+    // this.zone.body.velocity.y = 0
       this.girlMap.flipX = true;
 
       this.girlMap.anims.play('walk', true);
@@ -134,12 +135,14 @@ export class GameScene extends Phaser.Scene {
     else if (this.cursors.right.isDown) {
       this.girlMap.setVelocityX(300);
       this.zone.x = this.girlMap.x;
+    // this.zone.body.velocity.y = 0
 
       this.girlMap.flipX = false;
       this.girlMap.anims.play('walk', true);
     }
     else if (this.spaceBar.isDown) {
 
+    // this.zone.body.velocity.y = 0
       this.zone.x = this.girlMap.x;
       if (!this.girlMap.anims.getFrameName().includes("jump")) {
         this.girlMap.anims.play('jump');
@@ -158,5 +161,21 @@ export class GameScene extends Phaser.Scene {
 
       this.girlMap.anims.play('idle_walk');
     }
+
+    if (this.cursors.up.isDown && this.girlMap.body.touching.down)
+{
+    this.zone.body.position.y -= 2
+} else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
+
+    if(this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+      // this.girlMap.body.allowGravity = false;
+      this.girlMap.y += 2;
+      this.zone.y += 2;
+}
+
+  // this.zone.body.setImmovable(false)
+    // this.zone.body.position.y += 4
+}
+
   }
 }
