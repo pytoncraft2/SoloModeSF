@@ -118,7 +118,7 @@ export class GameScene extends Phaser.Scene {
       key: "jump",
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'jump', start: 0, end: 5 }),
       frameRate: 7,
-      repeat: 1
+      repeat: 0
     });
 
     this.anims.create({
@@ -384,7 +384,8 @@ else if (this.cursors.right.isDown)
     this.girlMap.setVelocityX(300);
     this.zone.x = this.girlMap.x;
 
-    // this.girlMap.flipX = false;
+    this.girlMap.flipX = false;
+    this.girlMap.anims.play('walk', true);
 }
 else if (this.spaceBar.isDown)
 {
