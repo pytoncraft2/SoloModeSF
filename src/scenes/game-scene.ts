@@ -170,6 +170,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
   public update(time, delta): void {
 
+
         // this.ennemyzone.y - 30
         this.ennemyzone.x = this.ennemy.x
 
@@ -180,14 +181,11 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       }
     }
     else if (this.cursors.left.isDown) {
-this.r4.scaleX = 1, this.r4.scaleY = 1
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
       this.r4.y = this.zone.y - 30
       this.girlMap.flipX = true;
       if (this.cKey.isDown) {
-
-
       this.girlMap.anims.play('run', true);
       this.girlMap.setVelocityX(-400);
     } else {
@@ -216,18 +214,17 @@ this.r4.scaleX = 1, this.r4.scaleY = 1
     else if (this.spaceBar.isDown) {
       // this.cameras.main.shake(100);
       // this.controls.update(delta)
+      if (!this.tweens.isTweening(this.r4)) {
+        this.tweens.add({
+          targets: this.r4,
+          scaleX: 0.25,
+          scaleY: 0.5,
+          yoyo: true,
+          repeat: 0,
+           duration: 200,
+        });
+      }
 
-
-      this.tweens.add({
-        targets: this.r4,
-        scaleX: 0.25,
-        scaleY: 0.5,
-        repeat: 0,
-         duration: 200,
-         onCompleteParams:[this.r4.scaleX = 1, this.r4.scaleY = 1]
-      });
-
-      // this.tweens.killTweensOf(this.r4)
       this.zone.x = this.girlMap.x;
       this.r4.x = this.zone.x
       this.r4.y = this.zone.y - 30
@@ -282,7 +279,6 @@ this.r4.scaleX = 1, this.r4.scaleY = 1
       // this.physics.moveToObject(this.barrel, this.girlMap, 200);
 
     }
-
 
 
 
