@@ -35,58 +35,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
-    // this.cameras.main.fadeIn(4000);
-    // this.cameras.main.setBounds(-2074, 0, 3574, 666);
-    // this.physics.world.setBounds(-2074, 0, 3574, 666);
-
-    // this.physics.add.overlap(this.girlMap, this.doors, function(girlMap: Phaser.Physics.Arcade.Image, doors: Phaser.Physics.Arcade.Image)  {
-    //   girlMap.body.x < 399 ? doors.alpha = 0.5 : doors.alpha = 1
-    // });
-    // const objects = this.map.getObjectLayer("objects").objects as any[];
-
-    // console.log(objects)
-
     this.follow = true;
-
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
-
-
     this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
-
-
-    // self.zone.body.move = false;
-    // self.players.add(self.player);
-
-
-
-// this.scene.add.existing(this);
-
-    // this.physics.accelerateToObject(this.bird, this.this.girlMap, );
-
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
-    // this.ennemy.anims.play('walk')
     this.ennemy.anims.play('walk', true)
-
-
-    // function col(e) {}
     this.add.image(940, 390, 'bg').setDepth(-54);
-
-
-
-
-
-
-    // this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
-
-    // This is a nice helper Phaser provides to create listeners for some of the most common keys.
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.yKey = this.input.keyboard.addKey('Y');
     this.aKey = this.input.keyboard.addKey('A');
     this.tKey = this.input.keyboard.addKey('T');
-
-
 
     this.anims.create({
       key: 'attack',
@@ -134,12 +94,9 @@ export class GameScene extends Phaser.Scene {
       repeat: -1
     });
 
-
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
-this.physics.world.enableBody(this.zone);
-// this.scene.physics.world.enableBody(this);
-
+    this.physics.world.enableBody(this.zone);
 
     this.zone.body.friction.x = 0;
     this.zone.body.allowGravity = false;
@@ -147,7 +104,6 @@ this.physics.world.enableBody(this.zone);
     this.zone.depth = 30;
     this.physics.add.collider(this.girlMap, this.zone);
     this.ennemy.anims.play('walk', true)
-
 
     var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function(e: Phaser.Physics.Arcade.Sprite, n: Phaser.Physics.Arcade.Sprite) {
       this.ennemy.body.stop();
@@ -175,7 +131,6 @@ this.physics.world.enableBody(this.zone);
   public update(): void {
     if (this.cursors.left.isDown) {
       this.girlMap.setVelocityX(-300);
-      // this.zone.setVelocityX(-160);
       this.zone.x = this.girlMap.x;
       this.girlMap.flipX = true;
 
@@ -207,10 +162,5 @@ this.physics.world.enableBody(this.zone);
 
       this.girlMap.anims.play('idle_walk');
     }
-
-    // if (this.cursors.up.isDown && this.girlMap.body.touching.down)
-    // {
-    //     this.girlMap.setVelocityY(-330);
-    // }
   }
 }
