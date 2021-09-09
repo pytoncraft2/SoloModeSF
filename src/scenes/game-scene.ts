@@ -184,13 +184,13 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.depth -= 1;
       this.r4.y = this.zone.y -30
       this.r4.x = this.zone.x
-      if (!this.girlMap.anims.getFrameName().includes("jump")) {
-        this.girlMap.anims.play('jump');
+      // if (!this.girlMap.anims.getFrameName().includes("dos")) {
+        this.girlMap.anims.play('goback');
         this.ennemy.on('animationcomplete', () => {
           this.ennemy.anims.play('walk')
         })
 
-      }
+      // }
 
 
     } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
