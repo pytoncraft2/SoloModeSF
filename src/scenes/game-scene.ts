@@ -285,11 +285,13 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
     //  4 is our distance tolerance, i.e. how close the source can get to the target
     //  before it is considered as being there. The faster it moves, the more tolerance is required.
-    if (distance < 4)
+    if (distance < 5)
     {
         this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
         this.ennemy.anims.play("attack",true)
         console.log("yyy")
+    } else {
+      console.log("nop")
     }
 
 
