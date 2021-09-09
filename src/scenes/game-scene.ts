@@ -22,6 +22,7 @@ export class GameScene extends Phaser.Scene {
   public barrel: Phaser.Physics.Arcade.Image;
   public follow: boolean;
   private zone: Phaser.GameObjects.Zone
+  private ennemyzone: Phaser.GameObjects.Zone
   public map: any;
 
 
@@ -34,11 +35,14 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
-    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setDragX(-100).setImmovable(false)
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200)
+    this.ennemy = this.physics.add.sprite(356, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5)
+
+
+    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
+    this.physics.moveToObject(this.ennemy, this.girlMap, 200);
     this.ennemy.anims.play('walk', true)
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -107,28 +111,38 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     });
 
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.ennemyzone = this.add.zone(356, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
+    this.physics.add.existing(this.ennemyzone);
     this.physics.world.enableBody(this.zone);
-    if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
+    this.physics.world.enableBody(this.ennemyzone);
+    if (this.zone.body instanceof Phaser.Physics.Arcade.Body ) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
       this.zone.body.immovable = true;
       this.zone.depth = 30;
     }
+    if (this.ennemyzone.body instanceof Phaser.Physics.Arcade.Body) {
+      this.ennemyzone.body.friction.x = 0;
+      this.ennemyzone.body.allowGravity = false;
+      this.ennemyzone.body.immovable = true;
+      this.ennemyzone.depth = 30;
+    }
     if (this.barrel.body instanceof Phaser.Physics.Arcade.Body) {
       this.barrel.body.allowGravity = false;
     }
     this.physics.add.collider(this.girlMap, this.zone);
-    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:any, b: Phaser.Physics.Arcade.Sprite) {
-
-      if(g.anims.getFrameName() === "attack1") {
-        b.setAngularVelocity(100)
-        // b.body.touching.left && b.setAngularVelocity(100).setDragX(60).setVelocityX(100)
-        // b.body.touching.right && b.setAngularVelocity(-100).setDragX(-60).setVelocityX(-100)
-      }
-      this.r4.y = this.girlMap.y + 210
-
-    }, null, this);
+    this.physics.add.collider(this.ennemy, this.ennemyzone);
+    // var t = this.physics.add.overlap(this.girlMap, this.barrel, function(g:any, b: Phaser.Physics.Arcade.Sprite) {
+    //
+    //   if(g.anims.getFrameName() === "attack1") {
+    //     b.setAngularVelocity(100)
+    //     // b.body.touching.left && b.setAngularVelocity(100).setDragX(60).setVelocityX(100)
+    //     // b.body.touching.right && b.setAngularVelocity(-100).setDragX(-60).setVelocityX(-100)
+    //   }
+    //   this.r4.y = this.girlMap.y + 210
+    //
+    // }, null, this);
 
         this.ennemy.anims.play('walk', true)
 
@@ -139,32 +153,17 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false): (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
     },this)
 
-    var collider = this.physics.add.overlap(this.girlMap, this.ennemy, function(e: Phaser.Physics.Arcade.Sprite, n: Phaser.Physics.Arcade.Sprite) {
-      this.ennemy.body.stop();
-      this.ennemy.anims.play('attack')
-      this.ennemy.on('animationcomplete', () => {
-        this.ennemy.anims.play('walk')
-        e.setAlpha(0.4)
-
-        this.goToTarget()
-        this.stopTarget()
-      })
-    }, null, this);
-
-    this.goToTarget()
     this.r4 = this.add.ellipse(10, 90, 100, 20, 0x0009).setAlpha(0.5);
     // console.log(r4)
   }
 
-  public goToTarget() {
-    this.physics.accelerateToObject(this.ennemy, this.girlMap, 200, 200, 200)
-  }
 
-  public stopTarget() {
-    this.physics.add.overlap(this.girlMap, this.ennemy)
-  }
 
   public update(time, delta): void {
+
+
+        // this.ennemyzone.y - 30
+        this.ennemyzone.x = this.ennemy.x
 
     if (this.aKey.isDown) {
       this.girlMap.setVelocityX(0);
@@ -244,9 +243,9 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
 
     if (this.tKey.isDown) {
-      this.barrel.alpha = 0.4;
+      // this.barrel.alpha = 0.4;
       // this.barrel.x = this.girlMap.x
-      this.physics.moveToObject(this.barrel, this.girlMap, 200);
+      // this.physics.moveToObject(this.barrel, this.girlMap, 200);
 
     }
 
