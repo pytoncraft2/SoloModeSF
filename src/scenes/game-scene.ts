@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
   public yKey: Phaser.Input.Keyboard.Key;
   public aKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
+  public r4: Phaser.GameObjects.Ellipse
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
@@ -91,12 +92,12 @@ export class GameScene extends Phaser.Scene {
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.world.enableBody(this.zone);
-    if(this.zone.body instanceof Phaser.Physics.Arcade.Body) {
-    this.zone.body.friction.x = 0;
-    this.zone.body.allowGravity = false;
-    this.zone.body.immovable = true;
-    this.zone.depth = 30;
-  }
+    if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
+      this.zone.body.friction.x = 0;
+      this.zone.body.allowGravity = false;
+      this.zone.body.immovable = true;
+      this.zone.depth = 30;
+    }
     this.physics.add.collider(this.girlMap, this.zone);
     this.ennemy.anims.play('walk', true)
 
@@ -113,6 +114,8 @@ export class GameScene extends Phaser.Scene {
     }, null, this);
 
     this.goToTarget()
+    this.r4 = this.add.ellipse(10, 90, 100, 20, 0x0009).setAlpha(0.5);
+    // console.log(r4)
   }
 
   public goToTarget() {
@@ -127,7 +130,8 @@ export class GameScene extends Phaser.Scene {
     if (this.cursors.left.isDown) {
       this.girlMap.setVelocityX(-300);
       this.zone.x = this.girlMap.x;
-    // this.zone.body.velocity.y = 0
+      this.r4.x = this.zone.x
+      this.r4.y = this.zone.y -30
       this.girlMap.flipX = true;
 
       this.girlMap.anims.play('walk', true);
@@ -135,15 +139,17 @@ export class GameScene extends Phaser.Scene {
     else if (this.cursors.right.isDown) {
       this.girlMap.setVelocityX(300);
       this.zone.x = this.girlMap.x;
-    // this.zone.body.velocity.y = 0
+      this.r4.x = this.zone.x
+      this.r4.y = this.zone.y -30
 
       this.girlMap.flipX = false;
       this.girlMap.anims.play('walk', true);
     }
     else if (this.spaceBar.isDown) {
 
-    // this.zone.body.velocity.y = 0
       this.zone.x = this.girlMap.x;
+      this.r4.x = this.zone.x
+      this.r4.y = this.zone.y -30
       if (!this.girlMap.anims.getFrameName().includes("jump")) {
         this.girlMap.anims.play('jump');
         this.ennemy.on('animationcomplete', () => {
@@ -162,20 +168,19 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.anims.play('idle_walk');
     }
 
-    if (this.cursors.up.isDown && this.girlMap.body.touching.down)
-{
-    this.zone.body.position.y -= 2
-} else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
+    if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
+      this.zone.body.position.y -= 2
+      this.r4.y = this.zone.y -30
+      this.r4.x = this.zone.x
+    } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
 
-    if(this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
-      // this.girlMap.body.allowGravity = false;
-      this.girlMap.y += 2;
-      this.zone.y += 2;
-}
-
-  // this.zone.body.setImmovable(false)
-    // this.zone.body.position.y += 4
-}
+      if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+        this.girlMap.y += 2;
+        this.r4.y = this.zone.y -30
+        this.r4.x = this.zone.x
+        this.zone.y += 2;
+      }
+    }
 
   }
 }
