@@ -54,6 +54,12 @@ export class GameScene extends Phaser.Scene {
     var block2 = group.create(500, 200, 'barrel').setVelocity(-100, -100).setScale(0.2);
     var block3 = group.create(300, 400, 'barrel').setVelocity(60, 100).setScale(0.2);
     var block4 = group.create(600, 300, 'barrel').setVelocity(-30, -50).setScale(0.2);
+    var block5 = group.create(600, 300, 'barrel').setVelocity(-30, -60).setScale(0.2);
+    var block6 = group.create(600, 300, 'barrel').setVelocity(-30, -70).setScale(0.2);
+    var block7 = group.create(600, 300, 'barrel').setVelocity(-30, -80).setScale(0.2);
+    var block8 = group.create(600, 300, 'barrel').setVelocity(-30, -90).setScale(0.2);
+    var block8 = group.create(600, 300, 'barrel').setVelocity(-30, -10).setScale(0.2);
+    var block9 = group.create(600, 300, 'barrel').setVelocity(-30, -10).setScale(0.2);
 
     console.log(sceneConfig)
     this.carryBarrel = false;
@@ -339,6 +345,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
 
     if (this.tKey.isDown) {
+      this.barrel.x = this.girlMap.x
+      this.barrel.y = this.girlMap.y
       if (this.ennemy.isTinted)
 {
     this.ennemy.clearTint();
