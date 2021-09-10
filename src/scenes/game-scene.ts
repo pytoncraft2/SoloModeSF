@@ -25,6 +25,8 @@ export class GameScene extends Phaser.Scene {
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
   public map: any;
+  public dot: any;
+  public load: any;
 
 
 
@@ -33,7 +35,14 @@ export class GameScene extends Phaser.Scene {
     super(sceneConfig);
   }
 
+  public preload() {
+    this.load.plugin('rexmovetoplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexmovetoplugin.min.js', true);
+}
+
   public create(): void {
+
+
+    console.log(sceneConfig)
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
     this.ennemy = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
@@ -164,6 +173,29 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.r4 = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
 
     // console.log(r4)
+
+    // this.dot = this.add.circle(100, 100, 20, 0xffffff);
+    this.ennemy.moveTo = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
+        speed: 400,
+        rotateToTarget: true
+    }).on('complete', function(){
+        console.log('Reach target');
+    })
+    this.input.on('pointerdown', function (pointer) {
+        var touchX = pointer.x;
+        var touchY = pointer.y;
+        this.ennemy.moveTo.moveTo(touchX, touchY);
+    },this);
+
+
+
+
+
+
+
+
+
+
   }
 
 
@@ -299,9 +331,7 @@ else
     {
         this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
         this.ennemy.anims.play("attack",true)
-        console.log("yyy")
     } else {
-      console.log("nop")
     }
 
 
