@@ -152,11 +152,11 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.physics.add.collider(this.girlMap, this.zone);
     this.physics.add.collider(this.girlMap, this.barrel);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
-    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
+    var t = this.physics.add.overlap(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
     //   if(g.anims.getFrameName() === "attack1") {
     //     b.setAngularVelocity(100)
-    console.log(b.body.touching)
+    // console.log(b.body.touching)
         // if(b.body.touching.up) {
           // console.log("immmm")
           // b.setImmovable(true)
@@ -314,6 +314,13 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       }
     }
 
+
+
+    if (this.pKey.isDown) {
+      // this.carryBarrel = true;
+      console.log("porter")
+    }
+
     if (this.tKey.isDown) {
       if (this.ennemy.isTinted)
 {
@@ -341,11 +348,6 @@ else
         this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
         this.ennemy.anims.play("attack",true)
     } else {
-    }
-
-    if (this.pKey.isDown && this.carryBarrel === true) {
-      // this.carryBarrel = true;
-      console.log("porter")
     }
 
 
