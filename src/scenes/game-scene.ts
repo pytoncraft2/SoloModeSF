@@ -20,6 +20,7 @@ export class GameScene extends Phaser.Scene {
   private spaceBar: Phaser.Input.Keyboard.Key
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
+  public groupeBullets: any;
   public barrel: Phaser.Physics.Arcade.Image;
   public follow: boolean;
   private zone: Phaser.GameObjects.Zone
@@ -180,14 +181,16 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         rotateToTarget: true
     }).on('complete', function(){
         console.log('Reach target');
+        console.log(this.dot)
     })
 
 
-        this.dot.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
+        // this.dot.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
     this.input.on('pointerdown', function (pointer) {
-        var touchX = pointer.x;
-        var touchY = pointer.y;
-        this.dot.moveTo.moveTo(touchX, touchY);
+        // var touchX = pointer.x;
+        // var touchY = pointer.y;
+        // this.dot.moveTo = this.add.circle(100, 100, 20, 0xffffff);
+        this.dot.moveTo.moveTo(this.ennemy.x, this.ennemy.y);
     },this);
 
 
@@ -198,13 +201,43 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
 
 
-
+this.groupeBullets = this.physics.add.group();
 
   }
-
+  public tirer(player) : void {
+        var coefDir;
+            if (this.girlMap.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
+        // on crée la balle a coté du joueur
+        var bullet = this.groupeBullets.create(this.girlMap.x + (25 * coefDir), player.y - 4, 'bullet');
+        // parametres physiques de la balle.
+        bullet.setCollideWorldBounds(true);
+        bullet.body.allowGravity =false;
+        bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+}
 
 
   public update(time, delta): void {
+
+        if (this.cursors.left.isDown)  {
+            this.girlMap.direction = 'left';
+            this.girlMap.setVelocityX(-160);
+            this.girlMap.anims.play('left', true);
+        }
+        else if (this.cursors.right.isDown) {
+            this.girlMap.direction = 'right';
+            // this.girlMap.setVelocityX(160);
+            // this.girlMap.anims.play('right', true);
+        }
+        else  {
+            // this.girlMap.setVelocityX(0);
+            // this.girlMap.anims.play('turn');
+        }
+        if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
+            this.girlMap.setVelocityY(-330);
+        }
+        if ( Phaser.Input.Keyboard.JustDown(this.aKey)) {
+            this.tirer(this.girlMap);
+        }
 
 
         // this.ennemyzone.y - 30
