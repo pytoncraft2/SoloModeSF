@@ -213,7 +213,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }, null, this);
 
         this.ennemy.anims.play('walk', true)
-        this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
+        // this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
 
     var following = this.yKey
 
@@ -233,6 +233,18 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         console.log('Reach target');
     })
     this.input.on('pointerdown', function (pointer) {
+      this.ennemy2 = this.physics.add.sprite(600, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 ).setImmovable(true);
+
+      this.ennemyGroup.add(this.ennemy2);
+      this.ennemy2.body.allowGravity = false;
+      this.tweens.add({
+  targets: this.ennemy2,
+  alpha: 0,
+  y:-100,
+  repeat: 0,
+   duration: 600,
+});
+
         var touchX = pointer.x;
         var touchY = pointer.y;
         this.barrel.moveTo.moveTo(touchX, touchY);
@@ -360,16 +372,6 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
 
     if (this.tKey.isDown) {
-    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face2').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803).setImmovable(true);
-    // this.ennemy2 = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803);
-this.ennemyGroup.add(this.ennemy);
-  if (this.ennemy.body instanceof Phaser.Physics.Arcade.Body ) {
-
-  this.ennemy.body.allowGravity = false;
-  console.log(this.ennemyGroup.getChildren())
-}
-
-
       if (this.ennemy.isTinted)
 {
     this.ennemy.clearTint();
