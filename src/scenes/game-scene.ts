@@ -152,7 +152,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.physics.add.collider(this.girlMap, this.zone);
     this.physics.add.collider(this.girlMap, this.barrel);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
-    var t = this.physics.add.overlap(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
+    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
     //   if(g.anims.getFrameName() === "attack1") {
     //     b.setAngularVelocity(100)
@@ -165,7 +165,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         // }
         this.carryBarrel = true;
         if (g.anims.getFrameName().includes("attack1")) {
-          // b.setImmovable(false)
+          b.setImmovable(false)
+          b.setAngle(90)
         }
     //     // b.body.touching.right && b.setAngularVelocity(-100).setDragX(-60).setVelocityX(-100)
     //   }
