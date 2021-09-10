@@ -174,21 +174,24 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
     // console.log(r4)
 
-    // this.dot = this.add.circle(100, 100, 20, 0xffffff);
-    this.ennemy.moveTo = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
+    this.dot = this.add.circle(100, 100, 20, 0xffffff);
+    this.dot.moveTo = this.plugins.get('rexmovetoplugin').add(this.dot, {
         speed: 400,
         rotateToTarget: true
     }).on('complete', function(){
         console.log('Reach target');
     })
+
+
+        this.dot.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
     this.input.on('pointerdown', function (pointer) {
         var touchX = pointer.x;
         var touchY = pointer.y;
-        this.ennemy.moveTo.moveTo(touchX, touchY);
+        this.dot.moveTo.moveTo(touchX, touchY);
     },this);
 
 
-        this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
+        // this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
 
 
 
@@ -310,6 +313,11 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       if (this.ennemy.isTinted)
 {
     this.ennemy.clearTint();
+    this.dot = this.add.circle(this.girlMap.x, this.girlMap.y, 20, 0xffffff);
+
+
+
+
     // this.ennemy.moveTo.pause();
 
 }
