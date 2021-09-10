@@ -162,7 +162,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     // }, null, this);
 
         this.ennemy.anims.play('walk', true)
-        this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
+        // this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
 
     var following = this.yKey
 
@@ -188,6 +188,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     },this);
 
 
+        this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
 
 
 
@@ -309,6 +310,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       if (this.ennemy.isTinted)
 {
     this.ennemy.clearTint();
+    // this.ennemy.moveTo.pause();
+
 }
 else
 {
