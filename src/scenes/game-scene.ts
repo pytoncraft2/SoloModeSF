@@ -164,8 +164,9 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.barrel.body.allowGravity = false;
     }
     this.physics.add.collider(this.girlMap, this.zone);
-    this.physics.add.collider(this.girlMap, this.barrel);
+    // this.physics.add.collider(this.girlMap, this.barrel);
     this.physics.add.collider(this.girlMap, group);
+    this.physics.add.collider(group, group);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
