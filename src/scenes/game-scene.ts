@@ -20,14 +20,11 @@ export class GameScene extends Phaser.Scene {
   private spaceBar: Phaser.Input.Keyboard.Key
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
-  public groupeBullets: any;
   public barrel: Phaser.Physics.Arcade.Image;
   public follow: boolean;
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
   public map: any;
-  public dot: any;
-  public load: any;
 
 
 
@@ -36,20 +33,15 @@ export class GameScene extends Phaser.Scene {
     super(sceneConfig);
   }
 
-  public preload() {
-    this.load.plugin('rexmovetoplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexmovetoplugin.min.js', true);
-}
 
   public create(): void {
-
-
     console.log(sceneConfig)
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
     this.ennemy = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
 
 
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2)
+    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
@@ -150,6 +142,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
       this.barrel.body.allowGravity = false;
     }
     this.physics.add.collider(this.girlMap, this.zone);
+    this.physics.add.collider(this.girlMap, this.barrel);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     // var t = this.physics.add.overlap(this.girlMap, this.barrel, function(g:any, b: Phaser.Physics.Arcade.Sprite) {
     //
@@ -174,70 +167,11 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.r4 = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
 
     // console.log(r4)
-
-    this.dot = this.add.circle(100, 100, 20, 0xffffff);
-    this.dot.moveTo = this.plugins.get('rexmovetoplugin').add(this.dot, {
-        speed: 400,
-        rotateToTarget: true
-    }).on('complete', function(){
-        console.log('Reach target');
-        console.log(this.dot)
-    })
-
-
-        // this.dot.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
-    this.input.on('pointerdown', function (pointer) {
-        // var touchX = pointer.x;
-        // var touchY = pointer.y;
-        // this.dot.moveTo = this.add.circle(100, 100, 20, 0xffffff);
-        this.dot.moveTo.moveTo(this.ennemy.x, this.ennemy.y);
-    },this);
-
-
-        // this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
-
-
-
-
-
-
-this.groupeBullets = this.physics.add.group();
-
   }
-  public tirer(player) : void {
-        var coefDir;
-            if (this.girlMap.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
-        // on crée la balle a coté du joueur
-        var bullet = this.groupeBullets.create(this.girlMap.x + (25 * coefDir), player.y - 4, 'bullet');
-        // parametres physiques de la balle.
-        bullet.setCollideWorldBounds(true);
-        bullet.body.allowGravity =false;
-        bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
-}
+
 
 
   public update(time, delta): void {
-
-        if (this.cursors.left.isDown)  {
-            this.girlMap.direction = 'left';
-            this.girlMap.setVelocityX(-160);
-            this.girlMap.anims.play('left', true);
-        }
-        else if (this.cursors.right.isDown) {
-            this.girlMap.direction = 'right';
-            // this.girlMap.setVelocityX(160);
-            // this.girlMap.anims.play('right', true);
-        }
-        else  {
-            // this.girlMap.setVelocityX(0);
-            // this.girlMap.anims.play('turn');
-        }
-        if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
-            this.girlMap.setVelocityY(-330);
-        }
-        if ( Phaser.Input.Keyboard.JustDown(this.aKey)) {
-            this.tirer(this.girlMap);
-        }
 
 
         // this.ennemyzone.y - 30
@@ -346,13 +280,6 @@ this.groupeBullets = this.physics.add.group();
       if (this.ennemy.isTinted)
 {
     this.ennemy.clearTint();
-    this.dot = this.add.circle(this.girlMap.x, this.girlMap.y, 20, 0xffffff);
-
-
-
-
-    // this.ennemy.moveTo.pause();
-
 }
 else
 {
