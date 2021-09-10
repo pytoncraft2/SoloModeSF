@@ -20,8 +20,10 @@ export class GameScene extends Phaser.Scene {
   public cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
   public ennemy: Phaser.Physics.Arcade.Sprite;
+  public ennemy2: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public barrel: Phaser.Physics.Arcade.Image;
+  public ennemyGroup: Phaser.Physics.Arcade.Group;
   public follow: boolean;
   public carryBarrel: boolean;
   private zone: Phaser.GameObjects.Zone
@@ -44,28 +46,48 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
 
-    var group = this.physics.add.group({
-        bounceX: 1,
-        bounceY: 1,
+    var barrelGroup = this.physics.add.group({
         collideWorldBounds: true
     });
 
-    var block1 = group.create(100, 200, 'barrel').setVelocity(100, 200).setScale(0.2);
-    var block2 = group.create(500, 200, 'barrel').setVelocity(-100, -100).setScale(0.2);
-    var block3 = group.create(300, 400, 'barrel').setVelocity(60, 100).setScale(0.2);
-    var block4 = group.create(600, 300, 'barrel').setVelocity(-30, -50).setScale(0.2);
+    // var ennemyGroup = {}
+    this.ennemyGroup = this.physics.add.group()
+    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
+this.ennemyGroup.add(this.ennemy);
+
+
+
+  //   if (this.ennemy2.body instanceof Phaser.Physics.Arcade.Body ) {
+  //
+  //   this.ennemy2.body.allowGravity = false;
+  // }
+
+
+// ennemy.setDrag(100);
+// ennemy.setAngularDrag(100);
+// ennemy.setMaxVelocity(200);
+// player.playerId = playerInfo.playerId;
+
+  // var ennemy = this.ennemyGroup.create(-200, 400)
+  // platformGroup.setAll('body.immovable', true);
+    // this.ennemy = ;
+
+
+    var block1 = barrelGroup.create(100, 200, 'barrel').setVelocity(100, 200).setScale(0.2);
+    var block2 = barrelGroup.create(500, 200, 'barrel').setVelocity(-100, -100).setScale(0.2);
+    var block3 = barrelGroup.create(300, 400, 'barrel').setVelocity(60, 100).setScale(0.2);
+    var block4 = barrelGroup.create(600, 300, 'barrel').setVelocity(-30, -50).setScale(0.2);
 
     console.log(sceneConfig)
     this.carryBarrel = false;
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
-    this.ennemy = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
 
 
     this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setImmovable(true)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
-    this.ennemy.setScale(0.4)
+    // this.ennemy.setScale(0.4)
     // this.physics.moveToObject(this.ennemy, this.girlMap, 200);
     this.ennemy.anims.play('walk', true)
     this.add.image(940, 390, 'bg').setDepth(-54);
@@ -165,8 +187,8 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
     this.physics.add.collider(this.girlMap, this.zone);
     // this.physics.add.collider(this.girlMap, this.barrel);
-    this.physics.add.collider(this.girlMap, group);
-    this.physics.add.collider(group, group);
+    this.physics.add.collider(this.girlMap, barrelGroup);
+    this.physics.add.collider(barrelGroup, barrelGroup);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
@@ -227,11 +249,6 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
   public update(time, delta): void {
 
-var closest = this.physics.closest(this.barrel) as Phaser.Physics.Arcade.Sprite
-// if (closest.alpha) {
-  // console.log("oo")
-closest.alpha = 0.5
-// }
         // this.ennemyzone.y - 30
         this.ennemyzone.x = this.ennemy.x
 
@@ -343,8 +360,16 @@ closest.alpha = 0.5
     }
 
     if (this.tKey.isDown) {
-      this.barrel.x = this.girlMap.x
-      this.barrel.y = this.girlMap.y
+    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face2').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803).setImmovable(true);
+    // this.ennemy2 = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803);
+this.ennemyGroup.add(this.ennemy);
+  if (this.ennemy.body instanceof Phaser.Physics.Arcade.Body ) {
+
+  this.ennemy.body.allowGravity = false;
+  console.log(this.ennemyGroup.getChildren())
+}
+
+
       if (this.ennemy.isTinted)
 {
     this.ennemy.clearTint();
