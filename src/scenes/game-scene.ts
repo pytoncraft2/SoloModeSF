@@ -37,10 +37,24 @@ export class GameScene extends Phaser.Scene {
 
   public preload() {
   this.load.plugin('rexmovetoplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexmovetoplugin.min.js', true);
+  // FIXME: Property 'add' does not exist on type 'Function | BasePlugin'
+  // FIXME: Property 'moveTo' does not exist on type 'Image'.
 }
 
 
   public create(): void {
+
+    var group = this.physics.add.group({
+        bounceX: 1,
+        bounceY: 1,
+        collideWorldBounds: true
+    });
+
+    var block1 = group.create(100, 200, 'barrel').setVelocity(100, 200).setScale(0.2);
+    var block2 = group.create(500, 200, 'barrel').setVelocity(-100, -100).setScale(0.2);
+    var block3 = group.create(300, 400, 'barrel').setVelocity(60, 100).setScale(0.2);
+    var block4 = group.create(600, 300, 'barrel').setVelocity(-30, -50).setScale(0.2);
+
     console.log(sceneConfig)
     this.carryBarrel = false;
     this.follow = true;
@@ -151,6 +165,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
     this.physics.add.collider(this.girlMap, this.zone);
     this.physics.add.collider(this.girlMap, this.barrel);
+    this.physics.add.collider(this.girlMap, group);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
