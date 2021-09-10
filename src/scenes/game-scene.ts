@@ -11,6 +11,7 @@ export class GameScene extends Phaser.Scene {
   public yKey: Phaser.Input.Keyboard.Key;
   public controls: any;
   public aKey: Phaser.Input.Keyboard.Key;
+  public pKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
   public r4: Phaser.GameObjects.Ellipse
   public keyObj: Phaser.Input.Keyboard.Key
@@ -22,6 +23,7 @@ export class GameScene extends Phaser.Scene {
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public barrel: Phaser.Physics.Arcade.Image;
   public follow: boolean;
+  public carryBarrel: boolean;
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
   public map: any;
@@ -33,9 +35,14 @@ export class GameScene extends Phaser.Scene {
     super(sceneConfig);
   }
 
+  public preload() {
+  this.load.plugin('rexmovetoplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexmovetoplugin.min.js', true);
+}
+
 
   public create(): void {
     console.log(sceneConfig)
+    this.carryBarrel = false;
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
     this.ennemy = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
@@ -54,6 +61,7 @@ export class GameScene extends Phaser.Scene {
     this.aKey = this.input.keyboard.addKey('A');
     this.yKey = this.input.keyboard.addKey('Y');
     this.tKey = this.input.keyboard.addKey('T');
+    this.pKey = this.input.keyboard.addKey('P');
     const controlConfig = {
     camera: this.cameras.main,
     left: this.cursors.left,
@@ -155,8 +163,9 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         // } else if (b.body.touching.left || b.body.touching.right) {
           // b.setImmovable(false)
         // }
+        this.carryBarrel = true;
         if (g.anims.getFrameName().includes("attack1")) {
-          b.setImmovable(false)
+          // b.setImmovable(false)
         }
     //     // b.body.touching.right && b.setAngularVelocity(-100).setDragX(-60).setVelocityX(-100)
     //   }
@@ -176,6 +185,25 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.r4 = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
 
     // console.log(r4)
+
+
+    this.barrel.moveTo = this.plugins.get('rexmovetoplugin').add(this.barrel, {
+        speed: 400,
+        rotateToTarget: false
+    }).on('complete', function(){
+        console.log('Reach target');
+    })
+    this.input.on('pointerdown', function (pointer) {
+        var touchX = pointer.x;
+        var touchY = pointer.y;
+        this.barrel.moveTo.moveTo(touchX, touchY);
+    },this);
+
+
+
+
+
+
   }
 
 
@@ -314,6 +342,13 @@ else
         this.ennemy.anims.play("attack",true)
     } else {
     }
+
+    if (this.pKey.isDown && this.carryBarrel === true) {
+      // this.carryBarrel = true;
+      console.log("porter")
+    }
+
+
 
 
 
