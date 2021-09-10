@@ -57,6 +57,7 @@ this.ennemyGroup.add(this.ennemy);
 
 
 
+
   //   if (this.ennemy2.body instanceof Phaser.Physics.Arcade.Body ) {
   //
   //   this.ennemy2.body.allowGravity = false;
@@ -190,6 +191,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.physics.add.collider(this.girlMap, barrelGroup);
     this.physics.add.collider(barrelGroup, barrelGroup);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
+    this.physics.add.collider(this.ennemy, this.ennemy2);
     var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
     //   if(g.anims.getFrameName() === "attack1") {
@@ -233,21 +235,25 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         console.log('Reach target');
     })
     this.input.on('pointerdown', function (pointer) {
-      this.ennemy2 = this.physics.add.sprite(600, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 ).setImmovable(true);
+      this.ennemy2 = this.physics.add.sprite(600, 100, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 ).setImmovable(true).setAlpha(0);
 
       this.ennemyGroup.add(this.ennemy2);
       this.ennemy2.body.allowGravity = false;
+      this.ennemy2.body.y = 580;
       this.tweens.add({
   targets: this.ennemy2,
-  alpha: 0,
-  y:-100,
+  alpha: 1,
+  y:480,
   repeat: 0,
    duration: 600,
 });
 
         var touchX = pointer.x;
         var touchY = pointer.y;
-        this.barrel.moveTo.moveTo(touchX, touchY);
+        // this.barrel.moveTo.moveTo(touchX, touchY);
+        this.ennemy2.moveTo.moveTo(this.girlMap.body.x, this.girlMap.y);
+        // this.physics.moveToObject(this.ennemy2, this.girlMap, 200);
+
     },this);
 
 
