@@ -41,7 +41,7 @@ export class GameScene extends Phaser.Scene {
     this.ennemy = this.physics.add.sprite(-200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
 
 
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200)
+    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setImmovable(true)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
     this.girlMap.setScale(0.4)
     this.ennemy.setScale(0.4)
@@ -144,16 +144,25 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     this.physics.add.collider(this.girlMap, this.zone);
     this.physics.add.collider(this.girlMap, this.barrel);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
-    // var t = this.physics.add.overlap(this.girlMap, this.barrel, function(g:any, b: Phaser.Physics.Arcade.Sprite) {
+    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
     //   if(g.anims.getFrameName() === "attack1") {
     //     b.setAngularVelocity(100)
-    //     // b.body.touching.left && b.setAngularVelocity(100).setDragX(60).setVelocityX(100)
+    console.log(b.body.touching)
+        // if(b.body.touching.up) {
+          // console.log("immmm")
+          // b.setImmovable(true)
+        // } else if (b.body.touching.left || b.body.touching.right) {
+          // b.setImmovable(false)
+        // }
+        if (g.anims.getFrameName().includes("attack1")) {
+          b.setImmovable(false)
+        }
     //     // b.body.touching.right && b.setAngularVelocity(-100).setDragX(-60).setVelocityX(-100)
     //   }
     //   this.r4.y = this.girlMap.y + 210
     //
-    // }, null, this);
+    }, null, this);
 
         this.ennemy.anims.play('walk', true)
         this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
@@ -179,6 +188,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
     if (this.aKey.isDown) {
       this.girlMap.setVelocityX(0);
+      this.barrel.setImmovable(false)
       if (!this.girlMap.anims.getFrameName().includes("attack1")) {
         this.girlMap.anims.play("attack", true)
       }
