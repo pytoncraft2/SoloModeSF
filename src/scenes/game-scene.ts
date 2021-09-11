@@ -38,7 +38,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public preload() {
-  this.load.plugin('rexmovetoplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexmovetoplugin.min.js', true);
+  // this.load.plugin('rexmovetoplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexmovetoplugin.min.js', true);
   // FIXME: Property 'add' does not exist on type 'Function | BasePlugin'
   // FIXME: Property 'moveTo' does not exist on type 'Image'.
 }
@@ -52,8 +52,8 @@ export class GameScene extends Phaser.Scene {
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
-    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 );
-this.ennemyGroup.add(this.ennemy);
+    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605 );
+// this.ennemyGroup.add(this.ennemy);
 
 
 
@@ -74,19 +74,18 @@ this.ennemyGroup.add(this.ennemy);
 
 
     var block1 = barrelGroup.create(100, 200, 'barrel').setVelocity(100, 200).setScale(0.2);
-    var block2 = barrelGroup.create(500, 200, 'barrel').setVelocity(-100, -100).setScale(0.2);
-    var block3 = barrelGroup.create(300, 400, 'barrel').setVelocity(60, 100).setScale(0.2);
-    var block4 = barrelGroup.create(600, 300, 'barrel').setVelocity(-30, -50).setScale(0.2);
+    // var block2 = barrelGroup.create(500, 200, 'barrel').setVelocity(-100, -100).setScale(0.2);
+    // var block3 = barrelGroup.create(300, 400, 'barrel').setVelocity(60, 100).setScale(0.2);
+    // var block4 = barrelGroup.create(600, 300, 'barrel').setVelocity(-30, -50).setScale(0.2);
 
     console.log(sceneConfig)
     this.carryBarrel = false;
     this.follow = true;
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setVelocityY(203);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
 
 
     this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setImmovable(true)
     // this.cameras.main.setBounds(0, 0, 1920, 1080);
-    this.girlMap.setScale(0.4)
     // this.ennemy.setScale(0.4)
     // this.physics.moveToObject(this.ennemy, this.girlMap, 200);
     this.ennemy.anims.play('walk', true)
@@ -187,10 +186,25 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     }
     this.physics.add.collider(this.girlMap, this.zone);
     // this.physics.add.collider(this.girlMap, this.barrel);
-    this.physics.add.collider(this.girlMap, barrelGroup);
-    this.physics.add.collider(barrelGroup, barrelGroup);
+    // this.physics.add.collider(this.girlMap, barrelGroup);
+    // this.physics.add.collider(barrelGroup, barrelGroup);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
-    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
+    this.physics.add.overlap(this.girlMap, this.barrel, function(girl: Phaser.Physics.Arcade.Sprite, barrel: Phaser.Physics.Arcade.Sprite) {
+      // if (girl.depth < barrel.depth || girl.depth > barrel.depth + 10) {
+      // if (windowsize > 500 && windowsize < 600) {
+
+      if (girl.depth > barrel.depth - 10 && girl.depth < barrel.depth + 10) {
+      this.carryBarrel = true;
+      }
+      // console.log(barrel.depth)
+      // console.log(girl.depth)
+      // this.carryBarrel = true;
+      // console.log("oui")
+      // }
+      // console.log("non")
+    })
+
+/*    var t = this.physics.add.collider(this.girlMap, this.barrel, function(g:Phaser.Physics.Arcade.Sprite, b: Phaser.Physics.Arcade.Sprite) {
     //
     //   if(g.anims.getFrameName() === "attack1") {
     //     b.setAngularVelocity(100)
@@ -201,7 +215,6 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
         // } else if (b.body.touching.left || b.body.touching.right) {
           // b.setImmovable(false)
         // }
-        this.carryBarrel = true;
         if (g.anims.getFrameName().includes("attack1")) {
           b.setImmovable(false)
           b.setAngle(90)
@@ -211,6 +224,7 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     //   this.r4.y = this.girlMap.y + 210
     //
     }, null, this);
+    */
 
         this.ennemy.anims.play('walk', true)
         // this.physics.moveToObject(this.ennemy, this.girlMap, 10, 4000)
@@ -226,29 +240,30 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
     // console.log(r4)
 
 
-    this.ennemy.moveTo  = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
+/*    this.ennemy.moveTo  = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
         speed: 400,
         rotateToTarget: false
     }).on('complete', function(){
         console.log('Reach target');
     })
+    */
     this.input.on('pointerdown', function (pointer) {
-      this.ennemy2 = this.physics.add.sprite(600, 100, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.5).setTintFill(0x310803, 0x311605 ).setImmovable(true).setAlpha(0);
+      // this.ennemy2 = this.physics.add.sprite(600, 100, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605 ).setImmovable(true).setAlpha(0);
 
-      this.ennemyGroup.add(this.ennemy2);
-      this.ennemy2.body.allowGravity = false;
-      this.ennemy2.body.y = 580;
-      this.tweens.add({
-  targets: this.ennemy2,
-  alpha: 1,
-  y:480,
-  repeat: 0,
-   duration: 600,
-});
+      // this.ennemyGroup.add(this.ennemy2);
+      // this.ennemy2.body.allowGravity = false;
+      // this.ennemy2.body.y = 580;
+      // this.tweens.add({
+      //   targets: this.ennemy2,
+      //   alpha: 1,
+      //   y:480,
+      //   repeat: 0,
+      //   duration: 600,
+      // });
 
         var touchX = pointer.x;
         var touchY = pointer.y;
-        this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y - 80);
+        // this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y - 80);
         // this.ennemy2.moveTo.moveTo(this.girlMap, touchY);
         // this.physics.moveToObject(this.ennemy2, this.girlMap, 200);
 
@@ -370,8 +385,10 @@ this.controls = new Phaser.Cameras.Controls.SmoothedKeyControl(controlConfig);
 
 
 
-    if (this.pKey.isDown) {
+    if (Phaser.Input.Keyboard.JustDown(this.pKey) && this.girlMap.depth > this.barrel.depth - 10 && this.girlMap.depth < this.barrel.depth + 10) {
       // this.carryBarrel = true;
+      this.physics.moveToObject(this.barrel, this.girlMap, 900);
+
       console.log("porter")
     }
 
