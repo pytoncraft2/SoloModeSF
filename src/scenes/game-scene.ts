@@ -17,9 +17,9 @@ export class GameScene extends Phaser.Scene {
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
+  public count: number;
   public cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
-  public emitter: any;
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public ennemy2: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
@@ -47,6 +47,7 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
 
+    this.count = 0;
     var barrelGroup = this.physics.add.group({
       collideWorldBounds: true
     });
@@ -172,20 +173,6 @@ export class GameScene extends Phaser.Scene {
     //   this.barrel.setAngularVelocity(60)
     //   this.physics.add.collider(this.girlMap, this.barrel)
     // }, this)
-    this.emitter = new Phaser.Events.EventEmitter();
-
-//  Set-up an event handler
-this.emitter.on('animationcomplete', test, this);
-
-function test() {
-  // this.girlMap.anims.play("walk")
-console.log("coucou")
-}
-
-//  Emit it a few times with varying arguments
-this.emitter.emit('addImage', 200, 300);
-this.emitter.emit('addImage', 400, 300);
-this.emitter.emit('addImage', 600, 300);
   }
 
 
@@ -194,25 +181,25 @@ this.emitter.emit('addImage', 600, 300);
 
     this.ennemyzone.x = this.ennemy.x
 
-    if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
+    if (this.aKey.isDown) {
+      this.girlMap.setVelocityX(0);
+      this.barrel.setImmovable(false)
+      console.log(this.count)
+      if (!this.girlMap.anims.getFrameName().includes("attack4")) {
+        // console.log(this.girlMap.anims.getFrameName())
+        // this.girlMap.on('animationcomplete', () => {
+        // this.ennemy.alpha -= 0.4
+      // });
+    } else {
+      if (this.count == 1) {
+        this.ennemy.alpha -= 0.01
+        this.count = 0;
+      } else {
+        this.count++
+      }
+    }
+    this.girlMap.anims.play("attack", true)
 
-        this.emitter.emit('animationcomplete');
-
-  this.girlMap.play("attack")
-        this.girlMap.on('animationcomplete', (e) => {
-  this.ennemy.alpha -= 0.1
-});
-      // this.girlMap.setVelocityX(0);
-      // this.barrel.setImmovable(false)
-      // if (this.girlMap.anims.getFrameName().includes("attack1")) {
-      //   this.girlMap.anims.play("attack", true)
-      //   this.girlMap.on('animationcomplete', (e) => {
-      //   // this.ennemy.alpha -= 0.4
-      //   this.emitter.emit('animationcomplete');
-      //
-      //   // console.log(e)
-      // },this);
-      // }
     }
     else if (this.cursors.left.isDown) {
       this.zone.x = this.girlMap.x;
@@ -277,6 +264,7 @@ this.emitter.emit('addImage', 600, 300);
     else {
       this.girlMap.setVelocityX(0);
 
+      this.girlMap.anims.play('idle_walk');
     }
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
