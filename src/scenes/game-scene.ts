@@ -13,7 +13,7 @@ export class GameScene extends Phaser.Scene {
   public aKey: Phaser.Input.Keyboard.Key;
   public pKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
-  public r4: Phaser.GameObjects.Ellipse
+  public ombre: Phaser.GameObjects.Ellipse
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
@@ -159,7 +159,7 @@ export class GameScene extends Phaser.Scene {
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false) : (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
     }, this)
 
-    this.r4 = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
+    this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
 
     // this.barrel.moveTo = this.plugins.get('rexmovetoplugin').add(this.barrel, {
     //   speed: 400,
@@ -195,17 +195,18 @@ public onCompleteHandler(tween, target) {
     } else {
       if (this.count == 1) {
         if (this.ennemy.alpha < 0.3) {
+          this.ennemy.setTintFill(0xffffff)
           this.tweens.add({
             targets: this.ennemy,
             alpha: 0,
             y:-100,
             repeat: 0,
-            duration: 600,
-            onComplete: function (a, e) { console.log('FIN'); console.log(arguments[1][0].alpha = 0); },
+            duration: 900,
+            onComplete: function (a, e) { console.log('FIN'); arguments[1][0].setAlpha(0); },
           });
 
         }
-        this.ennemy.alpha -= 0.01
+        this.ennemy.alpha -= 0.03
         this.count = 0;
       } else {
         this.count++
@@ -216,8 +217,8 @@ public onCompleteHandler(tween, target) {
     }
     else if (this.cursors.left.isDown) {
       this.zone.x = this.girlMap.x;
-      this.r4.x = this.zone.x
-      this.r4.y = this.zone.y - 30
+      this.ombre.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
       this.girlMap.flipX = true;
       if (this.cKey.isDown) {
         this.girlMap.anims.play('run', true);
@@ -233,8 +234,8 @@ public onCompleteHandler(tween, target) {
     }
     else if (this.cursors.right.isDown) {
       this.zone.x = this.girlMap.x;
-      this.r4.x = this.zone.x
-      this.r4.y = this.zone.y - 30
+      this.ombre.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
 
       this.girlMap.flipX = false;
       if (this.cKey.isDown) {
@@ -248,9 +249,9 @@ public onCompleteHandler(tween, target) {
     else if (this.spaceBar.isDown) {
       // this.cameras.main.shake(100);
       // this.controls.update(delta)
-      if (!this.tweens.isTweening(this.r4)) {
+      if (!this.tweens.isTweening(this.ombre)) {
         this.tweens.add({
-          targets: this.r4,
+          targets: this.ombre,
           scaleX: 0.25,
           scaleY: 0.5,
           yoyo: true,
@@ -260,8 +261,8 @@ public onCompleteHandler(tween, target) {
       }
 
       this.zone.x = this.girlMap.x;
-      this.r4.x = this.zone.x
-      this.r4.y = this.zone.y - 30
+      this.ombre.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
       if (!this.girlMap.anims.getFrameName().includes("jump")) {
         this.girlMap.anims.play('jump');
         this.ennemy.on('animationcomplete', () => {
@@ -282,14 +283,14 @@ public onCompleteHandler(tween, target) {
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
       this.zone.body.position.y -= 2
-      this.r4.depth -= 1;
+      this.ombre.depth -= 1;
       this.girlMap.depth -= 1;
-      this.r4.y = this.zone.y - 30
-      this.r4.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
+      this.ombre.x = this.zone.x
       // if (!this.girlMap.anims.getFrameName().includes("dos")) {
       this.girlMap.anims.play('goback', true);
       this.ennemy.on('animationcomplete', () => {
-        this.ennemy.anims.play('idle_attack')
+        this.ennemy.anims.play('idle_attack', true)
       })
 
       // }
@@ -299,10 +300,10 @@ public onCompleteHandler(tween, target) {
 
       if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
         this.girlMap.y += 2;
-        this.r4.depth += 1;
+        this.ombre.depth += 1;
         this.girlMap.depth += 1;
-        this.r4.y = this.zone.y - 30
-        this.r4.x = this.zone.x
+        this.ombre.y = this.zone.y - 30
+        this.ombre.x = this.zone.x
         this.zone.y += 2;
       }
     }
@@ -344,6 +345,9 @@ public onCompleteHandler(tween, target) {
     if (distance < 5) {
       this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
       this.ennemy.anims.play("attack", true)
+      this.girlMap.on('animationcomplete', () => {
+      this.ennemy.anims.play("idle_attack", true)
+    })
     } else {
     }
 
@@ -353,6 +357,6 @@ public onCompleteHandler(tween, target) {
 
     // console.log(this.barrel.depth)
     // console.log("_______________")
-    // console.log(this.r4.depth)
+    // console.log(this.ombre.depth)
   }
 }
