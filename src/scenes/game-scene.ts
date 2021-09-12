@@ -27,6 +27,7 @@ export class GameScene extends Phaser.Scene {
   public ennemyGroup: Phaser.Physics.Arcade.Group;
   public follow: boolean;
   public carryBarrel: boolean;
+  public barrelGroup: Phaser.Physics.Arcade.Group;
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
   public map: any;
@@ -48,16 +49,16 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
 
     this.count = 0;
-    var barrelGroup = this.physics.add.group({
+     this.barrelGroup = this.physics.add.group({
       allowGravity: false
     });
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
     this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605);
-    var block1 = barrelGroup.create(-1562, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
-    var block2 = barrelGroup.create(-1620, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
-    var block3 = barrelGroup.create(-1662, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
+    var block1 = this.barrelGroup.create(-1562, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
+    var block2 = this.barrelGroup.create(-1620, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
+    var block3 = this.barrelGroup.create(-1662, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
     this.carryBarrel = false;
     this.follow = true;
@@ -145,6 +146,7 @@ export class GameScene extends Phaser.Scene {
       this.ennemyzone.depth = 30;
     }
     this.physics.add.collider(this.girlMap, this.zone);
+    this.physics.add.collider(this.girlMap, this.barrelGroup);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     this.physics.add.overlap(this.girlMap, this.barrel, function(girl: Phaser.Physics.Arcade.Sprite, barrel: Phaser.Physics.Arcade.Sprite) {
 
