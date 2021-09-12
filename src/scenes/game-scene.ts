@@ -175,9 +175,9 @@ export class GameScene extends Phaser.Scene {
     // }, this)
   }
 
-public onCompleteHandler(tween, target) {
-  console.log("hhhhhhhhhhhhhhhhhhhh")
-}
+  public onCompleteHandler(tween, target) {
+    console.log("hhhhhhhhhhhhhhhhhhhh")
+  }
 
   public update(time, delta): void {
 
@@ -187,32 +187,27 @@ public onCompleteHandler(tween, target) {
       this.girlMap.setVelocityX(0);
       this.barrel.setImmovable(false)
       console.log(this.count)
-      if (!this.girlMap.anims.getFrameName().includes("attack4")) {
-        // console.log(this.girlMap.anims.getFrameName())
-        // this.girlMap.on('animationcomplete', () => {
-        // this.ennemy.alpha -= 0.4
-      // });
-    } else {
-      if (this.count == 1) {
-        if (this.ennemy.alpha < 0.3) {
-          this.ennemy.setTintFill(0xffffff)
-          this.tweens.add({
-            targets: this.ennemy,
-            alpha: 0,
-            y:-100,
-            repeat: 0,
-            duration: 900,
-            onComplete: function (a, e) { console.log('FIN'); arguments[1][0].setAlpha(0); },
-          });
+      if (this.girlMap.anims.getFrameName().includes("attack4")) {
+        if (this.count == 1) {
+          if (this.ennemy.alpha < 0.3) {
+            this.ennemy.setTintFill(0xffffff)
+            this.tweens.add({
+              targets: this.ennemy,
+              alpha: 0,
+              y: -100,
+              repeat: 0,
+              duration: 900,
+              onComplete: function(a, e) { console.log('FIN'); arguments[1][0].setAlpha(0); },
+            });
 
+          }
+          this.ennemy.alpha -= 0.03
+          this.count = 0;
+        } else {
+          this.count++
         }
-        this.ennemy.alpha -= 0.03
-        this.count = 0;
-      } else {
-        this.count++
       }
-    }
-    this.girlMap.anims.play("attack", true)
+      this.girlMap.anims.play("attack", true)
 
     }
     else if (this.cursors.left.isDown) {
@@ -346,8 +341,8 @@ public onCompleteHandler(tween, target) {
       this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
       this.ennemy.anims.play("attack", true)
       this.girlMap.on('animationcomplete', () => {
-      this.ennemy.anims.play("idle_attack", true)
-    })
+        this.ennemy.anims.play("idle_attack", true)
+      })
     } else {
     }
 
