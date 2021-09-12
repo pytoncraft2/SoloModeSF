@@ -187,7 +187,11 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.setVelocityX(0);
       this.barrel.setImmovable(false)
       console.log(this.count)
-      if (this.girlMap.anims.getFrameName().includes("attack4") && this.girlMap.depth < this.ennemy.depth + 10 && this.girlMap.depth  > this.ennemy.depth - 10) {
+      if (this.girlMap.anims.getFrameName().includes("attack4")
+      && this.girlMap.depth < this.ennemy.depth + 10
+      && this.girlMap.depth  > this.ennemy.depth - 10
+      && this.girlMap.body.x < this.ennemy.body.x + 170
+      && this.girlMap.body.x > this.ennemy.body.x - 300) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
             this.ennemy.setTintFill(0xffffff)
