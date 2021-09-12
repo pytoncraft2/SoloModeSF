@@ -49,13 +49,15 @@ export class GameScene extends Phaser.Scene {
 
     this.count = 0;
     var barrelGroup = this.physics.add.group({
-      collideWorldBounds: true
+      allowGravity: false
     });
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
     this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605);
-    var block1 = barrelGroup.create(100, 200, 'barrel').setVelocity(100, 200).setScale(0.2);
+    var block1 = barrelGroup.create(-1562, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
+    var block2 = barrelGroup.create(-1620, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
+    var block3 = barrelGroup.create(-1662, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
     this.carryBarrel = false;
     this.follow = true;
@@ -175,18 +177,14 @@ export class GameScene extends Phaser.Scene {
     // }, this)
   }
 
-  public onCompleteHandler(tween, target) {
-    console.log("hhhhhhhhhhhhhhhhhhhh")
-  }
-
   public update(time, delta): void {
+    console.log(this.girlMap.body.y)
 
     this.ennemyzone.x = this.ennemy.x
 
     if (this.aKey.isDown) {
       this.girlMap.setVelocityX(0);
       this.barrel.setImmovable(false)
-      console.log(this.count)
       if (this.girlMap.anims.getFrameName().includes("attack4")
       && this.girlMap.depth < this.ennemy.depth + 10
       && this.girlMap.depth  > this.ennemy.depth - 10
