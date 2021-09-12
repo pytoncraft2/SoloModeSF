@@ -175,7 +175,9 @@ export class GameScene extends Phaser.Scene {
     // }, this)
   }
 
-
+public onCompleteHandler(tween, target) {
+  console.log("hhhhhhhhhhhhhhhhhhhh")
+}
 
   public update(time, delta): void {
 
@@ -192,6 +194,17 @@ export class GameScene extends Phaser.Scene {
       // });
     } else {
       if (this.count == 1) {
+        if (this.ennemy.alpha < 0.3) {
+          this.tweens.add({
+            targets: this.ennemy,
+            alpha: 0,
+            y:-100,
+            repeat: 0,
+            duration: 600,
+            onComplete: function (a, e) { console.log('FIN'); console.log(arguments[1][0].alpha = 0); },
+          });
+
+        }
         this.ennemy.alpha -= 0.01
         this.count = 0;
       } else {
