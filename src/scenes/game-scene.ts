@@ -10,11 +10,14 @@ export class GameScene extends Phaser.Scene {
   public cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   public yKey: Phaser.Input.Keyboard.Key;
   public controls: any;
+  public mKey: Phaser.Input.Keyboard.Key;
   public aKey: Phaser.Input.Keyboard.Key;
   public pKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
   public ombre: Phaser.GameObjects.Ellipse
   public protect: Phaser.GameObjects.Ellipse
+  public pannelRight: Phaser.GameObjects.Rectangle
+  public pannelBottom: Phaser.GameObjects.Rectangle
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
@@ -29,6 +32,7 @@ export class GameScene extends Phaser.Scene {
   public ennemyGroup: Phaser.Physics.Arcade.Group;
   public follow: boolean;
   public carryBarrel: boolean;
+  public info: Phaser.GameObjects.Text;
   public barrelGroup: Phaser.Physics.Arcade.Group;
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
@@ -49,9 +53,9 @@ export class GameScene extends Phaser.Scene {
 
 
   public create(): void {
-    var info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(201);
-    var r1 = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(200);
-    var r2 = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x1e1e1f).setScrollFactor(0).setDepth(200);
+    this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
+    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
     console.log("___________________")
     console.log(this.game.scale.gameSize)
 
@@ -81,6 +85,7 @@ export class GameScene extends Phaser.Scene {
     this.tKey = this.input.keyboard.addKey('T');
     this.pKey = this.input.keyboard.addKey('P');
     this.cKey = this.input.keyboard.addKey('C');
+    this.mKey = this.input.keyboard.addKey('M');
 
     this.anims.create({
       key: 'attack',
@@ -372,9 +377,36 @@ export class GameScene extends Phaser.Scene {
       // this.barrel.x = this.girlMap.x
       // this.physics.moveToObject(this.barrel, this.girlMap, 200);
 
-    }
 
-    // this.ennemyzone.y = this.zone.y
+  }
+
+
+    if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
+      console.log("ofdisqjfkldsmq")
+    // this.pannelRight.alpha === 1 ? (this.pannelBottom.setAlpha(0), this.pannelRight.setAlpha(0), this.info.setAlpha(0))
+    // :  (this.pannelBottom.setAlpha(1), this.pannelRight.setAlpha(1), this.info.setAlpha(1));
+
+      this.pannelBottom.alpha === 1 ?
+            this.tweens.add({
+              targets: this.pannelBottom,
+              alpha: 0,
+              repeat: 0,
+              duration: 300,
+              onComplete: (a, e) => { this.pannelRight.setAlpha(0); this.info.setAlpha(0)},
+            }) : this.tweens.add({
+              targets: this.pannelBottom ,
+              alpha: 1,
+              repeat: 0,
+              duration: 300,
+              onComplete: (a, e) => { this.pannelRight.setAlpha(1); this.info.setAlpha(1)},
+            })
+            ;
+            this.info.setAlpha(0);
+            console.log(this.pannelRight.alpha)
+
+
+
+    }
 
     var distance = Phaser.Math.Distance.Between(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
 
