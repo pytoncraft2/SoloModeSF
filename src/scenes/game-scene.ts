@@ -14,6 +14,7 @@ export class GameScene extends Phaser.Scene {
   public pKey: Phaser.Input.Keyboard.Key;
   public tKey: Phaser.Input.Keyboard.Key;
   public ombre: Phaser.GameObjects.Ellipse
+  public protect: Phaser.GameObjects.Ellipse
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
@@ -164,6 +165,7 @@ export class GameScene extends Phaser.Scene {
     }, this)
 
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
+    this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 220, 420, 0xeceae4).setAlpha(0.5);
 
     // this.barrel.moveTo = this.plugins.get('rexmovetoplugin').add(this.barrel, {
     //   speed: 400,
@@ -180,7 +182,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public update(time, delta): void {
-    console.log(this.girlMap.body.y)
+    // console.log(this.girlMap.body.y)
 
     this.ennemyzone.x = this.ennemy.x
 
@@ -218,6 +220,9 @@ export class GameScene extends Phaser.Scene {
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
+
+      this.protect.x = this.zone.x
+      this.protect.y = this.zone.y - 200
       this.girlMap.flipX = true;
       if (this.cKey.isDown) {
         this.girlMap.anims.play('run', true);
@@ -235,6 +240,9 @@ export class GameScene extends Phaser.Scene {
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
+
+      this.protect.x = this.zone.x
+      this.protect.y = this.zone.y - 200
 
       this.girlMap.flipX = false;
       if (this.cKey.isDown) {
