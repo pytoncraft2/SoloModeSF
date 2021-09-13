@@ -4,6 +4,39 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Game',
 };
 
+var UIScene = new Phaser.Class({
+
+    Extends: Phaser.Scene,
+
+    initialize:
+
+    function UIScene ()
+    {
+        Phaser.Scene.call(this, { key: 'UIScene', active: true });
+
+        this.score = 0;
+    },
+
+    create: function ()
+    {
+        //  Our Text object to display the Score
+        var info = this.add.text(10, 10, 'Score: 0', { font: '48px Arial', fill: '#000000' });
+
+        //  Grab a reference to the Game Scene
+        var ourGame = this.scene.get('GameScene');
+
+        //  Listen for events from it
+        ourGame.events.on('addScore', function () {
+
+            this.score += 10;
+
+            info.setText('Score: ' + this.score);
+
+        }, this);
+    }
+
+});
+
 export class GameScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
 
@@ -49,6 +82,7 @@ export class GameScene extends Phaser.Scene {
 
 
   public create(): void {
+    var info = this.add.text(10, 10, 'Score: 0', { font: '48px Arial' }).setScrollFactor(0);
 
     this.count = 0;
      this.barrelGroup = this.physics.add.group({
@@ -182,7 +216,6 @@ export class GameScene extends Phaser.Scene {
     //   this.physics.add.collider(this.girlMap, this.barrel)
     // }, this)
   }
-
   public update(time, delta): void {
     // console.log(this.girlMap.body.y)
 
