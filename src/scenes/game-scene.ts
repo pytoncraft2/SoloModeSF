@@ -334,13 +334,26 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
+      console.log(this.protect.displayWidth)
+      console.log(this.protect.displayHeight)
+      this.protect.alpha === 0.5 ?
             this.tweens.add({
               targets: this.protect,
               alpha: 0,
               repeat: 0,
+              displayWidth: 0,
+              displayHeight: 0,
               duration: 900,
               onComplete: function(a, e) { console.log('FIN'); arguments[1][0].setAlpha(0); },
-            });
+            }) : this.tweens.add({
+              targets: this.protect,
+              alpha: 0.5,
+              displayWidth: 220,
+              displayHeight: 420,
+              repeat: 0,
+              duration: 900,
+              onComplete: function(a, e) { console.log('FIN'); arguments[1][0].setAlpha(0.5); },
+            })
     }
 
     if (this.tKey.isDown) {
