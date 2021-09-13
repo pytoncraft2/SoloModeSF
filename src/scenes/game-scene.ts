@@ -4,39 +4,6 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   key: 'Game',
 };
 
-var UIScene = new Phaser.Class({
-
-    Extends: Phaser.Scene,
-
-    initialize:
-
-    function UIScene ()
-    {
-        Phaser.Scene.call(this, { key: 'UIScene', active: true });
-
-        this.score = 0;
-    },
-
-    create: function ()
-    {
-        //  Our Text object to display the Score
-        var info = this.add.text(10, 10, 'Score: 0', { font: '48px Arial', fill: '#000000' });
-
-        //  Grab a reference to the Game Scene
-        var ourGame = this.scene.get('GameScene');
-
-        //  Listen for events from it
-        ourGame.events.on('addScore', function () {
-
-            this.score += 10;
-
-            info.setText('Score: ' + this.score);
-
-        }, this);
-    }
-
-});
-
 export class GameScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
 
@@ -82,7 +49,11 @@ export class GameScene extends Phaser.Scene {
 
 
   public create(): void {
-    var info = this.add.text(10, 10, 'Score: 0', { font: '48px Arial' }).setScrollFactor(0);
+    var info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(201);
+    var r1 = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(200);
+    var r2 = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x1e1e1f).setScrollFactor(0).setDepth(200);
+    console.log("___________________")
+    console.log(this.game.scale.gameSize)
 
     this.count = 0;
      this.barrelGroup = this.physics.add.group({
@@ -201,7 +172,7 @@ export class GameScene extends Phaser.Scene {
     }, this)
 
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
-    this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 220, 420, 0xeceae4).setAlpha(0.5);
+    this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0.5);
 
     // this.barrel.moveTo = this.plugins.get('rexmovetoplugin').add(this.barrel, {
     //   speed: 400,
