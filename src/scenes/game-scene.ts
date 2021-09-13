@@ -184,6 +184,8 @@ export class GameScene extends Phaser.Scene {
   public update(time, delta): void {
     // console.log(this.girlMap.body.y)
 
+    this.protect.x = this.girlMap.x
+    this.protect.y = this.girlMap.y
     this.ennemyzone.x = this.ennemy.x
 
     if (this.aKey.isDown) {
@@ -221,8 +223,6 @@ export class GameScene extends Phaser.Scene {
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
 
-      this.protect.x = this.zone.x
-      this.protect.y = this.zone.y - 200
       this.girlMap.flipX = true;
       if (this.cKey.isDown) {
         this.girlMap.anims.play('run', true);
@@ -241,8 +241,6 @@ export class GameScene extends Phaser.Scene {
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
 
-      this.protect.x = this.zone.x
-      this.protect.y = this.zone.y - 200
 
       this.girlMap.flipX = false;
       if (this.cKey.isDown) {
@@ -268,8 +266,11 @@ export class GameScene extends Phaser.Scene {
       }
 
       this.zone.x = this.girlMap.x;
+
+
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
+
       if (!this.girlMap.anims.getFrameName().includes("jump")) {
         this.girlMap.anims.play('jump');
         this.ennemy.on('animationcomplete', () => {
@@ -294,6 +295,7 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.depth -= 1;
       this.ombre.y = this.zone.y - 30
       this.ombre.x = this.zone.x
+
       // if (!this.girlMap.anims.getFrameName().includes("dos")) {
       this.girlMap.anims.play('goback', true);
       this.ennemy.on('animationcomplete', () => {
