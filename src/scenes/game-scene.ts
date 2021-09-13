@@ -177,7 +177,7 @@ export class GameScene extends Phaser.Scene {
     }, this)
 
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
-    this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0.5);
+    this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
     // this.barrel.moveTo = this.plugins.get('rexmovetoplugin').add(this.barrel, {
     //   speed: 400,
