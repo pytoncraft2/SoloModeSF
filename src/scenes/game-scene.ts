@@ -19,6 +19,7 @@ export class GameScene extends Phaser.Scene {
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
   public count: number;
+  public ctrlKey: Phaser.Input.Keyboard.Key
   public cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
   public ennemy: Phaser.Physics.Arcade.Sprite;
@@ -69,11 +70,12 @@ export class GameScene extends Phaser.Scene {
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
-    this.cKey = this.input.keyboard.addKey('CTRL');
+    this.ctrlKey = this.input.keyboard.addKey('CTRL');
     this.aKey = this.input.keyboard.addKey('A');
     this.yKey = this.input.keyboard.addKey('Y');
     this.tKey = this.input.keyboard.addKey('T');
     this.pKey = this.input.keyboard.addKey('P');
+    this.cKey = this.input.keyboard.addKey('C');
 
     this.anims.create({
       key: 'attack',
@@ -224,7 +226,7 @@ export class GameScene extends Phaser.Scene {
       this.ombre.y = this.zone.y - 30
 
       this.girlMap.flipX = true;
-      if (this.cKey.isDown) {
+      if (this.ctrlKey.isDown) {
         this.girlMap.anims.play('run', true);
         this.girlMap.setVelocityX(-400);
       } else {
@@ -243,7 +245,7 @@ export class GameScene extends Phaser.Scene {
 
 
       this.girlMap.flipX = false;
-      if (this.cKey.isDown) {
+      if (this.ctrlKey.isDown) {
         this.girlMap.anims.play('run', true);
         this.girlMap.setVelocityX(400);
       } else {
@@ -329,6 +331,16 @@ export class GameScene extends Phaser.Scene {
 
         console.log("porter")
       }
+    }
+
+    if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
+            this.tweens.add({
+              targets: this.protect,
+              alpha: 0,
+              repeat: 0,
+              duration: 900,
+              onComplete: function(a, e) { console.log('FIN'); arguments[1][0].setAlpha(0); },
+            });
     }
 
     if (this.tKey.isDown) {
