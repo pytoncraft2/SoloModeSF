@@ -343,7 +343,7 @@ export class GameScene extends Phaser.Scene {
               repeat: 0,
               displayWidth: 0,
               displayHeight: 0,
-              duration: 900,
+              duration: 300,
               onComplete: function(a, e) { console.log('FIN'); arguments[1][0].setAlpha(0); },
             }) : this.tweens.add({
               targets: this.protect,
@@ -351,7 +351,7 @@ export class GameScene extends Phaser.Scene {
               displayWidth: 220,
               displayHeight: 420,
               repeat: 0,
-              duration: 900,
+              duration: 300,
               onComplete: function(a, e) { console.log('FIN'); arguments[1][0].setAlpha(0.5); },
             })
     }
