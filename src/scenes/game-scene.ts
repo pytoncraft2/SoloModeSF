@@ -184,39 +184,6 @@ this.gfx = this.add.graphics();
     }, this)
 
 
-    var points = [];
-
-    points.push(new Phaser.Math.Vector2(50, 400));
-    points.push(new Phaser.Math.Vector2(200, 200));
-    points.push(new Phaser.Math.Vector2(350, 300));
-    points.push(new Phaser.Math.Vector2(500, 500));
-    points.push(new Phaser.Math.Vector2(700, 400));
-
-    var curve = new Phaser.Curves.Spline(points);
-
-    var graphics = this.add.graphics();
-
-    graphics.lineStyle(1, 0xffffff, 1);
-
-    curve.draw(graphics, 64);
-
-    graphics.fillStyle(0x00ff00, 1);
-
-    for (var i = 0; i < points.length; i++)
-    {
-        graphics.fillCircle(points[i].x, points[i].y, 4);
-    }
-
-    var lemming = this.add.follower(curve, 50, 400, 'ennemy');
-
-    lemming.startFollow({
-        duration: 6000,
-        yoyo: true,
-        repeat: -1,
-        rotateToPath: true,
-        startAt: 0.5
-    });
-
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
@@ -235,12 +202,13 @@ this.gfx = this.add.graphics();
   }
   public update(time, delta): void {
     var pointer = this.input.activePointer;
-var closest = this.physics.closest(pointer);
-var furthest = this.physics.furthest(pointer);
+    console.log(pointer)
+var closest = this.physics.closest(this.girlMap);
+var furthest = this.physics.furthest(this.girlMap);
 
 this.gfx.clear()
     .lineStyle(2, 0xff3300)
-    .lineBetween(closest.x, closest.y, pointer.x, pointer.y)
+    .lineBetween(closest.x, closest.y, this.ennemy.x, this.ennemy.y)
     .lineStyle(2, 0x0099ff)
     .lineBetween(furthest.x, furthest.y, pointer.x, pointer.y);
     // console.log(this.girlMap.body.y)
@@ -256,7 +224,7 @@ this.gfx.clear()
     ], true, true)
 
     var dist2 = Phaser.Math.Distance.BetweenPoints(this.girlMap, this.ennemy);
-    console.log(dist)
+    // console.log(dist)
     //196 dis2
 
 this.graphic2
