@@ -207,7 +207,7 @@ this.gfx = this.add.graphics();
 var closest = this.physics.closest(this.zone);
 var furthest = this.physics.furthest(this.girlMap);
 
-    this.physics.moveTo(this.ennemy, closest.x, 1000);
+    // this.physics.moveTo(this.ennemy, closest.x, 1000);
 this.gfx.clear()
     .lineStyle(2, 0xff3300)
     .lineBetween(closest.x, closest.y, this.ennemy.x, this.ennemy.y)
@@ -266,7 +266,7 @@ this.graphic2
 
     }
     else if (this.cursors.left.isDown) {
-      this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
+      // this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
 
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
@@ -286,7 +286,7 @@ this.graphic2
 
     }
     else if (this.cursors.right.isDown) {
-    this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
+    this.physics.moveTo(this.ennemy, this.girlMap.x, 0, 200, 100);
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -373,7 +373,7 @@ this.graphic2
       if (this.girlMap.depth > this.barrel.depth - 10
         && this.girlMap.depth < this.barrel.depth + 10) {
         this.barrel.allowGravity = false
-        this.barrel.moveTo.moveTo(this.girlMap.x, this.girlMap.y - 340);
+        // this.barrel.moveTo.moveTo(this.girlMap.x, this.girlMap.y - 340);
 
 
 
