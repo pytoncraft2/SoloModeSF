@@ -73,7 +73,7 @@ this.gfx = this.add.graphics();
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
-    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605);
+    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
     var block1 = this.barrelGroup.create(-1562, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
     var block2 = this.barrelGroup.create(-1620, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
     var block3 = this.barrelGroup.create(-1662, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
@@ -199,18 +199,20 @@ this.gfx = this.add.graphics();
     //   this.barrel.setAngularVelocity(60)
     //   this.physics.add.collider(this.girlMap, this.barrel)
     // }, this)
+
   }
   public update(time, delta): void {
     var pointer = this.input.activePointer;
     console.log(pointer)
-var closest = this.physics.closest(this.girlMap);
+var closest = this.physics.closest(this.zone);
 var furthest = this.physics.furthest(this.girlMap);
 
+    this.physics.moveTo(this.ennemy, closest.x, 1000);
 this.gfx.clear()
     .lineStyle(2, 0xff3300)
     .lineBetween(closest.x, closest.y, this.ennemy.x, this.ennemy.y)
     .lineStyle(2, 0x0099ff)
-    .lineBetween(furthest.x, furthest.y, pointer.x, pointer.y);
+    .lineBetween(furthest.x, furthest.y, this.ennemy.x, this.ennemy.y);
     // console.log(this.girlMap.body.y)
     var dist = Phaser.Math.Distance.Snake(this.girlMap.x, this.girlMap.y, this.ennemy.x, this.ennemy.y);
 
@@ -264,6 +266,8 @@ this.graphic2
 
     }
     else if (this.cursors.left.isDown) {
+      this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
+
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -282,6 +286,7 @@ this.graphic2
 
     }
     else if (this.cursors.right.isDown) {
+    this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
