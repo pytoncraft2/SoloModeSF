@@ -167,7 +167,7 @@ this.gfx = this.add.graphics();
       this.ennemyzone.depth = 30;
     }
     this.physics.add.collider(this.girlMap, this.zone);
-    this.physics.add.collider(this.girlMap, this.barrelGroup);
+    // this.physics.add.collider(this.girlMap, this.barrelGroup);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     this.physics.add.overlap(this.girlMap, this.barrel, function(girl: Phaser.Physics.Arcade.Sprite, barrel: Phaser.Physics.Arcade.Sprite) {
 
