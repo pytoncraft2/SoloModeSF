@@ -18,7 +18,6 @@ export class GameScene extends Phaser.Scene {
   public protect: Phaser.GameObjects.Ellipse
   public pannelRight: Phaser.GameObjects.Rectangle
   public pannelBottom: Phaser.GameObjects.Rectangle
-  public path: Phaser.Curves.Path
   public keyObj: Phaser.Input.Keyboard.Key
   public keyObj2: Phaser.Input.Keyboard.Key
   public keyObj3: Phaser.Input.Keyboard.Key
@@ -31,11 +30,10 @@ export class GameScene extends Phaser.Scene {
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public graphic: Phaser.GameObjects.Graphics;
   public graphic2: Phaser.GameObjects.Graphics;
-  public graphic3: Phaser.GameObjects.Graphics;
+  public gfx: Phaser.GameObjects.Graphics;
   public barrel: Phaser.Physics.Arcade.Image;
   public ennemyGroup: Phaser.Physics.Arcade.Group;
   public follow: boolean;
-  public follower: any;
   public carryBarrel: boolean;
   public info: Phaser.GameObjects.Text;
   public barrelGroup: Phaser.Physics.Arcade.Group;
@@ -71,9 +69,7 @@ export class GameScene extends Phaser.Scene {
 
 this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 this.graphic2 = this.add.graphics({ lineStyle: { color: 0x00ffff } });
-this.graphic3 = this.add.graphics();
-this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
-
+this.gfx = this.add.graphics();
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
@@ -187,6 +183,40 @@ this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false) : (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
     }, this)
 
+
+    var points = [];
+
+    points.push(new Phaser.Math.Vector2(50, 400));
+    points.push(new Phaser.Math.Vector2(200, 200));
+    points.push(new Phaser.Math.Vector2(350, 300));
+    points.push(new Phaser.Math.Vector2(500, 500));
+    points.push(new Phaser.Math.Vector2(700, 400));
+
+    var curve = new Phaser.Curves.Spline(points);
+
+    var graphics = this.add.graphics();
+
+    graphics.lineStyle(1, 0xffffff, 1);
+
+    curve.draw(graphics, 64);
+
+    graphics.fillStyle(0x00ff00, 1);
+
+    for (var i = 0; i < points.length; i++)
+    {
+        graphics.fillCircle(points[i].x, points[i].y, 4);
+    }
+
+    var lemming = this.add.follower(curve, 50, 400, 'ennemy');
+
+    lemming.startFollow({
+        duration: 6000,
+        yoyo: true,
+        repeat: -1,
+        rotateToPath: true,
+        startAt: 0.5
+    });
+
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
@@ -202,30 +232,19 @@ this.follower = { t: 0, vec: new Phaser.Math.Vector2() };
     //   this.barrel.setAngularVelocity(60)
     //   this.physics.add.collider(this.girlMap, this.barrel)
     // }, this)
-    var line1 = new Phaser.Curves.Line([ 100, 100, 500, 200 ]);
-var line2 = new Phaser.Curves.Line([ 200, 300, 600, 500 ]);
-
-// var this.path = this.add.this.path();
-this.path = new Phaser.Curves.Path();
-
-
-// this.path = new Phaser.Curves.Path();
-
-this.path.add(line1);
-this.path.add(line2);
   }
   public update(time, delta): void {
+    var pointer = this.input.activePointer;
+var closest = this.physics.closest(pointer);
+var furthest = this.physics.furthest(pointer);
+
+this.gfx.clear()
+    .lineStyle(2, 0xff3300)
+    .lineBetween(closest.x, closest.y, pointer.x, pointer.y)
+    .lineStyle(2, 0x0099ff)
+    .lineBetween(furthest.x, furthest.y, pointer.x, pointer.y);
     // console.log(this.girlMap.body.y)
     var dist = Phaser.Math.Distance.Snake(this.girlMap.x, this.girlMap.y, this.ennemy.x, this.ennemy.y);
-    this.graphic3.clear();
-this.graphic3.lineStyle(2, 0xffffff, 1);
-
-this.path.draw(this.graphic3);
-
-this.path.getPoint(this.follower.t, this.follower.vec);
-
-this.graphic3.fillStyle(0xff0000, 1);
-this.graphic3.fillRect(this.follower.vec.x - 8, this.follower.vec.y - 8, 16, 16);
 
     this.graphic
     .clear()
@@ -237,7 +256,7 @@ this.graphic3.fillRect(this.follower.vec.x - 8, this.follower.vec.y - 8, 16, 16)
     ], true, true)
 
     var dist2 = Phaser.Math.Distance.BetweenPoints(this.girlMap, this.ennemy);
-    // console.log(dist)
+    console.log(dist)
     //196 dis2
 
 this.graphic2
