@@ -29,6 +29,7 @@ export class GameScene extends Phaser.Scene {
   public ennemy2: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
   public graphic: Phaser.GameObjects.Graphics;
+  public graphic2: Phaser.GameObjects.Graphics;
   public barrel: Phaser.Physics.Arcade.Image;
   public ennemyGroup: Phaser.Physics.Arcade.Group;
   public follow: boolean;
@@ -66,6 +67,7 @@ export class GameScene extends Phaser.Scene {
     });
 
 this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
+this.graphic2 = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
@@ -208,6 +210,14 @@ this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
         { x: this.girlMap.x , y: this.girlMap.y - dist },
     ], true, true)
 
+    var dist2 = Phaser.Math.Distance.BetweenPoints(this.girlMap, this.ennemy);
+    console.log(dist)
+    //196 dis2
+
+this.graphic2
+    .clear()
+    .strokeCircle(this.girlMap.x, this.girlMap.y, dist2);
+
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
     this.ennemyzone.x = this.ennemy.x
@@ -217,9 +227,7 @@ this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
       this.barrel.setImmovable(false)
       if (this.girlMap.anims.getFrameName().includes("attack4")
       && this.girlMap.depth < this.ennemy.depth + 10
-      && this.girlMap.depth  > this.ennemy.depth - 10
-      && this.girlMap.body.x < this.ennemy.body.x + 170
-      && this.girlMap.body.x > this.ennemy.body.x - 300) {
+      && this.girlMap.depth  > this.ennemy.depth - 10 && dist2 < 196) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
             this.ennemy.setTintFill(0xffffff)
