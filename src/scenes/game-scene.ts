@@ -28,6 +28,7 @@ export class GameScene extends Phaser.Scene {
   public ennemy: Phaser.Physics.Arcade.Sprite;
   public ennemy2: Phaser.Physics.Arcade.Sprite;
   public girlMap: Phaser.Physics.Arcade.Sprite;
+  public graphic: Phaser.GameObjects.Graphics;
   public barrel: Phaser.Physics.Arcade.Image;
   public ennemyGroup: Phaser.Physics.Arcade.Group;
   public follow: boolean;
@@ -63,6 +64,8 @@ export class GameScene extends Phaser.Scene {
      this.barrelGroup = this.physics.add.group({
       allowGravity: false
     });
+
+this.graphic = this.add.graphics({ lineStyle: { color: 0x00ffff } });
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
@@ -194,6 +197,16 @@ export class GameScene extends Phaser.Scene {
   }
   public update(time, delta): void {
     // console.log(this.girlMap.body.y)
+    var dist = Phaser.Math.Distance.Snake(this.girlMap.x, this.girlMap.y, this.ennemy.x, this.ennemy.y);
+
+    this.graphic
+    .clear()
+    .strokePoints([
+        { x: this.girlMap.x + dist, y: this.girlMap.y },
+        { x: this.girlMap.x, y: this.girlMap.y + dist },
+        { x: this.girlMap.x - dist, y: this.girlMap.y },
+        { x: this.girlMap.x , y: this.girlMap.y - dist },
+    ], true, true)
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
