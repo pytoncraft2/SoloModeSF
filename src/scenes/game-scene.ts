@@ -188,7 +188,7 @@ this.gfx = this.add.graphics();
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
-    this.ennemy.moveTo = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
+    this.ennemyzone.moveTo = this.plugins.get('rexmovetoplugin').add(this.ennemyzone, {
       speed: 200,
       rotateToTarget: false
     }).on('complete', function() {
@@ -200,16 +200,26 @@ this.gfx = this.add.graphics();
     //   this.barrel.setAngularVelocity(60)
     //   this.physics.add.collider(this.girlMap, this.barrel)
     // var rad = Phaser.Math.Angle.Between(this.zone.x, this.zone.y, this.ennemyzone.x, this.ennemyzone.y);
-    var rad = Phaser.Math.Angle.BetweenPoints(this.zone, this.ennemyzone);
-    console.log(rad)
+    // var rad = Phaser.Math.Angle.BetweenPoints(this.zone, this.ennemyzone);
+    // console.log(rad)
         // this.ennemy.moveTo.moveToward(rad, this.dist);
         // this.ennemy.moveTo.moveTo(this.zone.x - 400, this.girlMap.y + 90);
         // var rad = Phaser.Math.DegToRad(deg);
-        var deg = Phaser.Math.RadToDeg(rad);
-        this.ennemy.moveTo.moveToward(deg*3, 100);
+        // var deg = Phaser.Math.RadToDeg(rad);
+        // this.ennemy.moveTo.moveToward(deg*3, this.dist);
+        // this.ennemy.setVelocity(400)
+        // this.ennemy.allowGravity = false
+    // this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
+    // this.ennemy.setVelocityX(300)
+    // this.ennemy.setAngularVelocity(60)
+    // this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
+
+
     }, this)
 
-        this.ennemy.moveTo.moveTo(this.zone.x - 400, this.girlMap.y + 90);
+    // this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
+
+        // this.ennemyzone.moveTo.moveTo(this.zone.body.x, this.zone.body.y);
         // this.ennemy.moveTo.on('complete', function(gameObject, moveTo){
 
         // });
@@ -225,6 +235,7 @@ this.gfx = this.add.graphics();
 var closest = this.physics.closest(this.zone);
 var furthest = this.physics.furthest(this.girlMap);
 
+    this.physics.moveTo(this.ennemy, closest.x, 800, 200, 2010);
 this.gfx.clear()
     .lineStyle(2, 0xff3300)
     .lineBetween(closest.x, closest.y, this.ennemy.x, this.ennemy.y)
@@ -247,6 +258,7 @@ this.gfx.clear()
     // console.log(dist2)
     //196 dis2
 
+    // this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
 
 this.graphic2
     .clear()
@@ -477,18 +489,18 @@ this.graphic2
 
     }
 
-    var distance = Phaser.Math.Distance.Between(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
+    // var distance = Phaser.Math.Distance.Between(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
 
     //  4 is our distance tolerance, i.e. how close the source can get to the target
     //  before it is considered as being there. The faster it moves, the more tolerance is required.
-    if (distance < 5) {
-      this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
-      this.ennemy.anims.play("attack", true)
-      this.girlMap.on('animationcomplete', () => {
-        this.ennemy.anims.play("idle_attack", true)
-      })
-    } else {
-    }
+    // if (distance < 5) {
+      // this.ennemy.body.reset(this.girlMap.x, this.girlMap.y);
+      // this.ennemy.anims.play("attack", true)
+      // this.girlMap.on('animationcomplete', () => {
+        // this.ennemy.anims.play("idle_attack", true)
+      // })
+    // } else {
+    // }
 
 
 
