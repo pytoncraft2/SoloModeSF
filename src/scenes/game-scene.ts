@@ -7,39 +7,40 @@ const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
 export class GameScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
 
-  public cursors: Phaser.Types.Input.Keyboard.CursorKeys;
-  public yKey: Phaser.Input.Keyboard.Key;
-  public controls: any;
-  public mKey: Phaser.Input.Keyboard.Key;
-  public aKey: Phaser.Input.Keyboard.Key;
-  public pKey: Phaser.Input.Keyboard.Key;
-  public tKey: Phaser.Input.Keyboard.Key;
-  public ombre: Phaser.GameObjects.Ellipse
-  public protect: Phaser.GameObjects.Ellipse
-  public pannelRight: Phaser.GameObjects.Rectangle
-  public pannelBottom: Phaser.GameObjects.Rectangle
-  public keyObj: Phaser.Input.Keyboard.Key
-  public keyObj2: Phaser.Input.Keyboard.Key
-  public keyObj3: Phaser.Input.Keyboard.Key
-  public count: number;
-  public ctrlKey: Phaser.Input.Keyboard.Key
-  public cKey: Phaser.Input.Keyboard.Key
+  private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  private yKey: Phaser.Input.Keyboard.Key;
+  private dist: any;
+  private controls: any;
+  private mKey: Phaser.Input.Keyboard.Key;
+  private aKey: Phaser.Input.Keyboard.Key;
+  private pKey: Phaser.Input.Keyboard.Key;
+  private tKey: Phaser.Input.Keyboard.Key;
+  private ombre: Phaser.GameObjects.Ellipse
+  private protect: Phaser.GameObjects.Ellipse
+  private pannelRight: Phaser.GameObjects.Rectangle
+  private pannelBottom: Phaser.GameObjects.Rectangle
+  private keyObj: Phaser.Input.Keyboard.Key
+  private keyObj2: Phaser.Input.Keyboard.Key
+  private keyObj3: Phaser.Input.Keyboard.Key
+  private count: number;
+  private ctrlKey: Phaser.Input.Keyboard.Key
+  private cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
-  public ennemy: Phaser.Physics.Arcade.Sprite;
-  public ennemy2: Phaser.Physics.Arcade.Sprite;
-  public girlMap: Phaser.Physics.Arcade.Sprite;
-  public graphic: Phaser.GameObjects.Graphics;
-  public graphic2: Phaser.GameObjects.Graphics;
-  public gfx: Phaser.GameObjects.Graphics;
-  public barrel: Phaser.Physics.Arcade.Image;
-  public ennemyGroup: Phaser.Physics.Arcade.Group;
-  public follow: boolean;
-  public carryBarrel: boolean;
-  public info: Phaser.GameObjects.Text;
-  public barrelGroup: Phaser.Physics.Arcade.Group;
+  private ennemy: Phaser.Physics.Arcade.Sprite;
+  private ennemy2: Phaser.Physics.Arcade.Sprite;
+  private girlMap: Phaser.Physics.Arcade.Sprite;
+  private graphic: Phaser.GameObjects.Graphics;
+  private graphic2: Phaser.GameObjects.Graphics;
+  private gfx: Phaser.GameObjects.Graphics;
+  private barrel: Phaser.Physics.Arcade.Image;
+  private ennemyGroup: Phaser.Physics.Arcade.Group;
+  private follow: boolean;
+  private carryBarrel: boolean;
+  private info: Phaser.GameObjects.Text;
+  private barrelGroup: Phaser.Physics.Arcade.Group;
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
-  public map: any;
+  private map: any;
 
 
 
@@ -73,7 +74,7 @@ this.gfx = this.add.graphics();
 
     // var ennemyGroup = {}
     this.ennemyGroup = this.physics.add.group()
-    this.ennemy = this.physics.add.sprite(500, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
+    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
     var block1 = this.barrelGroup.create(-1562, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
     var block2 = this.barrelGroup.create(-1620, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
     var block3 = this.barrelGroup.create(-1662, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
@@ -187,47 +188,65 @@ this.gfx = this.add.graphics();
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
-    // this.barrel.moveTo = this.plugins.get('rexmovetoplugin').add(this.barrel, {
-    //   speed: 400,
-    //   rotateToTarget: false
-    // }).on('complete', function() {
-    //   this.barrel.setImmovable(false)
+    this.ennemy.moveTo = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
+      speed: 200,
+      rotateToTarget: false
+    }).on('complete', function() {
+      // this.barrel.setImmovable(false)
     //   this.barrel.allowGravity = true
     //   this.barrel.setVelocityY(100)
     //   this.barrel.body.friction.x = 1
     //   // setAnangularVelocity= 60
     //   this.barrel.setAngularVelocity(60)
     //   this.physics.add.collider(this.girlMap, this.barrel)
-    // }, this)
+    // var rad = Phaser.Math.Angle.Between(this.zone.x, this.zone.y, this.ennemyzone.x, this.ennemyzone.y);
+    var rad = Phaser.Math.Angle.BetweenPoints(this.zone, this.ennemyzone);
+    console.log(rad)
+        // this.ennemy.moveTo.moveToward(rad, this.dist);
+        // this.ennemy.moveTo.moveTo(this.zone.x - 400, this.girlMap.y + 90);
+        // var rad = Phaser.Math.DegToRad(deg);
+        var deg = Phaser.Math.RadToDeg(rad);
+        this.ennemy.moveTo.moveToward(deg*3, 100);
+    }, this)
+
+        this.ennemy.moveTo.moveTo(this.zone.x - 400, this.girlMap.y + 90);
+        // this.ennemy.moveTo.on('complete', function(gameObject, moveTo){
+
+        // });
+// moveTo.once('complete', function(gameObject, moveTo){});
+        // this.ennemy.moveTo.moveToward(10, dist);
 
   }
   public update(time, delta): void {
+    var distance = Phaser.Math.Distance.Between(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
+
     var pointer = this.input.activePointer;
-    console.log(pointer)
+    // console.log(pointer)
 var closest = this.physics.closest(this.zone);
 var furthest = this.physics.furthest(this.girlMap);
 
-    // this.physics.moveTo(this.ennemy, closest.x, 1000);
 this.gfx.clear()
     .lineStyle(2, 0xff3300)
     .lineBetween(closest.x, closest.y, this.ennemy.x, this.ennemy.y)
     .lineStyle(2, 0x0099ff)
     .lineBetween(furthest.x, furthest.y, this.ennemy.x, this.ennemy.y);
     // console.log(this.girlMap.body.y)
-    var dist = Phaser.Math.Distance.Snake(this.girlMap.x, this.girlMap.y, this.ennemy.x, this.ennemy.y);
+    this.dist = Phaser.Math.Distance.Snake(this.girlMap.x, this.girlMap.y, this.ennemy.x, this.ennemy.y);
+    // this.physics.moveTo(this.ennemy, closest.x, 100);
 
     this.graphic
     .clear()
     .strokePoints([
-        { x: this.girlMap.x + dist, y: this.girlMap.y },
-        { x: this.girlMap.x, y: this.girlMap.y + dist },
-        { x: this.girlMap.x - dist, y: this.girlMap.y },
-        { x: this.girlMap.x , y: this.girlMap.y - dist },
+        { x: this.girlMap.x + this.dist, y: this.girlMap.y },
+        { x: this.girlMap.x, y: this.girlMap.y + this.dist },
+        { x: this.girlMap.x - this.dist, y: this.girlMap.y },
+        { x: this.girlMap.x , y: this.girlMap.y - this.dist },
     ], true, true)
 
-    var dist2 = Phaser.Math.Distance.BetweenPoints(this.girlMap, this.ennemy);
-    // console.log(dist)
+    var dist2 = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
+    // console.log(dist2)
     //196 dis2
+
 
 this.graphic2
     .clear()
@@ -286,7 +305,7 @@ this.graphic2
 
     }
     else if (this.cursors.right.isDown) {
-    this.physics.moveTo(this.ennemy, this.girlMap.x, 0, 200, 100);
+    // this.physics.moveTo(this.ennemy, this.zone.x, 100, 2, 1000);
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -302,6 +321,17 @@ this.graphic2
       }
     }
     else if (this.spaceBar.isDown) {
+      // var isRunning = this.ennemy.moveTo.isRunning;
+
+      // console.log(isRunning)
+      // this.ennemy.moveTo.setEnable(true);
+      // this.ennemy.moveTo.moveToward(10, dist);
+
+      // this.ennemy.moveTo.setEnable(false);
+      // moveTo.pause();
+// moveTo.resume();
+// moveTo.stop();
+
       // this.cameras.main.shake(100);
       // this.controls.update(delta)
       if (!this.tweens.isTweening(this.ombre)) {
