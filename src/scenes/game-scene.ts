@@ -82,7 +82,7 @@ this.gfx = this.add.graphics();
     this.carryBarrel = false;
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setImmovable(true).setCollideWorldBounds(true)
+    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
     // this.ennemy.anims.play('idle_attack', true)
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -167,7 +167,7 @@ this.gfx = this.add.graphics();
       this.ennemyzone.depth = 30;
     }
     this.physics.add.collider(this.girlMap, this.zone);
-    // this.physics.add.collider(this.girlMap, this.barrelGroup);
+    this.physics.add.collider(this.girlMap, this.barrel);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
     this.physics.add.overlap(this.girlMap, this.barrel, function(girl: Phaser.Physics.Arcade.Sprite, barrel: Phaser.Physics.Arcade.Sprite) {
 
