@@ -264,7 +264,14 @@ this.graphic2
       this.ennemyzone.y += 1
     }
     }
+    console.log(dist2)
+    if (dist2 > 150 && this.ennemy.x < this.girlMap.x) {
     this.ennemyzone.x += 1.5
+    this.ennemy.x += 1.5
+    this.ennemy.play('walk', true)
+  } else {
+    this.ennemy.play('attack', true)
+  }
 
 
     if (this.aKey.isDown) {
