@@ -257,6 +257,10 @@ this.graphic2
     // this.ennemyzone.x += 0.5
     // this.ennemyzone.y -= 0.5
     // }
+    /**
+     * Deplacement en Y du socle de l'ennemie
+     * @param  this.ennemyzone.y!==this.zone.y socle ennemie
+     */
     if (this.ennemyzone.y !== this.zone.y) {
       if (this.zone.y < this.ennemyzone.y) {
       this.ennemyzone.y -= 1
@@ -269,8 +273,11 @@ this.graphic2
     this.ennemyzone.x += 1.5
     this.ennemy.x += 1.5
     this.ennemy.play('walk', true)
-  } else {
-    this.ennemy.play('attack', true)
+  } else if(dist2 > 150 && this.ennemy.x > this.girlMap.x) {
+    this.ennemyzone.x -= 1.5
+    this.ennemy.x -= 1.5
+    // this.ennemy.flipX = true
+    // this.ennemy.play('attack', true)
   }
 
 
