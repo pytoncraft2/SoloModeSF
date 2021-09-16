@@ -25,6 +25,7 @@ export class GameScene extends Phaser.Scene {
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private barrel: Phaser.Physics.Arcade.Image;
+  private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   private zone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
@@ -42,10 +43,20 @@ export class GameScene extends Phaser.Scene {
 
     this.count = 0;
 
+    this.barrelGroup = this.physics.add.group({
+     allowGravity: false
+   });
+
+   // var ennemyGroup = {}
+   var block1 = this.barrelGroup.create(150, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
+   // var block2 = this.barrelGroup.create(162, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
+   // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
+
+
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
-    this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
+    // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
@@ -130,14 +141,8 @@ export class GameScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-    this.physics.add.collider(this.girlMap, this.barrel);
+    this.physics.add.collider(this.girlMap, block1);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
-    this.physics.add.overlap(this.girlMap, this.barrel, function(girl: Phaser.Physics.Arcade.Sprite, barrel: Phaser.Physics.Arcade.Sprite) {
-      if (girl.depth > barrel.depth - 10 && girl.depth < barrel.depth + 10) {
-        this.carryBarrel = true;
-      }
-    })
-
 
      //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
     var following = this.yKey
@@ -197,7 +202,7 @@ export class GameScene extends Phaser.Scene {
      */
     if (this.aKey.isDown) {
       this.girlMap.setVelocityX(0);
-      this.barrel.setImmovable(false)
+      // this.barrel.setImmovable(false)
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && this.girlMap.depth < this.ennemy.depth + 10
         && this.girlMap.depth > this.ennemy.depth - 10 && distance < 196) {
