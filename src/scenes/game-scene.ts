@@ -269,15 +269,18 @@ this.graphic2
     }
     }
     console.log(dist2)
-    if (dist2 > 150 && this.ennemy.x < this.girlMap.x) {
+    if (dist2 > 160 && this.ennemy.x < this.girlMap.x) {
     this.ennemyzone.x += 1.5
     this.ennemy.x += 1.5
+    this.ennemy.flipX = false
     this.ennemy.play('walk', true)
-  } else if(dist2 > 150 && this.ennemy.x > this.girlMap.x) {
+  } else if(dist2 > 160 && this.ennemy.x > this.girlMap.x) {
     this.ennemyzone.x -= 1.5
     this.ennemy.x -= 1.5
-    // this.ennemy.flipX = true
-    // this.ennemy.play('attack', true)
+    this.ennemy.flipX = true
+    this.ennemy.play('walk', true)
+  } else {
+    this.ennemy.play("attack", true)
   }
 
 
