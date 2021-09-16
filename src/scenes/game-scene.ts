@@ -149,7 +149,7 @@ this.gfx = this.add.graphics();
     })
 
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
-    this.ennemyzone = this.add.zone(356, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.ennemyzone = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.add.existing(this.ennemyzone);
     this.physics.world.enableBody(this.zone);
@@ -192,34 +192,19 @@ this.gfx = this.add.graphics();
       speed: 200,
       rotateToTarget: false
     }).on('complete', function() {
-      // this.barrel.setImmovable(false)
-    //   this.barrel.allowGravity = true
-    //   this.barrel.setVelocityY(100)
-    //   this.barrel.body.friction.x = 1
-    //   // setAnangularVelocity= 60
-    //   this.barrel.setAngularVelocity(60)
-    //   this.physics.add.collider(this.girlMap, this.barrel)
-    // var rad = Phaser.Math.Angle.Between(this.zone.x, this.zone.y, this.ennemyzone.x, this.ennemyzone.y);
-    // var rad = Phaser.Math.Angle.BetweenPoints(this.zone, this.ennemyzone);
-    // console.log(rad)
-        // this.ennemy.moveTo.moveToward(rad, this.dist);
-        // this.ennemy.moveTo.moveTo(this.zone.x - 400, this.girlMap.y + 90);
-        // var rad = Phaser.Math.DegToRad(deg);
-        // var deg = Phaser.Math.RadToDeg(rad);
-        // this.ennemy.moveTo.moveToward(deg*3, this.dist);
-        // this.ennemy.setVelocity(400)
-        // this.ennemy.allowGravity = false
-    // this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
-    // this.ennemy.setVelocityX(300)
-    // this.ennemy.setAngularVelocity(60)
-    // this.ennemy.moveTo.moveTo(this.girlMap.x, this.girlMap.y);
+    }, this)
 
 
+    this.ennemy.moveTo = this.plugins.get('rexmovetoplugin').add(this.ennemy, {
+      speed: 200,
+      rotateToTarget: false
+    }).on('complete', function() {
     }, this)
 
     // this.physics.moveTo(this.ennemy, this.girlMap.x, 800);
 
         // this.ennemyzone.moveTo.moveTo(this.zone.body.x, this.zone.body.y);
+        // this.ennemy.moveTo.moveTo(this.zone.body.x, this.zone.body.y);
         // this.ennemy.moveTo.on('complete', function(gameObject, moveTo){
 
         // });
@@ -235,23 +220,24 @@ this.gfx = this.add.graphics();
 var closest = this.physics.closest(this.zone);
 var furthest = this.physics.furthest(this.girlMap);
 
-    this.physics.moveTo(this.ennemy, closest.x, 800, 200, 2010);
+    // this.physics.moveTo(this.ennemy, closest.x, 800, 200, 2010);
 this.gfx.clear()
     .lineStyle(2, 0xff3300)
     .lineBetween(closest.x, closest.y, this.ennemy.x, this.ennemy.y)
     .lineStyle(2, 0x0099ff)
     .lineBetween(furthest.x, furthest.y, this.ennemy.x, this.ennemy.y);
     // console.log(this.girlMap.body.y)
-    this.dist = Phaser.Math.Distance.Snake(this.girlMap.x, this.girlMap.y, this.ennemy.x, this.ennemy.y);
-    // this.physics.moveTo(this.ennemy, closest.x, 100);
+    this.dist = Phaser.Math.Distance.Snake(this.ennemy.x, this.ennemy.y, this.girlMap.x, this.girlMap.y);
+    // this.physics.moveTo(this.ennemy, closest.y, 100);
+    // this.physics.moveTo(this.ennemyzone, closest.x, 100);
 
     this.graphic
     .clear()
     .strokePoints([
-        { x: this.girlMap.x + this.dist, y: this.girlMap.y },
-        { x: this.girlMap.x, y: this.girlMap.y + this.dist },
-        { x: this.girlMap.x - this.dist, y: this.girlMap.y },
-        { x: this.girlMap.x , y: this.girlMap.y - this.dist },
+        { x: this.ennemy.x + this.dist, y: this.girlMap.y },
+        { x: this.ennemy.x, y: this.girlMap.y + this.dist },
+        { x: this.ennemy.x - this.dist, y: this.girlMap.y },
+        { x: this.ennemy.x , y: this.girlMap.y - this.dist },
     ], true, true)
 
     var dist2 = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
@@ -262,11 +248,24 @@ this.gfx.clear()
 
 this.graphic2
     .clear()
-    .strokeCircle(this.girlMap.x, this.girlMap.y, dist2);
+    .strokeCircle(this.ennemy.x, this.ennemy.y, dist2);
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
-    this.ennemyzone.x = this.ennemy.x
+    // this.ennemyzone.x = this.ennemy.x
+    // if (dist2 !== 196) {
+    // this.ennemyzone.x += 0.5
+    // this.ennemyzone.y -= 0.5
+    // }
+    if (this.ennemyzone.y !== this.zone.y) {
+      if (this.zone.y < this.ennemyzone.y) {
+      this.ennemyzone.y -= 1
+    } else {
+      this.ennemyzone.y += 1
+    }
+    }
+    this.ennemyzone.x += 1.5
+
 
     if (this.aKey.isDown) {
       this.girlMap.setVelocityX(0);
