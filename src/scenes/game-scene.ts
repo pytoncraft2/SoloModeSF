@@ -124,7 +124,7 @@ export class GameScene extends Phaser.Scene {
 
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
-    this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(900, 40).setOrigin(0.5, 0.5);
+    this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(3000, 40).setOrigin(0.5, 0.5);
     this.ennemyzone = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.add.existing(this.ennemyzone);
@@ -163,7 +163,7 @@ export class GameScene extends Phaser.Scene {
     function col(e, f) {
       console.log("COOOLLISION")
       if (this.girlMap.anims.getFrameName().includes("attack4")) {
-        f.setAngularVelocity(20).setVelocity(-400)
+        f.x < e.x ? f.setAngularVelocity(20).setVelocity(-400).setDragX(300) : f.setAngularVelocity(20).setVelocity(400).setDragX(300)
         // if (Phaser.Input.Keyboard.JustDown(this.aKey)) f.setAngularVelocity(20).setVelocity(-400)
       }
 
