@@ -49,8 +49,8 @@ export class GameScene extends Phaser.Scene {
    });
 
    // var ennemyGroup = {}
-   var block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2)
-   var block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2);
+   var block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53)
+   var block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
    // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
@@ -58,6 +58,7 @@ export class GameScene extends Phaser.Scene {
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
+    // girl.depth > barrel.depth - 10 && girl.depth < barrel.depth + 10
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
@@ -161,9 +162,13 @@ export class GameScene extends Phaser.Scene {
     );
 
     function col(e, f) {
-      console.log("COOOLLISION")
-      if (this.girlMap.anims.getFrameName().includes("attack4")) {
-        f.x < e.x ? f.setAngularVelocity(20).setVelocity(-400).setDragX(300) : f.setAngularVelocity(20).setVelocity(400).setDragX(300)
+      if (this.girlMap.anims.getFrameName().includes("attack4")
+      && e.depth > f.depth - 10 && e.depth < f.depth + 10
+
+      // && this.girlMap.y < f.y + 10
+        // && this.girlMap.y > f.y - 10
+      ) {
+        f.x < e.x ? f.setAngularVelocity(20).setVelocity(-400).setDragX(300).setAngularDrag(30) : f.setAngularVelocity(20).setVelocity(400).setDragX(300).setAngularDrag(30)
         // if (Phaser.Input.Keyboard.JustDown(this.aKey)) f.setAngularVelocity(20).setVelocity(-400)
       }
 
@@ -182,6 +187,7 @@ export class GameScene extends Phaser.Scene {
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
   }
   public update(): void {
+
 
     let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     this.protect.x = this.girlMap.x
