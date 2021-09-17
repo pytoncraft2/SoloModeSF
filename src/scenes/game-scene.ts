@@ -141,7 +141,23 @@ export class GameScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-    this.physics.add.collider(this.girlMap, block1);
+    // this.physics.add.collider(this.girlMap, block1);
+    this.physics.add.overlap(
+      this.girlMap,
+      block1,
+      col,
+      null,
+      this
+    );
+
+    function col(e, f) {
+      console.log("COOOLLISION")
+      if (this.girlMap.anims.getFrameName().includes("attack4")) {
+        f.setAngularVelocity(20).setVelocity(-400)
+        // if (Phaser.Input.Keyboard.JustDown(this.aKey)) f.setAngularVelocity(20).setVelocity(-400)
+      }
+
+    }
     this.physics.add.collider(this.ennemy, this.ennemyzone);
 
      //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
