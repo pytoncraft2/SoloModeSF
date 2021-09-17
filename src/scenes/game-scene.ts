@@ -28,6 +28,7 @@ export class GameScene extends Phaser.Scene {
   private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   private zone: Phaser.GameObjects.Zone
+  private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
 
   constructor() {
@@ -38,18 +39,18 @@ export class GameScene extends Phaser.Scene {
 
     //PANNEL VIEWER (Twitch)
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
-    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
-    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
+    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(0);
+    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(0);
 
     this.count = 0;
 
     this.barrelGroup = this.physics.add.group({
-     allowGravity: false
+     allowGravity: true
    });
 
    // var ennemyGroup = {}
-   var block1 = this.barrelGroup.create(150, 672, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
-   // var block2 = this.barrelGroup.create(162, 540, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true).setDepth(0.5);
+   var block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2)
+   var block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2);
    // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
@@ -123,9 +124,11 @@ export class GameScene extends Phaser.Scene {
 
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(900, 40).setOrigin(0.5, 0.5);
     this.ennemyzone = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.add.existing(this.ennemyzone);
+    this.physics.add.existing(this.barrelzone);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -138,10 +141,17 @@ export class GameScene extends Phaser.Scene {
       this.ennemyzone.body.immovable = true;
       this.ennemyzone.depth = 30;
     }
+    if (this.barrelzone.body instanceof Phaser.Physics.Arcade.Body) {
+      this.barrelzone.body.friction.x = 0;
+      this.barrelzone.body.allowGravity = false;
+      this.barrelzone.body.immovable = true;
+      this.barrelzone.depth = 30;
+    }
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-    // this.physics.add.collider(this.girlMap, block1);
+    // this.physics.add.collider(this.barrelGroup, this.barrelGroup);
+    this.physics.add.collider(this.barrelzone, this.barrelGroup);
     this.physics.add.overlap(
       this.girlMap,
       block1,
