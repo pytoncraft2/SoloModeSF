@@ -315,11 +315,11 @@ export class GameScene extends Phaser.Scene {
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
 
-      if (!this.girlMap.anims.getFrameName().includes("jump")) {
+      if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
         this.girlMap.anims.play('jump');
-        this.ennemy.on('animationcomplete', () => {
-          this.ennemy.anims.play('walk')
-        })
+        // this.ennemy.on('animationcomplete', () => {
+          // this.ennemy.anims.play('walk')
+        // })
       }
       if (this.girlMap.body.touching.down) {
         this.girlMap.setVelocityY(-590);
