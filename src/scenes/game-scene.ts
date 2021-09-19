@@ -45,13 +45,13 @@ export class GameScene extends Phaser.Scene {
     this.count = 0;
 
     this.barrelGroup = this.physics.add.group({
-     allowGravity: true
-   });
+      allowGravity: true
+    });
 
-   // var ennemyGroup = {}
-   var block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53)
-   var block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
-   // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
+    // var ennemyGroup = {}
+    var block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53)
+    var block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
+    // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
@@ -163,9 +163,9 @@ export class GameScene extends Phaser.Scene {
 
     function col(e, f) {
       if (this.girlMap.anims.getFrameName().includes("attack4")
-      && e.depth > f.depth - 10 && e.depth < f.depth + 10
+        && e.depth > f.depth - 10 && e.depth < f.depth + 10
 
-      // && this.girlMap.y < f.y + 10
+        // && this.girlMap.y < f.y + 10
         // && this.girlMap.y > f.y - 10
       ) {
         f.x < e.x ? f.setAngularVelocity(20).setVelocity(-400).setDragX(300).setAngularDrag(30) : f.setAngularVelocity(20).setVelocity(400).setDragX(300).setAngularDrag(30)
@@ -175,7 +175,7 @@ export class GameScene extends Phaser.Scene {
     }
     this.physics.add.collider(this.ennemy, this.ennemyzone);
 
-     //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
+    //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
     var following = this.yKey
     following.on('down', function() {
       this.follow === true ? (this.cameras.main.startFollow(this.girlMap), this.follow = false) : (this.cameras.main.stopFollow(this.girlMap), this.follow = true)
@@ -201,25 +201,29 @@ export class GameScene extends Phaser.Scene {
      * @param  this.zone.y socle joueur
      * @param  distance distance entre le joueur et l'ennemie
      */
-    if (this.ennemyzone.y !== this.zone.y) {
-      if (this.zone.y < this.ennemyzone.y) {
-        this.ennemyzone.y -= 1
-      } else {
-        this.ennemyzone.y += 1
+    if (distance < 1000) {
+      if (this.ennemyzone.y !== this.zone.y) {
+        if (this.zone.y < this.ennemyzone.y) {
+          this.ennemyzone.y -= 1
+        } else {
+          this.ennemyzone.y += 1
+        }
       }
-    }
-    if (distance > 160 && this.ennemy.x < this.girlMap.x) {
-      this.ennemyzone.x += 1.5
-      this.ennemy.x += 1.5
-      this.ennemy.flipX = false
-      this.ennemy.play('walk', true)
-    } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
-      this.ennemyzone.x -= 1.5
-      this.ennemy.x -= 1.5
-      this.ennemy.flipX = true
-      this.ennemy.play('walk', true)
+      if (distance > 160 && this.ennemy.x < this.girlMap.x) {
+        this.ennemyzone.x += 1.5
+        this.ennemy.x += 1.5
+        this.ennemy.flipX = false
+        this.ennemy.play('walk', true)
+      } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
+        this.ennemyzone.x -= 1.5
+        this.ennemy.x -= 1.5
+        this.ennemy.flipX = true
+        this.ennemy.play('walk', true)
+      } else {
+        this.ennemy.play("attack", true)
+      }
     } else {
-      this.ennemy.play("attack", true)
+      this.ennemy.play("idle_walk")
     }
     /**
      * [FIN LOGIQUE BOT]
@@ -263,11 +267,11 @@ export class GameScene extends Phaser.Scene {
      * _________________
      */
 
-     /**
-      * [DEPLACEMENT GAUCHE - DROITE - SAUT]
-      * @param  this.cursors touches directionnelle et espace:
-      * _________________
-      */
+    /**
+     * [DEPLACEMENT GAUCHE - DROITE - SAUT]
+     * @param  this.cursors touches directionnelle et espace:
+     * _________________
+     */
 
     else if (this.cursors.left.isDown) {
       this.zone.x = this.girlMap.x;
@@ -331,11 +335,11 @@ export class GameScene extends Phaser.Scene {
      * _________________
      */
 
-     /**
-      * _________________
-      * [DEPLACEMENT HAUT - BAS ]
-      * @param  this.cursors touches directionnelle et espace:
-      */
+    /**
+     * _________________
+     * [DEPLACEMENT HAUT - BAS ]
+     * @param  this.cursors touches directionnelle et espace:
+     */
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
       this.zone.body.position.y -= 2
@@ -363,11 +367,11 @@ export class GameScene extends Phaser.Scene {
      * _________________
      */
 
-     /**
-      * [LOGIQUE INTERACTION AVEC UN TONNEAU]
-      * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
-      *
-      */
+    /**
+     * [LOGIQUE INTERACTION AVEC UN TONNEAU]
+     * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
+     *
+     */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
       if (this.girlMap.depth > this.barrel.depth - 10
         && this.girlMap.depth < this.barrel.depth + 10) {
@@ -414,9 +418,9 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-/**
- * [TOGGLE AFFICHAGE + ANIMATION PANNEL VIEWER (Twitch)]
- */
+    /**
+     * [TOGGLE AFFICHAGE + ANIMATION PANNEL VIEWER (Twitch)]
+     */
     if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
       this.pannelBottom.alpha === 1 ?
         this.tweens.add({
