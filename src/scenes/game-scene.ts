@@ -324,8 +324,10 @@ export class GameScene extends Phaser.Scene {
       if (this.girlMap.body.touching.down) {
         this.girlMap.setVelocityY(-590);
       }
-    } else if (Phaser.Input.Keyboard.JustUp(this.spaceBar) && !this.girlMap.body.touching.down) {
-        this.girlMap.setFrame("jump3");
+    }
+    else {
+      this.girlMap.setVelocityX(0);
+      this.girlMap.anims.play('idle_walk');
     }
 
     /**
