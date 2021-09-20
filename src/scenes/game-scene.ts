@@ -43,10 +43,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+    this.cameras.main.setBounds(-2074, 0, 3574, 666);
+this.physics.world.setBounds(-2074, 0, 3574, 666);
 
-    this.cameras.main.setBounds(0, 0, 3200, 600).setName('main')
+    // this.cameras.main.setBounds(0, 0, 3200, 600).setName('main')
 
-    this.minimap = this.cameras.add(200, 10, 400, 100).setZoom(0.2)
+    this.minimap = this.cameras.add(500, 10, 400, 100).setZoom(0.2)
 this.minimap.setBackgroundColor(0x002244)
 this.minimap.scrollX = 1600
 this.minimap.scrollY = 300
@@ -244,6 +246,8 @@ this.minimap.scrollY = 300
   }
 
   private handleHealthChanged(value: number) {
+    this.cameras.main.flash(600, 255, 0, 0);
+
     this.tweens.addCounter({
       from: this.lastHealth,
       to: value,
