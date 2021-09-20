@@ -240,6 +240,19 @@ export class GameScene extends Phaser.Scene {
      * @return                  [description]
      */
     if (this.aKey.isDown) {
+
+      if (!this.block1.body.allowGravity) {
+        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+
+        this.block1.body.allowGravity = true
+        // this.block1.setVelocityX(300)
+        this.block1.setDepth(this.girlMap.depth)
+        this.barrelzone.y = this.zone.y
+        // this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30)
+        this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
+      }
+        // this.barrelzone.y = this.zone.y
+      }
       this.girlMap.setVelocityX(0);
       // this.barrel.setImmovable(false)
       if (this.girlMap.anims.getFrameName().includes("attack4")
