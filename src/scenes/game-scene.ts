@@ -25,7 +25,6 @@ export class GameScene extends Phaser.Scene {
   private cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
   private ennemy: Phaser.Physics.Arcade.Sprite;
-  private ennemyt: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
   private barrel: Phaser.Physics.Arcade.Image;
@@ -68,8 +67,7 @@ export class GameScene extends Phaser.Scene {
     // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
-    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
-    this.ennemyt = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setImmovable(true).setActive(true);
+    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true);
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
@@ -146,14 +144,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.existing(this.ennemyzone);
     this.physics.add.existing(this.barrelzone);
     this.physics.add.existing(this.block1);
-    this.physics.add.existing(this.ennemyt);
-    console.log(this.ennemyt)
-
-    if (this.ennemyt.body instanceof Phaser.Physics.Arcade.Body) {
-      this.ennemyt.body.allowGravity = false;
-      this.ennemyt.body.immovable = true;
-    }
-
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -269,11 +259,14 @@ export class GameScene extends Phaser.Scene {
     /**
      * _________________
      * [LOGIQUE DU BOT] (déblacement en x/y et rotation selon le joueur)
+     * @param  this.ennemy.active sprite ennemi non détruit
      * @param  this.ennemy sprite de l'ennemie
      * @param  this.ennemyzone.y socle ennemie
      * @param  this.zone.y socle joueur
      * @param  distance distance entre le joueur et l'ennemie
      */
+
+     if (this.ennemy.active) {
     if (distance < 1000) {
       if (this.ennemyzone.y !== this.zone.y) {
         if (this.zone.y < this.ennemyzone.y) {
@@ -306,6 +299,7 @@ export class GameScene extends Phaser.Scene {
     } else {
       this.ennemy.play("idle_walk")
     }
+  }
     /**
      * [FIN LOGIQUE BOT]
      * _________________
@@ -345,7 +339,7 @@ export class GameScene extends Phaser.Scene {
               y: -100,
               repeat: 0,
               duration: 900,
-              onComplete: function() { console.log('FIN'); arguments[1][0].destroy(); },
+              onComplete: () => ( this.ennemy.destroy(), this.ennemyzone.destroy() ),
             });
           }
           this.ennemy.alpha -= 0.03
@@ -394,9 +388,6 @@ export class GameScene extends Phaser.Scene {
       }
     }
     else if (this.spaceBar.isDown) {
-      this.ennemyt.destroy()
-console.log(this.ennemyt)
-
       if (!this.tweens.isTweening(this.ombre)) {
         this.tweens.add({
           targets: this.ombre,
