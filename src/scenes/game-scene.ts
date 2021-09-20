@@ -271,7 +271,6 @@ export class GameScene extends Phaser.Scene {
         }
       }
       if (distance > 160 && this.ennemy.x < this.girlMap.x) {
-        // this.zone.x = this.girlMap.x;
 
         this.ennemyzone.x = this.ennemy.x
         this.ennemy.x += 1.5
@@ -279,19 +278,22 @@ export class GameScene extends Phaser.Scene {
         this.ennemy.play('walk', true)
       } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
         this.ennemyzone.x = this.ennemy.x
-        // this.ennemyzone.x -= 1.5
         this.ennemy.x -= 1.5
         this.ennemy.flipX = true
         this.ennemy.play('walk', true)
       } else {
         if (this.ennemy.alpha > 0.3) {
-        this.ennemy.play("attack", true)
+
+          if (this.protect.alpha === 0.5) {
+            this.ennemy.play("idle_attack", true)
+          } else {
+            this.ennemy.play("attack", true)
+          }
+
       } else {
         this.ennemy.setFrame(0)
       }
         if (this.ennemy.anims.getFrameName().includes("attack4")) {
-      // this.events.emit('health-changed',90);
-      // const value = 40
       this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
       this.events.emit('health-changed', this.health)
         }
@@ -316,7 +318,7 @@ export class GameScene extends Phaser.Scene {
 
       /**
        * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
-       * @param  !this.block1.body.allowGravity : surélevé
+       * @param  !this.block1.body.allowGravity : tonneau surélevé
        */
 
       if (!this.block1.body.allowGravity) {
@@ -406,9 +408,6 @@ export class GameScene extends Phaser.Scene {
 
       if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
         this.girlMap.anims.play('jump');
-        // this.ennemy.on('animationcomplete', () => {
-        // this.ennemy.anims.play('walk')
-        // })
       }
       if (this.girlMap.body.touching.down) {
         this.girlMap.setVelocityY(-590);
