@@ -25,6 +25,8 @@ export class GameScene extends Phaser.Scene {
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private barrel: Phaser.Physics.Arcade.Image;
+  private block1: Phaser.Physics.Arcade.Image;
+  private block2: Phaser.Physics.Arcade.Image;
   private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   private zone: Phaser.GameObjects.Zone
@@ -49,8 +51,8 @@ export class GameScene extends Phaser.Scene {
     });
 
     // var ennemyGroup = {}
-    var block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53)
-    var block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
+    this.block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53)
+    this.block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
     // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
@@ -155,13 +157,13 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.barrelzone, this.barrelGroup);
     this.physics.add.overlap(
       this.girlMap,
-      block1,
-      col,
+      this.block1,
+      collideEvent,
       null,
       this
     );
 
-    function col(e, f) {
+    function collideEvent(e, f) {
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && e.depth > f.depth - 10 && e.depth < f.depth + 10
 
@@ -373,10 +375,24 @@ export class GameScene extends Phaser.Scene {
      *
      */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
-      if (this.girlMap.depth > this.barrel.depth - 10
-        && this.girlMap.depth < this.barrel.depth + 10) {
-        // this.barrel.allowGravity = false
-        // this.barrel.moveTo.moveTo(this.girlMap.x, this.girlMap.y - 340);
+      if (this.girlMap.depth > this.block1.depth - 10
+        && this.girlMap.depth < this.block1.depth + 10) {
+
+        //porter
+        if (this.block1.body.allowGravity) {
+          this.block1.setVelocityX(this.girlMap.body.velocity.x)
+          if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+            this.block1.body.allowGravity = false
+            this.block1.y = this.girlMap.y
+            this.block1.setVelocityX(this.girlMap.body.velocity.x)
+          }
+        } else {
+          this.block1.setVelocityX(this.girlMap.body.velocity.x)
+          if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+            this.block1.body.allowGravity = true
+            this.block1.setVelocityX(0)
+          }
+        }
       }
     }
 
