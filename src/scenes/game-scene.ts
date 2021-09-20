@@ -25,6 +25,7 @@ export class GameScene extends Phaser.Scene {
   private cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
   private ennemy: Phaser.Physics.Arcade.Sprite;
+  private ennemyt: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
   private barrel: Phaser.Physics.Arcade.Image;
@@ -68,6 +69,7 @@ export class GameScene extends Phaser.Scene {
 
 
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203);
+    this.ennemyt = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setImmovable(true).setActive(true);
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
@@ -144,6 +146,14 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.existing(this.ennemyzone);
     this.physics.add.existing(this.barrelzone);
     this.physics.add.existing(this.block1);
+    this.physics.add.existing(this.ennemyt);
+    console.log(this.ennemyt)
+
+    if (this.ennemyt.body instanceof Phaser.Physics.Arcade.Body) {
+      this.ennemyt.body.allowGravity = false;
+      this.ennemyt.body.immovable = true;
+    }
+
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -384,6 +394,9 @@ export class GameScene extends Phaser.Scene {
       }
     }
     else if (this.spaceBar.isDown) {
+      this.ennemyt.destroy()
+console.log(this.ennemyt)
+
       if (!this.tweens.isTweening(this.ombre)) {
         this.tweens.add({
           targets: this.ombre,
