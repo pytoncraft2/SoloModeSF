@@ -8,6 +8,8 @@ export class GameScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
 
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
+  private health = 100
+  public events: Phaser.Events.EventEmitter;
   private yKey: Phaser.Input.Keyboard.Key;
   public follow: boolean;
   private mKey: Phaser.Input.Keyboard.Key;
@@ -24,6 +26,7 @@ export class GameScene extends Phaser.Scene {
   private spaceBar: Phaser.Input.Keyboard.Key
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
+  private graphics!: Phaser.GameObjects.Graphics;
   private barrel: Phaser.Physics.Arcade.Image;
   private block1: Phaser.Physics.Arcade.Image;
   private block2: Phaser.Physics.Arcade.Image;
@@ -32,6 +35,7 @@ export class GameScene extends Phaser.Scene {
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
+  private lastHealth = 100
 
   constructor() {
     super(sceneConfig);
@@ -40,6 +44,13 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
 
     //PANNEL VIEWER (Twitch)
+    this.graphics = this.add.graphics()
+    this.setHealthBar(100)
+    this.events = new Phaser.Events.EventEmitter()
+    this.events.on('health-changed', this.handleHealthChanged, this)
+
+
+
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
     this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(0);
     this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(0);
@@ -132,6 +143,7 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.existing(this.zone);
     this.physics.add.existing(this.ennemyzone);
     this.physics.add.existing(this.barrelzone);
+    this.physics.add.existing(this.block1);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -187,7 +199,55 @@ export class GameScene extends Phaser.Scene {
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
+
   }
+
+
+  public setHealthBar(value: number) {
+    const width = 200
+    const percent = Phaser.Math.Clamp(value, 0, 100) / 100
+    this.graphics.clear()
+    this.graphics.fillStyle(0x979797)
+    this.graphics.fillRoundedRect(10, 10, width, 20, 5).setScrollFactor(0)
+    if (percent > 0) {
+      this.graphics.fillStyle(0x00ff00)
+      this.graphics.fillRoundedRect(10, 10, width * percent, 20, 5)
+    }
+  }
+
+  private handleHealthChanged(value: number) {
+    this.tweens.addCounter({
+      from: this.lastHealth,
+      to: value,
+      duration: 200,
+      ease: Phaser.Math.Easing.Sine.InOut,
+      onUpdate: tween => {
+        const value = tween.getValue()
+        this.setHealthBar(value)
+      }
+    })
+
+    this.lastHealth = value
+  }
+
+
+  // public handleHealthChanged(value: number)
+  // {
+  // 	this.tweens.addCounter({
+  // 		from: this.lastHealth,
+  // 		to: value,
+  // 		duration: 200,
+  // 		ease: Phaser.Math.Easing.Sine.InOut,
+  // 		onUpdate: tween => {
+  // 			const value = tween.getValue()
+  // 			this.setHealthBar(value)
+  // 		}
+  // 	})
+  //
+  // 	this.lastHealth = value
+  // }
+
+
   public update(): void {
 
 
@@ -224,6 +284,14 @@ export class GameScene extends Phaser.Scene {
         this.ennemy.play('walk', true)
       } else {
         this.ennemy.play("attack", true)
+        if (this.ennemy.anims.getFrameName().includes("attack4")) {
+      // this.events.emit('health-changed',90);
+      // const value = 40
+      this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
+      console.log(this.health)
+      this.events.emit('health-changed', this.health)
+        }
+
       }
     } else {
       this.ennemy.play("idle_walk")
@@ -267,7 +335,7 @@ export class GameScene extends Phaser.Scene {
               y: -100,
               repeat: 0,
               duration: 900,
-              onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0); },
+              onComplete: function() { console.log('FIN'); arguments[1][0].destroy(); },
             });
           }
           this.ennemy.alpha -= 0.03
@@ -390,6 +458,7 @@ export class GameScene extends Phaser.Scene {
      *
      */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
+
       if (this.block1.body.allowGravity && this.girlMap.depth > this.block1.depth - 10
         && this.girlMap.depth < this.block1.depth + 10 && distanceBarrel < 150) {
         this.block1.setVelocityX(this.girlMap.body.velocity.x)
