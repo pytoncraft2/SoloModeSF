@@ -62,7 +62,7 @@ export class GameScene extends Phaser.Scene {
     });
 
     // var ennemyGroup = {}
-    this.block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53)
+    this.block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53).setBounce(0.5)
     this.block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
     // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
@@ -186,9 +186,13 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
-    function ennemyBarrelCollide() {
+       // this.physics.world.addCollider(colliderBlockEnnemy)
+    function ennemyBarrelCollide(block1: Phaser.Physics.Arcade.Image, ennemy) {
     // this.ennemyzone.x = this.ennemy.x - 200
-      // this.physics.world.removeCollider(colliderBlockEnnemy);
+      if (ennemy.body.touching.up) {
+       // this.physics.world.removeCollider(colliderBlockEnnemy);
+       // block1.disableBody(true)
+      }
     }
 
     function girlMapBlockCollide(e, f) {
