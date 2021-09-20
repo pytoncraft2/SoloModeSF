@@ -67,9 +67,9 @@ export class GameScene extends Phaser.Scene {
     // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
-    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
+    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 1).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
     this.follow = true;
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 1).setScale(0.4).setVelocityY(203);
     // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
     // girl.depth > barrel.depth - 10 && girl.depth < barrel.depth + 10
     this.add.image(940, 390, 'bg').setDepth(-54);
@@ -187,7 +187,7 @@ export class GameScene extends Phaser.Scene {
     );
 
     function ennemyBarrelCollide() {
-    this.ennemyzone.setDisplaySize(400, 40)
+    // this.ennemyzone.setDisplaySize(400, 40)
       // this.physics.world.removeCollider(colliderBlockEnnemy);
     }
 
@@ -271,7 +271,9 @@ export class GameScene extends Phaser.Scene {
     let distanceBarrel = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
+    this.ennemyzone.x = this.ennemy.body.x
 
+          // this.ennemyzone.y = this.ennemy.y
     /**
      * _________________
      * [LOGIQUE DU BOT] (déblacement en x/y et rotation selon le joueur)
@@ -286,18 +288,18 @@ export class GameScene extends Phaser.Scene {
     if (distance < 1000) {
       if (this.ennemyzone.y !== this.zone.y) {
         if (this.zone.y < this.ennemyzone.y) {
-          this.ennemyzone.y -= 1
+          // this.ennemyzone.y -= 1
         } else {
-          this.ennemyzone.y += 1
+          // this.ennemyzone.y += 1
         }
       }
       if (distance > 160 && this.ennemy.x < this.girlMap.x) {
-        this.ennemyzone.x += 1.5
+        // this.ennemyzone.x += 1.5
         this.ennemy.x += 1.5
         this.ennemy.flipX = false
         this.ennemy.play('walk', true)
       } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
-        this.ennemyzone.x -= 1.5
+        // this.ennemyzone.x -= 1.5
         this.ennemy.x -= 1.5
         this.ennemy.flipX = true
         this.ennemy.play('walk', true)
