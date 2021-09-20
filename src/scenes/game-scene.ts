@@ -247,17 +247,22 @@ this.minimap.scrollY = 300
 
   private handleHealthChanged(value: number) {
 
+    const hsv = Phaser.Display.Color.HSVColorWheel();
+    this.girlMap.setTint(0x8f1111);
+
+    // const i = Phaser.Math.Between(0, 359);
+
+// this.girlMap.setTint(hsv[0].color);
     // this.cameras.main.fadeEffect.start(false, 1000, 255,0,0, false)
-    this.girlMap.setTintFill(0xff00000).setAlpha(0.4)
+    // this.girlMap.setTintFill(0xff00000).setAlpha(0.4)
     // this.tweens.add({
     //   targets: this.girlMap,
-    //   tint: 0xff0000,
+    //   tint: 0xff00000,
     //   repeat: 0,
-    //   velocityX: -10,
-    //   duration: 2000,
+    //   duration: 1000,
     // });
+      // onComplete: () => ( this.girlMap.clearTint() ),
 
-      // onComplete: () => ( this.ennemy.destroy(), this.ennemyzone.destroy() ),
 
     this.tweens.addCounter({
       from: this.lastHealth,
@@ -267,7 +272,8 @@ this.minimap.scrollY = 300
       onUpdate: tween => {
         const value = tween.getValue()
         this.setHealthBar(value)
-      }
+      },
+      onComplete: () => this.girlMap.clearTint() ,
     })
 
     this.lastHealth = value
