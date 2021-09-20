@@ -291,7 +291,6 @@ export class GameScene extends Phaser.Scene {
       // this.events.emit('health-changed',90);
       // const value = 40
       this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
-      console.log(this.health)
       this.events.emit('health-changed', this.health)
         }
 
@@ -463,14 +462,15 @@ export class GameScene extends Phaser.Scene {
      */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
 
-      if (this.block1.body.allowGravity && this.girlMap.depth > this.block1.depth - 10
-        && this.girlMap.depth < this.block1.depth + 10 && distanceBarrel < 150) {
+      if (this.block1.body.allowGravity && distanceBarrel < 150) {
+        console.log("allow")
         this.block1.setVelocityX(this.girlMap.body.velocity.x)
         if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
           this.block1.body.allowGravity = false
           this.block1.y = this.girlMap.y
         }
-      } else if (!this.block1.body.allowGravity) {
+      } else {
+        console.log("deny")
         this.block1.setVelocityX(this.girlMap.body.velocity.x)
         if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
           this.block1.body.allowGravity = true
