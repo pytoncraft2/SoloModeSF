@@ -67,7 +67,7 @@ export class GameScene extends Phaser.Scene {
     // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
 
 
-    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true);
+    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
     this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
@@ -165,24 +165,40 @@ export class GameScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
+
+
     // this.physics.add.collider(this.barrelGroup, this.barrelGroup);
     this.physics.add.collider(this.barrelzone, this.barrelGroup);
-    this.physics.add.overlap(
-      this.girlMap,
+
+    var colliderBlockEnnemy = this.physics.add.collider(
       this.block1,
-      collideEvent,
+      this.ennemy,
+      ennemyBarrelCollide,
       null,
       this
     );
 
-    function collideEvent(e, f) {
+    this.physics.add.overlap(
+      this.girlMap,
+      this.block1,
+      girlMapBlockCollide,
+      null,
+      this
+    );
+
+    function ennemyBarrelCollide() {
+    this.ennemyzone.setDisplaySize(400, 40)
+      // this.physics.world.removeCollider(colliderBlockEnnemy);
+    }
+
+    function girlMapBlockCollide(e, f) {
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && e.depth > f.depth - 10 && e.depth < f.depth + 10
 
         // && this.girlMap.y < f.y + 10
         // && this.girlMap.y > f.y - 10
       ) {
-        f.x < e.x ? f.setAngularVelocity(20).setVelocity(-400).setDragX(300).setAngularDrag(30) : f.setAngularVelocity(20).setVelocity(400).setDragX(300).setAngularDrag(30)
+        f.x < e.x ? f.setAngularVelocity(20).setVelocity(-300).setDragX(300).setAngularDrag(30) : f.setAngularVelocity(20).setVelocity(300).setDragX(300).setAngularDrag(30)
         // if (Phaser.Input.Keyboard.JustDown(this.aKey)) f.setAngularVelocity(20).setVelocity(-400)
       }
 
@@ -469,7 +485,7 @@ export class GameScene extends Phaser.Scene {
           this.block1.body.allowGravity = false
           this.block1.y = this.girlMap.y
         }
-      } else {
+      } else if (!this.block1.body.allowGravity) {
         console.log("deny")
         this.block1.setVelocityX(this.girlMap.body.velocity.x)
         if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
