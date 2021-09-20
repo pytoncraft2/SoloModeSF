@@ -35,6 +35,7 @@ export class GameScene extends Phaser.Scene {
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
+  private minimap!: Phaser.Cameras.Scene2D.Camera
   private lastHealth = 100
 
   constructor() {
@@ -42,6 +43,13 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+
+    this.cameras.main.setBounds(0, 0, 3200, 600).setName('main')
+
+    this.minimap = this.cameras.add(200, 10, 400, 100).setZoom(0.2)
+this.minimap.setBackgroundColor(0x002244)
+this.minimap.scrollX = 1600
+this.minimap.scrollY = 300
 
     //PANNEL VIEWER (Twitch)
     this.graphics = this.add.graphics()
@@ -270,6 +278,10 @@ export class GameScene extends Phaser.Scene {
 
   public update(): void {
 
+    this.cameras.main.scrollX = this.girlMap.x - 400
+
+//  And this camera is 400px wide, so -200
+this.minimap.scrollX = Phaser.Math.Clamp(this.girlMap.x - 200, 800, 2000)
 
     let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     let distanceBarrel = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
