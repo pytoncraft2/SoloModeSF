@@ -35,7 +35,6 @@ export class GameScene extends Phaser.Scene {
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
-  private minimap!: Phaser.Cameras.Scene2D.Camera
   private lastHealth = 100
 
   constructor() {
@@ -43,45 +42,33 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
+
+    //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
-this.physics.world.setBounds(-2074, 0, 3574, 666);
+    this.physics.world.setBounds(-2074, 0, 3574, 666);
 
-    // this.cameras.main.setBounds(0, 0, 3200, 600).setName('main')
-
-    this.minimap = this.cameras.add(500, 10, 400, 100).setZoom(0.2)
-this.minimap.setBackgroundColor(0x002244)
-this.minimap.scrollX = 1600
-this.minimap.scrollY = 300
-
-    //PANNEL VIEWER (Twitch)
+    //PANNEL VIEWER (Twitch) + VIE
+    this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(0);
+    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(0);
     this.graphics = this.add.graphics()
     this.setHealthBar(100)
     this.events = new Phaser.Events.EventEmitter()
     this.events.on('health-changed', this.handleHealthChanged, this)
 
-
-
-    this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
-    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(0);
-    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(0);
-
     this.count = 0;
+    this.follow = true;
 
+    //creation du groupe de tonneaux
     this.barrelGroup = this.physics.add.group({
       allowGravity: true
     });
 
-    // var ennemyGroup = {}
     this.block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53).setBounce(0.5)
     this.block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
-    // var block3 = this.barrelGroup.create(169, 700, 'barrel').setVelocity(0).setScale(0.2).setImmovable(true);
-
 
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
-    this.follow = true;
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
-    // this.barrel = this.physics.add.image(1250, 680, 'barrel').setOrigin(0.5, 0.5).setScale(0.2).setDragX(200).setCollideWorldBounds(true)
-    // girl.depth > barrel.depth - 10 && girl.depth < barrel.depth + 10
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
@@ -175,18 +162,9 @@ this.minimap.scrollY = 300
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-
-
-    // this.physics.add.collider(this.barrelGroup, this.barrelGroup);
     this.physics.add.collider(this.barrelzone, this.barrelGroup);
-
-    var colliderBlockEnnemy = this.physics.add.collider(
-      this.block1,
-      this.ennemy,
-      ennemyBarrelCollide,
-      null,
-      this
-    );
+    this.physics.add.collider(this.block1, this.ennemy);
+    this.physics.add.collider(this.ennemy, this.ennemyzone);
 
     this.physics.add.overlap(
       this.girlMap,
@@ -196,28 +174,19 @@ this.minimap.scrollY = 300
       this
     );
 
-       // this.physics.world.addCollider(colliderBlockEnnemy)
-    function ennemyBarrelCollide(block1: Phaser.Physics.Arcade.Image, ennemy) {
-    // this.ennemyzone.x = this.ennemy.x - 200
-      if (ennemy.body.touching.up) {
-       // this.physics.world.removeCollider(colliderBlockEnnemy);
-       // block1.disableBody(true)
-      }
-    }
+    /**
+     * FACE A UN TONNEAU: le joueur peut propulser le tonneau
+     * @param  girl  verification de sa position
+     * @param  block reconfiguration des parametres(velocity, angularDrag...)
+     */
 
-    function girlMapBlockCollide(e, f) {
+    function girlMapBlockCollide(girl: Phaser.Physics.Arcade.Sprite, block: Phaser.Physics.Arcade.Image) {
       if (this.girlMap.anims.getFrameName().includes("attack4")
-        && e.depth > f.depth - 10 && e.depth < f.depth + 10
-
-        // && this.girlMap.y < f.y + 10
-        // && this.girlMap.y > f.y - 10
+        && girl.depth > block.depth - 10 && girl.depth < block.depth + 10
       ) {
-        f.x < e.x ? f.setAngularVelocity(20).setVelocity(-300).setDragX(300).setAngularDrag(30) : f.setAngularVelocity(20).setVelocity(300).setDragX(300).setAngularDrag(30)
-        // if (Phaser.Input.Keyboard.JustDown(this.aKey)) f.setAngularVelocity(20).setVelocity(-400)
+        block.x < girl.x ? block.setAngularVelocity(20).setVelocity(-300).setDragX(300).setAngularDrag(30) : block.setAngularVelocity(20).setVelocity(300).setDragX(300).setAngularDrag(30)
       }
-
     }
-    this.physics.add.collider(this.ennemy, this.ennemyzone);
 
     //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
     var following = this.yKey
@@ -233,6 +202,11 @@ this.minimap.scrollY = 300
   }
 
 
+  /**
+   * Changement de la barre de vie selon la valeur passé en parametre
+   * @param  value vie en plus ou en moins
+   * @return       Graphics en au à gauche
+   */
   public setHealthBar(value: number) {
     const width = 200
     const percent = Phaser.Math.Clamp(value, 0, 100) / 100
@@ -245,24 +219,15 @@ this.minimap.scrollY = 300
     }
   }
 
+  /**
+   * Animation bar de vie + joueur quand il est attaqué
+   * @param  value l'etat final de sa vie
+   */
+
   private handleHealthChanged(value: number) {
 
     const hsv = Phaser.Display.Color.HSVColorWheel();
     this.girlMap.setTint(0x8f1111);
-
-    // const i = Phaser.Math.Between(0, 359);
-
-// this.girlMap.setTint(hsv[0].color);
-    // this.cameras.main.fadeEffect.start(false, 1000, 255,0,0, false)
-    // this.girlMap.setTintFill(0xff00000).setAlpha(0.4)
-    // this.tweens.add({
-    //   targets: this.girlMap,
-    //   tint: 0xff00000,
-    //   repeat: 0,
-    //   duration: 1000,
-    // });
-      // onComplete: () => ( this.girlMap.clearTint() ),
-
 
     this.tweens.addCounter({
       from: this.lastHealth,
@@ -279,30 +244,7 @@ this.minimap.scrollY = 300
     this.lastHealth = value
   }
 
-
-  // public handleHealthChanged(value: number)
-  // {
-  // 	this.tweens.addCounter({
-  // 		from: this.lastHealth,
-  // 		to: value,
-  // 		duration: 200,
-  // 		ease: Phaser.Math.Easing.Sine.InOut,
-  // 		onUpdate: tween => {
-  // 			const value = tween.getValue()
-  // 			this.setHealthBar(value)
-  // 		}
-  // 	})
-  //
-  // 	this.lastHealth = value
-  // }
-
-
   public update(): void {
-
-    this.cameras.main.scrollX = this.girlMap.x - 400
-
-//  And this camera is 400px wide, so -200
-this.minimap.scrollX = Phaser.Math.Clamp(this.girlMap.x - 200, 800, 2000)
 
     let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     let distanceBarrel = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
@@ -342,7 +284,11 @@ this.minimap.scrollX = Phaser.Math.Clamp(this.girlMap.x - 200, 800, 2000)
         this.ennemy.flipX = true
         this.ennemy.play('walk', true)
       } else {
+        if (this.ennemy.alpha > 0.3) {
         this.ennemy.play("attack", true)
+      } else {
+        this.ennemy.setFrame(0)
+      }
         if (this.ennemy.anims.getFrameName().includes("attack4")) {
       // this.events.emit('health-changed',90);
       // const value = 40
