@@ -246,7 +246,13 @@ this.minimap.scrollY = 300
   }
 
   private handleHealthChanged(value: number) {
-    this.cameras.main.flash(600, 255, 0, 0);
+    this.cameras.main.flash(600);
+    // this.cameras.main.on('camerafadeinstart', )
+    // this.cameras.main.fadeIn(600, 255, 0, 0);
+    // this.cameras.main.setBackgroundColor('rgba(255, 0, 0, 0)');
+    // this.cameras.main.fadeEffect
+
+
 
     this.tweens.addCounter({
       from: this.lastHealth,
