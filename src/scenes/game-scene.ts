@@ -192,6 +192,7 @@ export class GameScene extends Phaser.Scene {
 
 
     let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
+    let distanceBarrel = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
 
@@ -320,7 +321,7 @@ export class GameScene extends Phaser.Scene {
       if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
         this.girlMap.anims.play('jump');
         // this.ennemy.on('animationcomplete', () => {
-          // this.ennemy.anims.play('walk')
+        // this.ennemy.anims.play('walk')
         // })
       }
       if (this.girlMap.body.touching.down) {
@@ -372,28 +373,32 @@ export class GameScene extends Phaser.Scene {
     /**
      * [LOGIQUE INTERACTION AVEC UN TONNEAU]
      * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
+     * Porter et lacher le tonneau
      *
      */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
-      if (this.girlMap.depth > this.block1.depth - 10
-        && this.girlMap.depth < this.block1.depth + 10) {
-
-        //porter
-        if (this.block1.body.allowGravity) {
+        if (this.block1.body.allowGravity && this.girlMap.depth > this.block1.depth - 10
+        && this.girlMap.depth < this.block1.depth + 10 && distanceBarrel < 150) {
           this.block1.setVelocityX(this.girlMap.body.velocity.x)
           if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
             this.block1.body.allowGravity = false
             this.block1.y = this.girlMap.y
-            this.block1.setVelocityX(this.girlMap.body.velocity.x)
           }
-        } else {
+        } else if (!this.block1.body.allowGravity) {
           this.block1.setVelocityX(this.girlMap.body.velocity.x)
           if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
             this.block1.body.allowGravity = true
             this.block1.setVelocityX(0)
+            this.block1.setDepth(this.girlMap.depth)
+            this.block1.setAngle(0)
+            this.barrelzone.y = this.zone.y
           }
         }
-      }
+    }
+
+    if (!this.block1.body.allowGravity) {
+      this.block1.x = this.girlMap.x
+      this.block1.y = this.girlMap.y
     }
 
     /**
