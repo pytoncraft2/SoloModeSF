@@ -241,20 +241,20 @@ export class GameScene extends Phaser.Scene {
      */
     if (this.aKey.isDown) {
 
+      /**
+       * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
+       * @param  !this.block1.body.allowGravity : surélevé
+       */
+
       if (!this.block1.body.allowGravity) {
         if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-
-        this.block1.body.allowGravity = true
-        // this.block1.setVelocityX(300)
-        this.block1.setDepth(this.girlMap.depth)
-        this.barrelzone.y = this.zone.y
-        // this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30)
-        this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
-      }
-        // this.barrelzone.y = this.zone.y
+          this.block1.body.allowGravity = true
+          this.block1.setDepth(this.girlMap.depth)
+          this.barrelzone.y = this.zone.y
+          this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
+        }
       }
       this.girlMap.setVelocityX(0);
-      // this.barrel.setImmovable(false)
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && this.girlMap.depth < this.ennemy.depth + 10
         && this.girlMap.depth > this.ennemy.depth - 10 && distance < 196) {
@@ -390,23 +390,23 @@ export class GameScene extends Phaser.Scene {
      *
      */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
-        if (this.block1.body.allowGravity && this.girlMap.depth > this.block1.depth - 10
+      if (this.block1.body.allowGravity && this.girlMap.depth > this.block1.depth - 10
         && this.girlMap.depth < this.block1.depth + 10 && distanceBarrel < 150) {
-          this.block1.setVelocityX(this.girlMap.body.velocity.x)
-          if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-            this.block1.body.allowGravity = false
-            this.block1.y = this.girlMap.y
-          }
-        } else if (!this.block1.body.allowGravity) {
-          this.block1.setVelocityX(this.girlMap.body.velocity.x)
-          if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-            this.block1.body.allowGravity = true
-            this.block1.setVelocityX(0)
-            this.block1.setDepth(this.girlMap.depth)
-            this.block1.setAngle(0)
-            this.barrelzone.y = this.zone.y
-          }
+        this.block1.setVelocityX(this.girlMap.body.velocity.x)
+        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+          this.block1.body.allowGravity = false
+          this.block1.y = this.girlMap.y
         }
+      } else if (!this.block1.body.allowGravity) {
+        this.block1.setVelocityX(this.girlMap.body.velocity.x)
+        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+          this.block1.body.allowGravity = true
+          this.block1.setVelocityX(0)
+          this.block1.setDepth(this.girlMap.depth)
+          this.block1.setAngle(0)
+          this.barrelzone.y = this.zone.y
+        }
+      }
     }
 
     if (!this.block1.body.allowGravity) {
