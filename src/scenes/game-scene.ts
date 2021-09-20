@@ -246,22 +246,18 @@ this.minimap.scrollY = 300
   }
 
   private handleHealthChanged(value: number) {
-    // this.ennemy.setTintFill(0xffffff)
 
-    // this.cameras.main.flash(600, 255, 0 ,0);
-    // this.girlMap.tin
-    // this.cameras.main.on('camerafadeinstart', )
-    // this.cameras.main.fadeOut(600, 255, 0, 0);
-    // this.cameras.main.fadeFrom(1000,255,0,0)
-    // this.cameras.
-    // this.cameras.main.fadeEffect.update(2000, 0)
-    this.cameras.main.fadeEffect.start(false, 1000, 255,0,0, false)
-    // thisstart( [direction] [, duration] [, red] [, green] [, blue] [, force] [, callback] [, context])
+    // this.cameras.main.fadeEffect.start(false, 1000, 255,0,0, false)
+    this.girlMap.setTintFill(0xff00000).setAlpha(0.4)
+    // this.tweens.add({
+    //   targets: this.girlMap,
+    //   tint: 0xff0000,
+    //   repeat: 0,
+    //   velocityX: -10,
+    //   duration: 2000,
+    // });
 
-    // this.cameras.main.setBackgroundColor('rgba(255, 0, 0, 0)');
-    // this.cameras.main.fadeEffect
-
-
+      // onComplete: () => ( this.ennemy.destroy(), this.ennemyzone.destroy() ),
 
     this.tweens.addCounter({
       from: this.lastHealth,
