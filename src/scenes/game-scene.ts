@@ -209,24 +209,6 @@ export class GameScene extends Phaser.Scene {
     }, this)
 
 
-    this.tweens.addCounter({
-  from: 255,
-  to: 0,
-  duration: 200,
-  ease: Phaser.Math.Easing.Sine.InOut,
-  onUpdate: function (tween)
-{
-console.log(Math.floor(tween.getValue()))
-// this.girlMap.setTint(Phaser.Display.Color.GetColor(value, value, value));
-}
-  // onUpdate: tween => {
-  //   const value = tween.getValue()
-  //   this.setHealthBar(value)
-  //   this.girlMap.setTint( 255, 100, 0 , 33)
-  //   this.girlMap.setTint( 200, 10, 0 , 33)
-  // },
-  // onComplete: () => this.girlMap.clearTint(),
-})
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
@@ -242,6 +224,7 @@ console.log(Math.floor(tween.getValue()))
   public setHealthBar(value: number) {
     const width = 200
     const percent = Phaser.Math.Clamp(value, 0, 100) / 100
+    // this.girlMap.setTint(Phaser.Display.Color.GetColor(Math.floor(tween.getValue()),Math.floor(tween.getValue()),Math.floor(tween.getValue())))
     this.graphics.clear()
     this.graphics.fillStyle(0x979797)
     this.graphics.fillRoundedRect(10, 10, width, 20, 5).setScrollFactor(0)
@@ -258,55 +241,41 @@ console.log(Math.floor(tween.getValue()))
 
   private handleHealthChanged(value: number) {
 
-    // this.girlMap.setTint(0x8f1111, 0x8f1111);
-    // Phaser.Display.Color.ObjectToColor(0x8f1111).color
-    /*
-    var RandomRGB = Phaser.Display.Color.RandomRGB;
-    var tween = this.tweens.addCounter({
-    from: 0,
-    to: 500,
-    duration: 200,
+/*
+    this.tweens.addCounter({
+      from: this.lastHealth,
+      to: value,
+      duration: 200,
       ease: Phaser.Math.Easing.Sine.InOut,
-    onUpdate: () => ( this.girlMap.setTint( 255, 255, 0 ) ),
-    // onComplete: callback
-});
-    console.log(RandomRGB().red)
+      onUpdate: tween => {
+        const value = tween.getValue()
+        this.setHealthBar(value)
+
+      },
+      onComplete: () => this.girlMap.clearTint(),
+    })
     */
 
-
-//     this.girlMap.setTint(
-//   this.fromColors.topLeft.color,
-//   this.fromColors.topRight.color,
-//   this.fromColors.bottomLeft.color,
-//   this.fromColors.bottomRight.color
-// );
-//
-//     this.tweens.addCounter({
-//       from: this.lastHealth,
-//       to: value,
-//       duration: 200,
-//       ease: Phaser.Math.Easing.Sine.InOut,
-//       onUpdate: function (tween)
-// {
-//     const value = Math.floor(tween.getValue());
-//     this.girlMap.setTint(Phaser.Display.Color.GetColor(value, value, value));
-// }
-      // onUpdate: tween => {
-      //   const value = tween.getValue()
-      //   this.setHealthBar(value)
-      //   this.girlMap.setTint( 255, 100, 0 , 33)
-      //   this.girlMap.setTint( 200, 10, 0 , 33)
-      // },
-      // onComplete: () => this.girlMap.clearTint(),
-    // })
+    // var r = 255
     this.tweens.addCounter({
 from: 255,
 to: 0,
 duration: 200,
 ease: Phaser.Math.Easing.Sine.InOut,
 yoyo: true,
-onUpdate: (tween) => ( this.girlMap.setTint(Phaser.Display.Color.GetColor(Math.floor(tween.getValue()),Math.floor(tween.getValue()),Math.floor(tween.getValue()))
-))})
+onUpdate: (tween) => (
+  this.girlMap.setTint(
+  Phaser.Display.Color.GetColor(
+    tween.getValue(),
+    0,
+    0,
+  )
+
+)),
+
+onComplete: () => (this.girlMap.clearTint()),
+
+ })
 
     // this.lastHealth = value
   }
