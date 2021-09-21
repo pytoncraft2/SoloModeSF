@@ -261,7 +261,6 @@ export class GameScene extends Phaser.Scene {
 
   public update(): void {
 
-    let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
 
@@ -276,6 +275,7 @@ export class GameScene extends Phaser.Scene {
      */
 
     if (this.ennemy.active) {
+    let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
       if (distance < 1000) {
         if (this.ennemyzone.y !== this.zone.y) {
           if (this.zone.y < this.ennemyzone.y) {
