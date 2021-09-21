@@ -70,7 +70,7 @@ export class GameScene extends Phaser.Scene {
     this.block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53).setBounce(0.5)
     this.block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
 
-    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
+    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
@@ -212,13 +212,13 @@ export class GameScene extends Phaser.Scene {
    * @return       Graphics en au à gauche
    */
   public setHealthBar(value: number) {
-    const width = 200
+    const width = 500
     const percent = Phaser.Math.Clamp(value, 0, 100) / 100
     this.graphics.clear()
-    this.graphics.fillStyle(0x979797)
+    this.graphics.fillStyle(0xd00b0b)
     this.graphics.fillRoundedRect(10, 10, width, 20, 5).setScrollFactor(0)
     if (percent > 0) {
-      this.graphics.fillStyle(0x00ff00)
+      this.graphics.fillStyle(0x0ddb0d)
       this.graphics.fillRoundedRect(10, 10, width * percent, 20, 5)
     }
   }
@@ -238,9 +238,9 @@ export class GameScene extends Phaser.Scene {
       onUpdate: tween => {
         const value = tween.getValue()
         this.setHealthBar(value)
-
       },
     })
+    this.lastHealth = value
 
     var tween = this.tweens.addCounter({
       from: 150,
@@ -256,7 +256,6 @@ export class GameScene extends Phaser.Scene {
         )),
     })
 
-    this.lastHealth = value
 
   }
 
@@ -297,10 +296,8 @@ export class GameScene extends Phaser.Scene {
           this.ennemy.flipX = true
           this.ennemy.play('walk', true)
         } else {
-          if (this.ennemy.alpha > 0.3) {
+          if (this.ennemy.active) {
             this.ennemy.play("attack", true)
-          } else {
-            this.ennemy.setFrame(0)
           }
           if (this.ennemy.anims.getFrameName().includes("attack4")) {
 
@@ -348,7 +345,7 @@ export class GameScene extends Phaser.Scene {
         && this.girlMap.depth > this.ennemy.depth - 10 && distance < 196) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
-            this.ennemy.setTintFill(0xffffff)
+            this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
             this.tweens.add({
               targets: this.ennemy,
               alpha: 0,
