@@ -73,16 +73,6 @@ export class GameScene extends Phaser.Scene {
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
-    var RandomRGB = Phaser.Display.Color.RandomRGB;
-    // var tint = Phaser.Display.Color.Interpolate.ColorWithColor('red', 11000);
-    // Phaser.Display.Color.ObjectToColor(RandomRGB).color
-
-// Interpolate.ColorWithColor returns a Javascript object with
-// interpolated RGB values. We convert it to a Phaser.Display.Color object
-// in order to get the integer value of the tint color.
-// console.log(Phaser.Display.Color.ObjectToColor(tint).color)
-    // console.log(RandomRGB().color)
-
     this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
@@ -257,19 +247,19 @@ export class GameScene extends Phaser.Scene {
     */
 
     // var r = 255
-    this.tweens.addCounter({
-from: 255,
-to: 0,
-duration: 200,
-ease: Phaser.Math.Easing.Sine.InOut,
+    var tween = this.tweens.addCounter({
+from: 150,
+to: 255,
+duration: 1000,
 onUpdate: (tween) => (
   this.girlMap.setTint(
   Phaser.Display.Color.GetColor(
     tween.getValue(),
-    0,
-    0,
+    tween.getValue(),
+    tween.getValue(),
   )
 )),
+
 
 // onComplete: () => (this.girlMap.clearTint()),
 
