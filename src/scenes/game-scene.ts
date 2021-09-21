@@ -37,19 +37,12 @@ export class GameScene extends Phaser.Scene {
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
   private lastHealth = 100
-  private tween: any
-  // private fromColor: any
-  private toColors: any
-  private fromColors: any
-  private fromColor: any
 
   constructor() {
     super(sceneConfig);
   }
 
   public create(): void {
-    // image = this.add.image(400, 300, 'face');
-
 
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
@@ -84,10 +77,10 @@ export class GameScene extends Phaser.Scene {
     // var tint = Phaser.Display.Color.Interpolate.ColorWithColor('red', 11000);
     // Phaser.Display.Color.ObjectToColor(RandomRGB).color
 
-    // Interpolate.ColorWithColor returns a Javascript object with
-    // interpolated RGB values. We convert it to a Phaser.Display.Color object
-    // in order to get the integer value of the tint color.
-    // console.log(Phaser.Display.Color.ObjectToColor(tint).color)
+// Interpolate.ColorWithColor returns a Javascript object with
+// interpolated RGB values. We convert it to a Phaser.Display.Color object
+// in order to get the integer value of the tint color.
+// console.log(Phaser.Display.Color.ObjectToColor(tint).color)
     // console.log(RandomRGB().color)
 
     this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
@@ -195,8 +188,6 @@ export class GameScene extends Phaser.Scene {
       this
     );
 
-    // var fromColors
-    // var tintTween
     /**
      * FACE A UN TONNEAU: le joueur peut propulser le tonneau
      * @param  girl  verification de sa position
@@ -218,80 +209,29 @@ export class GameScene extends Phaser.Scene {
     }, this)
 
 
+    this.tweens.addCounter({
+  from: 255,
+  to: 0,
+  duration: 200,
+  ease: Phaser.Math.Easing.Sine.InOut,
+  onUpdate: function (tween)
+{
+console.log(Math.floor(tween.getValue()))
+// this.girlMap.setTint(Phaser.Display.Color.GetColor(value, value, value));
+}
+  // onUpdate: tween => {
+  //   const value = tween.getValue()
+  //   this.setHealthBar(value)
+  //   this.girlMap.setTint( 255, 100, 0 , 33)
+  //   this.girlMap.setTint( 200, 10, 0 , 33)
+  // },
+  // onComplete: () => this.girlMap.clearTint(),
+})
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
-    this.fromColors = this.getRandomVertexColors();
-
-    this.girlMap.setTint(
-      this.fromColors.topLeft.color,
-      this.fromColors.topRight.color,
-      this.fromColors.bottomLeft.color,
-      this.fromColors.bottomRight.color
-    );
-
-    // Bind the scope to tintTween so we can use this.tweens inside it.
-    this.tintTween = this.tintTween.bind(this);
-
-    this.initTweens();
-
-
-
-
   }
-
-
-
-
-
-public getTintColor(vertex) {
-
-  // Interpolate between the fromColor and toColor of the current vertex,
-  // using the current tween value.
-  var tint = Phaser.Display.Color.Interpolate.ColorWithColor(
-    this.fromColors[vertex],
-    this.toColors[vertex],
-    100,
-    this.tween.getValue()
-  );
-
-  // Interpolate.ColorWithColor returns a Javascript object with
-  // interpolated RGB values. We convert it to a Phaser.Display.Color object
-  // in order to get the integer value of the tint color.
-  return Phaser.Display.Color.ObjectToColor(tint).color;
-}
-
-public tintTween(fromColors, toColors, callback) {
-  this.tween = this.tweens.addCounter({
-    from: 0,
-    to: 100,
-    duration: 2000,
-    onUpdate: () => ( this.girlMap.setTint( this.getTintColor('topLeft'), this.getTintColor('topRight'), this.getTintColor('bottomLeft'), this.getTintColor('topRight') ) ),
-    onComplete: callback
-  });
-}
-public getRandomVertexColors() {
-// Create a random color for each vertex.
-// RandomRGB returns a Phaser.Display.Color object with random RGB values.
-var RandomRGB = Phaser.Display.Color.RandomRGB;
-return {
-  topLeft: RandomRGB(),
-  topRight: RandomRGB(),
-  bottomLeft: RandomRGB(),
-  bottomRight: RandomRGB()
-};
-}
-
-public initTweens() {
-  this.fromColors = this.toColors || this.fromColors;
-  this.toColors = this.getRandomVertexColors();
-  this.tintTween(
-    this.fromColors,
-    this.toColors,
-    this.initTweens
-  );
-}
 
 
   /**
@@ -300,16 +240,16 @@ public initTweens() {
    * @return       Graphics en au à gauche
    */
   public setHealthBar(value: number) {
-  const width = 200
-  const percent = Phaser.Math.Clamp(value, 0, 100) / 100
-  this.graphics.clear()
-  this.graphics.fillStyle(0x979797)
-  this.graphics.fillRoundedRect(10, 10, width, 20, 5).setScrollFactor(0)
-  if (percent > 0) {
-    this.graphics.fillStyle(0x00ff00)
-    this.graphics.fillRoundedRect(10, 10, width * percent, 20, 5)
+    const width = 200
+    const percent = Phaser.Math.Clamp(value, 0, 100) / 100
+    this.graphics.clear()
+    this.graphics.fillStyle(0x979797)
+    this.graphics.fillRoundedRect(10, 10, width, 20, 5).setScrollFactor(0)
+    if (percent > 0) {
+      this.graphics.fillStyle(0x00ff00)
+      this.graphics.fillRoundedRect(10, 10, width * percent, 20, 5)
+    }
   }
-}
 
   /**
    * Animation bar de vie + joueur quand il est attaqué
@@ -318,27 +258,63 @@ public initTweens() {
 
   private handleHealthChanged(value: number) {
 
-  this.girlMap.setTint(0x8f1111);
-
-  this.tweens.addCounter({
-    from: this.lastHealth,
-    to: value,
+    // this.girlMap.setTint(0x8f1111, 0x8f1111);
+    // Phaser.Display.Color.ObjectToColor(0x8f1111).color
+    /*
+    var RandomRGB = Phaser.Display.Color.RandomRGB;
+    var tween = this.tweens.addCounter({
+    from: 0,
+    to: 500,
     duration: 200,
-    ease: Phaser.Math.Easing.Sine.InOut,
-    onUpdate: tween => {
-      const value = tween.getValue()
-      this.setHealthBar(value)
-    },
-    onComplete: () => this.girlMap.clearTint(),
-  })
+      ease: Phaser.Math.Easing.Sine.InOut,
+    onUpdate: () => ( this.girlMap.setTint( 255, 255, 0 ) ),
+    // onComplete: callback
+});
+    console.log(RandomRGB().red)
+    */
 
-  this.lastHealth = value
-}
+
+//     this.girlMap.setTint(
+//   this.fromColors.topLeft.color,
+//   this.fromColors.topRight.color,
+//   this.fromColors.bottomLeft.color,
+//   this.fromColors.bottomRight.color
+// );
+//
+//     this.tweens.addCounter({
+//       from: this.lastHealth,
+//       to: value,
+//       duration: 200,
+//       ease: Phaser.Math.Easing.Sine.InOut,
+//       onUpdate: function (tween)
+// {
+//     const value = Math.floor(tween.getValue());
+//     this.girlMap.setTint(Phaser.Display.Color.GetColor(value, value, value));
+// }
+      // onUpdate: tween => {
+      //   const value = tween.getValue()
+      //   this.setHealthBar(value)
+      //   this.girlMap.setTint( 255, 100, 0 , 33)
+      //   this.girlMap.setTint( 200, 10, 0 , 33)
+      // },
+      // onComplete: () => this.girlMap.clearTint(),
+    // })
+    this.tweens.addCounter({
+from: 255,
+to: 0,
+duration: 200,
+ease: Phaser.Math.Easing.Sine.InOut,
+yoyo: true,
+onUpdate: (tween) => ( this.girlMap.setTint(Phaser.Display.Color.GetColor(Math.floor(tween.getValue()),Math.floor(tween.getValue()),Math.floor(tween.getValue()))
+))})
+
+    // this.lastHealth = value
+  }
 
   public update(): void {
 
-  let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
-  this.protect.x = this.girlMap.x
+    let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
+    this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
 
     /**
@@ -351,46 +327,46 @@ public initTweens() {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-    if(this.ennemy.active) {
-    if (distance < 1000) {
-      if (this.ennemyzone.y !== this.zone.y) {
-        if (this.zone.y < this.ennemyzone.y) {
-          this.ennemyzone.y -= 1
-        } else {
-          this.ennemyzone.y += 1
-        }
-      }
-      if (distance > 160 && this.ennemy.x < this.girlMap.x) {
-
-        this.ennemyzone.x = this.ennemy.x
-        this.ennemy.x += 1.5
-        this.ennemy.flipX = false
-        this.ennemy.play('walk', true)
-      } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
-        this.ennemyzone.x = this.ennemy.x
-        this.ennemy.x -= 1.5
-        this.ennemy.flipX = true
-        this.ennemy.play('walk', true)
-      } else {
-        if (this.ennemy.alpha > 0.3) {
-          this.ennemy.play("attack", true)
-        } else {
-          this.ennemy.setFrame(0)
-        }
-        if (this.ennemy.anims.getFrameName().includes("attack4")) {
-
-          if (this.protect.displayWidth === 1) {
-            this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
-            this.events.emit('health-changed', this.health)
+    if (this.ennemy.active) {
+      if (distance < 1000) {
+        if (this.ennemyzone.y !== this.zone.y) {
+          if (this.zone.y < this.ennemyzone.y) {
+            this.ennemyzone.y -= 1
           } else {
-            //Diminuer la protection
+            this.ennemyzone.y += 1
           }
         }
+        if (distance > 160 && this.ennemy.x < this.girlMap.x) {
+
+          this.ennemyzone.x = this.ennemy.x
+          this.ennemy.x += 1.5
+          this.ennemy.flipX = false
+          this.ennemy.play('walk', true)
+        } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
+          this.ennemyzone.x = this.ennemy.x
+          this.ennemy.x -= 1.5
+          this.ennemy.flipX = true
+          this.ennemy.play('walk', true)
+        } else {
+          if (this.ennemy.alpha > 0.3) {
+            this.ennemy.play("attack", true)
+          } else {
+            this.ennemy.setFrame(0)
+          }
+          if (this.ennemy.anims.getFrameName().includes("attack4")) {
+
+            if (this.protect.displayWidth === 1) {
+              this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
+              this.events.emit('health-changed', this.health)
+            } else {
+              //Diminuer la protection
+            }
+          }
+        }
+      } else {
+        this.ennemy.play("idle_walk")
       }
-    } else {
-      this.ennemy.play("idle_walk")
     }
-  }
     /**
      * [FIN LOGIQUE BOT]
      * _________________
@@ -402,46 +378,46 @@ public initTweens() {
      * @param  this.aKey.isDown [description]
      * @return                  [description]
      */
-    if(this.aKey.isDown) {
+    if (this.aKey.isDown) {
 
-    /**
-     * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
-     * @param  !this.block1.body.allowGravity : tonneau surélevé
-     */
+      /**
+       * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
+       * @param  !this.block1.body.allowGravity : tonneau surélevé
+       */
 
-    if (!this.block1.body.allowGravity) {
-      if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-        this.block1.body.allowGravity = true
-        this.block1.setDepth(this.girlMap.depth)
-        this.barrelzone.y = this.zone.y
-        this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
-      }
-    }
-    this.girlMap.setVelocityX(0);
-    if (this.girlMap.anims.getFrameName().includes("attack4")
-      && this.girlMap.depth < this.ennemy.depth + 10
-      && this.girlMap.depth > this.ennemy.depth - 10 && distance < 196) {
-      if (this.count == 1) {
-        if (this.ennemy.alpha < 0.3) {
-          this.ennemy.setTintFill(0xffffff)
-          this.tweens.add({
-            targets: this.ennemy,
-            alpha: 0,
-            y: -100,
-            repeat: 0,
-            duration: 900,
-            onComplete: () => (this.ennemy.destroy(), this.ennemyzone.destroy()),
-          });
+      if (!this.block1.body.allowGravity) {
+        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+          this.block1.body.allowGravity = true
+          this.block1.setDepth(this.girlMap.depth)
+          this.barrelzone.y = this.zone.y
+          this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
         }
-        this.ennemy.alpha -= 0.03
-        this.count = 0;
-      } else {
-        this.count++
       }
-    }
-    this.girlMap.anims.play("attack", true)
+      this.girlMap.setVelocityX(0);
+      if (this.girlMap.anims.getFrameName().includes("attack4")
+        && this.girlMap.depth < this.ennemy.depth + 10
+        && this.girlMap.depth > this.ennemy.depth - 10 && distance < 196) {
+        if (this.count == 1) {
+          if (this.ennemy.alpha < 0.3) {
+            this.ennemy.setTintFill(0xffffff)
+            this.tweens.add({
+              targets: this.ennemy,
+              alpha: 0,
+              y: -100,
+              repeat: 0,
+              duration: 900,
+              onComplete: () => (this.ennemy.destroy(), this.ennemyzone.destroy()),
+            });
+          }
+          this.ennemy.alpha -= 0.03
+          this.count = 0;
+        } else {
+          this.count++
+        }
+      }
+      this.girlMap.anims.play("attack", true)
 
-  }
+    }
     /**
      * [FIN ATTAQUE JOUEUR]
      * _________________
@@ -453,63 +429,63 @@ public initTweens() {
      * _________________
      */
 
-    else if(this.cursors.left.isDown) {
-    this.zone.x = this.girlMap.x;
-    this.ombre.x = this.zone.x
-    this.ombre.y = this.zone.y - 30
-    this.girlMap.flipX = true;
-    if (this.ctrlKey.isDown) {
-      this.girlMap.anims.play('run', true);
-      this.girlMap.setVelocityX(-400);
-    } else {
-      this.girlMap.anims.play('walk', true);
-      this.girlMap.setVelocityX(-300);
+    else if (this.cursors.left.isDown) {
+      this.zone.x = this.girlMap.x;
+      this.ombre.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
+      this.girlMap.flipX = true;
+      if (this.ctrlKey.isDown) {
+        this.girlMap.anims.play('run', true);
+        this.girlMap.setVelocityX(-400);
+      } else {
+        this.girlMap.anims.play('walk', true);
+        this.girlMap.setVelocityX(-300);
+      }
     }
-  }
-    else if(this.cursors.right.isDown) {
-    this.zone.x = this.girlMap.x;
-    this.ombre.x = this.zone.x
-    this.ombre.y = this.zone.y - 30
-    this.girlMap.flipX = false;
-    if (this.ctrlKey.isDown) {
-      this.girlMap.anims.play('run', true);
-      this.girlMap.setVelocityX(400);
-    } else {
-      this.girlMap.anims.play('walk', true);
-      this.girlMap.setVelocityX(300);
+    else if (this.cursors.right.isDown) {
+      this.zone.x = this.girlMap.x;
+      this.ombre.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
+      this.girlMap.flipX = false;
+      if (this.ctrlKey.isDown) {
+        this.girlMap.anims.play('run', true);
+        this.girlMap.setVelocityX(400);
+      } else {
+        this.girlMap.anims.play('walk', true);
+        this.girlMap.setVelocityX(300);
+      }
     }
-  }
-    else if(this.spaceBar.isDown) {
-    if (!this.tweens.isTweening(this.ombre)) {
-      this.tweens.add({
-        targets: this.ombre,
-        scaleX: 0.25,
-        scaleY: 0.5,
-        yoyo: true,
-        repeat: 0,
-        duration: 600,
-      });
-    }
+    else if (this.spaceBar.isDown) {
+      if (!this.tweens.isTweening(this.ombre)) {
+        this.tweens.add({
+          targets: this.ombre,
+          scaleX: 0.25,
+          scaleY: 0.5,
+          yoyo: true,
+          repeat: 0,
+          duration: 600,
+        });
+      }
 
-    this.zone.x = this.girlMap.x;
-    this.ombre.x = this.zone.x
-    this.ombre.y = this.zone.y - 30
+      this.zone.x = this.girlMap.x;
+      this.ombre.x = this.zone.x
+      this.ombre.y = this.zone.y - 30
 
-    if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
-      this.girlMap.anims.play('jump');
+      if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
+        this.girlMap.anims.play('jump');
+      }
+      if (this.girlMap.body.touching.down) {
+        this.girlMap.setVelocityY(-590);
+      }
     }
-    if (this.girlMap.body.touching.down) {
-      this.girlMap.setVelocityY(-590);
-    }
-  }
     else {
-    this.girlMap.setVelocityX(0);
-    if(distance < 296) {
-      this.girlMap.anims.play('idle_attack');
-    } else {
-      this.girlMap.anims.play('idle_walk');
+      this.girlMap.setVelocityX(0);
+      if (distance < 296) {
+        this.girlMap.anims.play('idle_attack');
+      } else {
+        this.girlMap.anims.play('idle_walk');
+      }
     }
-  }
 
     /**
      * [FIN DEPLACEMENT GAUCHE - DROITE - SAUT]
@@ -522,121 +498,121 @@ public initTweens() {
      * @param  this.cursors touches directionnelle et espace:
      */
 
-    if(this.cursors.up.isDown && this.girlMap.body.touching.down) {
-  this.zone.body.position.y -= 2
-  this.ombre.depth -= 1;
-  this.girlMap.depth -= 1;
-  this.ombre.y = this.zone.y - 30
-  this.ombre.x = this.zone.x
-  this.girlMap.anims.play('goback', true);
-  this.ennemy.on('animationcomplete', () => {
-    this.ennemy.anims.play('idle_attack', true)
-  })
-} else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
-  if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
-    this.girlMap.y += 2;
-    this.ombre.depth += 1;
-    this.girlMap.depth += 1;
-    this.ombre.y = this.zone.y - 30
-    this.ombre.x = this.zone.x
-    this.zone.y += 2;
-  }
-}
+    if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
+      this.zone.body.position.y -= 2
+      this.ombre.depth -= 1;
+      this.girlMap.depth -= 1;
+      this.ombre.y = this.zone.y - 30
+      this.ombre.x = this.zone.x
+      this.girlMap.anims.play('goback', true);
+      this.ennemy.on('animationcomplete', () => {
+        this.ennemy.anims.play('idle_attack', true)
+      })
+    } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
+      if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+        this.girlMap.y += 2;
+        this.ombre.depth += 1;
+        this.girlMap.depth += 1;
+        this.ombre.y = this.zone.y - 30
+        this.ombre.x = this.zone.x
+        this.zone.y += 2;
+      }
+    }
 
-/**
- * [FIN DEPLACEMENT HAUT - BAS]
- * _________________
- */
+    /**
+     * [FIN DEPLACEMENT HAUT - BAS]
+     * _________________
+     */
 
-/**
- * [LOGIQUE INTERACTION AVEC UN TONNEAU]
- * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
- * Porter et lacher le tonneau
- *
- */
-if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
+    /**
+     * [LOGIQUE INTERACTION AVEC UN TONNEAU]
+     * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
+     * Porter et lacher le tonneau
+     *
+     */
+    if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
 
-  if (this.block1.body.allowGravity) {
-    console.log("allow")
-    this.block1.setVelocityX(this.girlMap.body.velocity.x)
-    if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-      this.block1.body.allowGravity = false
+      if (this.block1.body.allowGravity) {
+        console.log("allow")
+        this.block1.setVelocityX(this.girlMap.body.velocity.x)
+        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+          this.block1.body.allowGravity = false
+          this.block1.y = this.girlMap.y
+        }
+      } else if (!this.block1.body.allowGravity) {
+        console.log("deny")
+        this.block1.setVelocityX(this.girlMap.body.velocity.x)
+        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
+          this.block1.body.allowGravity = true
+          this.block1.setVelocityX(0)
+          this.block1.setDepth(this.girlMap.depth)
+          this.block1.setAngle(0)
+          this.barrelzone.y = this.zone.y
+        }
+      }
+    }
+
+    if (!this.block1.body.allowGravity) {
+      this.block1.x = this.girlMap.x
       this.block1.y = this.girlMap.y
     }
-  } else if (!this.block1.body.allowGravity) {
-    console.log("deny")
-    this.block1.setVelocityX(this.girlMap.body.velocity.x)
-    if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-      this.block1.body.allowGravity = true
-      this.block1.setVelocityX(0)
-      this.block1.setDepth(this.girlMap.depth)
-      this.block1.setAngle(0)
-      this.barrelzone.y = this.zone.y
+
+    /**
+     * [BOUCLIER + ANIMATION]
+     */
+
+    if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
+      this.protect.alpha === 0.5 ?
+        this.tweens.add({
+          targets: this.protect,
+          alpha: 0,
+          repeat: 0,
+          displayWidth: 1,
+          displayHeight: 0,
+          duration: 300,
+          onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0); },
+        }) : this.tweens.add({
+          targets: this.protect,
+          alpha: 0.5,
+          displayWidth: 220,
+          displayHeight: 420,
+          repeat: 0,
+          duration: 300,
+          onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0.5); },
+        })
     }
-  }
-}
 
-if (!this.block1.body.allowGravity) {
-  this.block1.x = this.girlMap.x
-  this.block1.y = this.girlMap.y
-}
+    /**
+     * [LOGIQUE PRESSION DE LA TOUCHE T]
+     */
 
-/**
- * [BOUCLIER + ANIMATION]
- */
+    if (this.tKey.isDown) {
+      if (this.ennemy.isTinted) {
+        this.ennemy.clearTint();
+      }
+      else {
+        this.ennemy.setTintFill(0xffffff);
+      }
+    }
 
-if (Phaser.Input.Keyboard.JustDown(this.cKey)) {
-  this.protect.alpha === 0.5 ?
-    this.tweens.add({
-      targets: this.protect,
-      alpha: 0,
-      repeat: 0,
-      displayWidth: 1,
-      displayHeight: 0,
-      duration: 300,
-      onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0); },
-    }) : this.tweens.add({
-      targets: this.protect,
-      alpha: 0.5,
-      displayWidth: 220,
-      displayHeight: 420,
-      repeat: 0,
-      duration: 300,
-      onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0.5); },
-    })
-}
-
-/**
- * [LOGIQUE PRESSION DE LA TOUCHE T]
- */
-
-if (this.tKey.isDown) {
-  if (this.ennemy.isTinted) {
-    this.ennemy.clearTint();
-  }
-  else {
-    this.ennemy.setTintFill(0xffffff);
-  }
-}
-
-/**
- * [TOGGLE AFFICHAGE + ANIMATION PANNEL VIEWER (Twitch)]
- */
-if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
-  this.pannelBottom.alpha === 1 ?
-    this.tweens.add({
-      targets: this.pannelBottom,
-      alpha: 0,
-      repeat: 0,
-      duration: 300,
-      onComplete: () => { this.pannelRight.setAlpha(0); this.info.setAlpha(0) },
-    }) : this.tweens.add({
-      targets: this.pannelBottom,
-      alpha: 1,
-      repeat: 0,
-      duration: 300,
-      onComplete: () => { this.pannelRight.setAlpha(1); this.info.setAlpha(1) },
-    })
-}
+    /**
+     * [TOGGLE AFFICHAGE + ANIMATION PANNEL VIEWER (Twitch)]
+     */
+    if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
+      this.pannelBottom.alpha === 1 ?
+        this.tweens.add({
+          targets: this.pannelBottom,
+          alpha: 0,
+          repeat: 0,
+          duration: 300,
+          onComplete: () => { this.pannelRight.setAlpha(0); this.info.setAlpha(0) },
+        }) : this.tweens.add({
+          targets: this.pannelBottom,
+          alpha: 1,
+          repeat: 0,
+          duration: 300,
+          onComplete: () => { this.pannelRight.setAlpha(1); this.info.setAlpha(1) },
+        })
+    }
   }
 }
