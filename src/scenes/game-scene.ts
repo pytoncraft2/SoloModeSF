@@ -72,7 +72,7 @@ export class GameScene extends Phaser.Scene {
 
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
-    // this.add.image(940, 390, 'bg').setDepth(-54);
+    this.add.image(940, 390, 'bg').setDepth(-54);
     var RandomRGB = Phaser.Display.Color.RandomRGB;
     // var tint = Phaser.Display.Color.Interpolate.ColorWithColor('red', 11000);
     // Phaser.Display.Color.ObjectToColor(RandomRGB).color
@@ -262,7 +262,6 @@ from: 255,
 to: 0,
 duration: 200,
 ease: Phaser.Math.Easing.Sine.InOut,
-yoyo: true,
 onUpdate: (tween) => (
   this.girlMap.setTint(
   Phaser.Display.Color.GetColor(
@@ -270,10 +269,9 @@ onUpdate: (tween) => (
     0,
     0,
   )
-
 )),
 
-onComplete: () => (this.girlMap.clearTint()),
+// onComplete: () => (this.girlMap.clearTint()),
 
  })
 
