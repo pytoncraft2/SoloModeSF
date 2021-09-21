@@ -27,12 +27,11 @@ export class GameScene extends Phaser.Scene {
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
-  private barrel: Phaser.Physics.Arcade.Image;
   private block1: Phaser.Physics.Arcade.Image;
-  private block2: Phaser.Physics.Arcade.Image;
+  public block2: Phaser.Physics.Arcade.Image;
   private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
-  private fakehear: Phaser.GameObjects.Text;
+  public fakehear: Phaser.GameObjects.Text;
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
@@ -242,7 +241,7 @@ export class GameScene extends Phaser.Scene {
     })
     this.lastHealth = value
 
-    var tween = this.tweens.addCounter({
+    this.tweens.addCounter({
       from: 150,
       to: 255,
       duration: 1000,
@@ -255,8 +254,6 @@ export class GameScene extends Phaser.Scene {
           )
         )),
     })
-
-
   }
 
   public update(): void {
@@ -275,7 +272,7 @@ export class GameScene extends Phaser.Scene {
      */
 
     if (this.ennemy.active) {
-    let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
+      var distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
       if (distance < 1000) {
         if (this.ennemyzone.y !== this.zone.y) {
           if (this.zone.y < this.ennemyzone.y) {
