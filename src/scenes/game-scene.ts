@@ -55,7 +55,6 @@ export class GameScene extends Phaser.Scene {
     this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
     this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
     this.graphics = this.add.graphics()
-    this.setHealthBar(100)
     this.events = new Phaser.Events.EventEmitter()
     this.events.on('health-changed', this.handleHealthChanged, this)
 
@@ -202,6 +201,7 @@ export class GameScene extends Phaser.Scene {
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
+    this.setHealthBar(100)
 
   }
 
@@ -214,6 +214,8 @@ export class GameScene extends Phaser.Scene {
   public setHealthBar(value: number) {
     const width = 200
     const percent = Phaser.Math.Clamp(value, 0, 100) / 100
+    // console.log(this.girlMap.tintFill)
+    this.girlMap.setTint(Phaser.Display.Color.GetColor( value, 255, 255 ) )
     // this.girlMap.setTint(Phaser.Display.Color.GetColor(Math.floor(tween.getValue()),Math.floor(tween.getValue()),Math.floor(tween.getValue())))
     this.graphics.clear()
     this.graphics.fillStyle(0x979797)
@@ -231,22 +233,22 @@ export class GameScene extends Phaser.Scene {
 
   private handleHealthChanged(value: number) {
 
-/*
     this.tweens.addCounter({
       from: this.lastHealth,
       to: value,
       duration: 200,
-      ease: Phaser.Math.Easing.Sine.InOut,
       onUpdate: tween => {
+        // const v = tween.getValue()
         const value = tween.getValue()
         this.setHealthBar(value)
-
       },
-      onComplete: () => this.girlMap.clearTint(),
+      // onComplete: () => this.girlMap.clearTint(),
     })
-    */
+    this.lastHealth = value
+
 
     // var r = 255
+    /*
     var tween = this.tweens.addCounter({
 from: 150,
 to: 255,
@@ -259,13 +261,9 @@ onUpdate: (tween) => (
     tween.getValue(),
   )
 )),
-
-
-// onComplete: () => (this.girlMap.clearTint()),
-
  })
+ */
 
-    // this.lastHealth = value
   }
 
   public update(): void {
