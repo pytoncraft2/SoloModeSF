@@ -55,6 +55,7 @@ export class GameScene extends Phaser.Scene {
     this.setHealthBar(100)
     this.events = new Phaser.Events.EventEmitter()
     this.events.on('health-changed', this.handleHealthChanged, this)
+    this.events.on('protection-changed', this.handleProtectionChanged, this)
 
     this.count = 0;
     this.follow = true;
@@ -219,6 +220,19 @@ export class GameScene extends Phaser.Scene {
     }
   }
 
+
+  public setProtectSize(value: number) {
+    // const width = 200
+    // const percent = Phaser.Math.Clamp(value, 0, 100) / 100
+    // this.graphics.clear()
+    // this.graphics.fillStyle(0x979797)
+    // this.graphics.fillRoundedRect(10, 10, width, 20, 5).setScrollFactor(0)
+    // if (percent > 0) {
+      // this.graphics.fillStyle(0x00ff00)
+      // this.graphics.fillRoundedRect(10, 10, width * percent, 20, 5)
+    // }
+  }
+
   /**
    * Animation bar de vie + joueur quand il est attaqué
    * @param  value l'etat final de sa vie
@@ -226,7 +240,6 @@ export class GameScene extends Phaser.Scene {
 
   private handleHealthChanged(value: number) {
 
-    const hsv = Phaser.Display.Color.HSVColorWheel();
     this.girlMap.setTint(0x8f1111);
 
     this.tweens.addCounter({
@@ -238,16 +251,30 @@ export class GameScene extends Phaser.Scene {
         const value = tween.getValue()
         this.setHealthBar(value)
       },
-      onComplete: () => this.girlMap.clearTint() ,
+      onComplete: () => this.girlMap.clearTint(),
     })
 
     this.lastHealth = value
   }
 
+
+  private handleProtectionChanged(value: number) {
+    this.tweens.addCounter({
+      from: this.lastHealth,
+      to: value,
+      duration: 200,
+      ease: Phaser.Math.Easing.Sine.InOut,
+      onUpdate: tween => {
+        const value = tween.getValue()
+        this.setProtectSize(value)
+      },
+      // onComplete: () => this.girlMap.clearTint(),
+    })
+  }
+
   public update(): void {
 
     let distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
-    let distanceBarrel = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
 
@@ -258,51 +285,49 @@ export class GameScene extends Phaser.Scene {
      * @param  this.ennemy sprite de l'ennemie
      * @param  this.ennemyzone.y socle ennemie
      * @param  this.zone.y socle joueur
-     * @param  distance distance entre le joueur et l'ennemie
+     * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-     if (this.ennemy.active) {
-    if (distance < 1000) {
-      if (this.ennemyzone.y !== this.zone.y) {
-        if (this.zone.y < this.ennemyzone.y) {
-          this.ennemyzone.y -= 1
-        } else {
-          this.ennemyzone.y += 1
-        }
-      }
-      if (distance > 160 && this.ennemy.x < this.girlMap.x) {
-
-        this.ennemyzone.x = this.ennemy.x
-        this.ennemy.x += 1.5
-        this.ennemy.flipX = false
-        this.ennemy.play('walk', true)
-      } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
-        this.ennemyzone.x = this.ennemy.x
-        this.ennemy.x -= 1.5
-        this.ennemy.flipX = true
-        this.ennemy.play('walk', true)
-      } else {
-        if (this.ennemy.alpha > 0.3) {
-
-          if (this.protect.alpha === 0.5) {
-            this.ennemy.play("idle_attack", true)
+    if (this.ennemy.active) {
+      if (distance < 1000) {
+        if (this.ennemyzone.y !== this.zone.y) {
+          if (this.zone.y < this.ennemyzone.y) {
+            this.ennemyzone.y -= 1
           } else {
-            this.ennemy.play("attack", true)
+            this.ennemyzone.y += 1
           }
-
-      } else {
-        this.ennemy.setFrame(0)
-      }
-        if (this.ennemy.anims.getFrameName().includes("attack4")) {
-      this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
-      this.events.emit('health-changed', this.health)
         }
+        if (distance > 160 && this.ennemy.x < this.girlMap.x) {
 
+          this.ennemyzone.x = this.ennemy.x
+          this.ennemy.x += 1.5
+          this.ennemy.flipX = false
+          this.ennemy.play('walk', true)
+        } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
+          this.ennemyzone.x = this.ennemy.x
+          this.ennemy.x -= 1.5
+          this.ennemy.flipX = true
+          this.ennemy.play('walk', true)
+        } else {
+          if (this.ennemy.alpha > 0.3) {
+            this.ennemy.play("attack", true)
+          } else {
+            this.ennemy.setFrame(0)
+          }
+          if (this.ennemy.anims.getFrameName().includes("attack4")) {
+
+            if (this.protect.displayWidth === 1) {
+            this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
+            this.events.emit('health-changed', this.health)
+          } else {
+            this.events.emit('protection-changed', this.health)
+          }
+          }
+        }
+      } else {
+        this.ennemy.play("idle_walk")
       }
-    } else {
-      this.ennemy.play("idle_walk")
     }
-  }
     /**
      * [FIN LOGIQUE BOT]
      * _________________
@@ -342,7 +367,7 @@ export class GameScene extends Phaser.Scene {
               y: -100,
               repeat: 0,
               duration: 900,
-              onComplete: () => ( this.ennemy.destroy(), this.ennemyzone.destroy() ),
+              onComplete: () => (this.ennemy.destroy(), this.ennemyzone.destroy()),
             });
           }
           this.ennemy.alpha -= 0.03
@@ -352,6 +377,7 @@ export class GameScene extends Phaser.Scene {
         }
       }
       this.girlMap.anims.play("attack", true)
+
     }
     /**
      * [FIN ATTAQUE JOUEUR]
@@ -415,7 +441,11 @@ export class GameScene extends Phaser.Scene {
     }
     else {
       this.girlMap.setVelocityX(0);
-      this.girlMap.anims.play('idle_walk');
+      if (distance < 296) {
+        this.girlMap.anims.play('idle_attack');
+      } else {
+        this.girlMap.anims.play('idle_walk');
+      }
     }
 
     /**
@@ -463,7 +493,7 @@ export class GameScene extends Phaser.Scene {
      */
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
 
-      if (this.block1.body.allowGravity && distanceBarrel < 150) {
+      if (this.block1.body.allowGravity) {
         console.log("allow")
         this.block1.setVelocityX(this.girlMap.body.velocity.x)
         if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
@@ -498,7 +528,7 @@ export class GameScene extends Phaser.Scene {
           targets: this.protect,
           alpha: 0,
           repeat: 0,
-          displayWidth: 0,
+          displayWidth: 1,
           displayHeight: 0,
           duration: 300,
           onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0); },
