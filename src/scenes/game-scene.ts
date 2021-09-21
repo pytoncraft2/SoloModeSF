@@ -32,6 +32,7 @@ export class GameScene extends Phaser.Scene {
   private block2: Phaser.Physics.Arcade.Image;
   private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
+  private fakehear: Phaser.GameObjects.Text;
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
@@ -49,8 +50,10 @@ export class GameScene extends Phaser.Scene {
 
     //PANNEL VIEWER (Twitch) + VIE
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
-    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(0);
-    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(0);
+    this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    // this.fakehear = this.add.text(-300, 870, 'FAKHEAR', { font: '38px Arial' }).setScrollFactor(0).setDepth(203).setAlpha(1);
+    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
+    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
     this.graphics = this.add.graphics()
     this.setHealthBar(100)
     this.events = new Phaser.Events.EventEmitter()
@@ -70,6 +73,7 @@ export class GameScene extends Phaser.Scene {
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
+    this.add.image(-300, 870, 'profilPanel').setScale(0.6).setDepth(202);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.ctrlKey = this.input.keyboard.addKey('CTRL');
