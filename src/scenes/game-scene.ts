@@ -29,6 +29,7 @@ export class GameScene extends Phaser.Scene {
   private graphics!: Phaser.GameObjects.Graphics;
   private block1: Phaser.Physics.Arcade.Image;
   public block2: Phaser.Physics.Arcade.Image;
+  public imageFakhear: any;
   private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   public fakehear: Phaser.GameObjects.Text;
@@ -72,7 +73,7 @@ export class GameScene extends Phaser.Scene {
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
-    this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
+    this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.ctrlKey = this.input.keyboard.addKey('CTRL');
@@ -539,23 +540,22 @@ export class GameScene extends Phaser.Scene {
     }
 
     /**
-     * [TOGGLE AFFICHAGE + ANIMATION PANNEL VIEWER (Twitch)]
+     * [TOGGLE AFFICHAGE + PANNEL VIEWER (Twitch)]
      */
     if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
-      this.pannelBottom.alpha === 1 ?
-        this.tweens.add({
-          targets: this.pannelBottom,
-          alpha: 0,
-          repeat: 0,
-          duration: 300,
-          onComplete: () => { this.pannelRight.setAlpha(0); this.info.setAlpha(0) },
-        }) : this.tweens.add({
-          targets: this.pannelBottom,
-          alpha: 1,
-          repeat: 0,
-          duration: 300,
-          onComplete: () => { this.pannelRight.setAlpha(1); this.info.setAlpha(1) },
-        })
+      this.pannelBottom.alpha === 1 ? (
+        this.pannelRight.setAlpha(0),
+        this.info.setAlpha(0),
+        this.fakehear.setAlpha(0),
+        this.imageFakhear.setAlpha(0),
+        this.pannelBottom.setAlpha(0)
+      ) :  (
+        this.pannelRight.setAlpha(1),
+        this.info.setAlpha(1),
+        this.fakehear.setAlpha(1),
+        this.imageFakhear.setAlpha(1),
+        this.pannelBottom.setAlpha(1)
+      )
     }
   }
 }
