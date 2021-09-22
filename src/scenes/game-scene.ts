@@ -27,7 +27,6 @@ export class GameScene extends Phaser.Scene {
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
-  private sabonner!: Phaser.GameObjects.Graphics;
   private block1: Phaser.Physics.Arcade.Image;
   public block2: Phaser.Physics.Arcade.Image;
   public imageFakhear: any;
@@ -52,13 +51,14 @@ export class GameScene extends Phaser.Scene {
 
     //PANNEL VIEWER (Twitch) + VIE
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+
+
     this.abonner = this.add.text(this.game.scale.width - 530 , this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
     this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '19px Georgia, "Goudy Bookletter 1911", Times, serif' }).setScrollFactor(0).setDepth(202).setAlpha(1);
     // this.fakehear = this.add.text(-300, 870, 'FAKHEAR', { font: '38px Arial' }).setScrollFactor(0).setDepth(203).setAlpha(1);
     this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
     this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
     this.graphics = this.add.graphics()
-    this.sabonner = this.add.graphics()
     this.setHealthBar(100)
     this.events = new Phaser.Events.EventEmitter()
     this.events.on('health-changed', this.handleHealthChanged, this)
@@ -548,18 +548,18 @@ export class GameScene extends Phaser.Scene {
      */
     if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
       // this.graphics.clear()
-this.sabonner.fillStyle(0xd00b0b)
-this.sabonner.fillRoundedRect(800, this.game.scale.height - 40, 300, 20, 5).setScrollFactor(0).setDepth(203)
 
       this.pannelBottom.alpha === 1 ? (
         this.pannelRight.setAlpha(0),
         this.info.setAlpha(0),
         this.fakehear.setAlpha(0),
+        this.abonner.setAlpha(0),
         this.imageFakhear.setAlpha(0),
         this.pannelBottom.setAlpha(0)
       ) :  (
         this.pannelRight.setAlpha(1),
         this.info.setAlpha(1),
+        this.abonner.setAlpha(1),
         this.fakehear.setAlpha(1),
         this.imageFakhear.setAlpha(1),
         this.pannelBottom.setAlpha(1)
@@ -567,3 +567,5 @@ this.sabonner.fillRoundedRect(800, this.game.scale.height - 40, 300, 20, 5).setS
     }
   }
 }
+
+//<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
