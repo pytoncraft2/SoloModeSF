@@ -29,8 +29,11 @@ export class GameScene extends Phaser.Scene {
   private graphics!: Phaser.GameObjects.Graphics;
   private block1: Phaser.Physics.Arcade.Image;
   public block2: Phaser.Physics.Arcade.Image;
+  public block3: Phaser.Physics.Arcade.Image;
+  public block4: Phaser.Physics.Arcade.Image;
   public imageFakhear: any;
-  private barrelGroup: Phaser.GameObjects.Group;
+  private barrels: any;
+  // private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   public fakehear: Phaser.GameObjects.Text;
   public abonner: Phaser.GameObjects.Text;
@@ -45,6 +48,7 @@ export class GameScene extends Phaser.Scene {
 
   public create(): void {
 
+    this.barrels = {}
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
     this.physics.world.setBounds(-2074, 0, 3574, 666);
@@ -67,12 +71,14 @@ export class GameScene extends Phaser.Scene {
     this.follow = true;
 
     //creation du groupe de tonneaux
-    this.barrelGroup = this.physics.add.group({
+    this.barrels = this.physics.add.group({
       allowGravity: true
     });
 
-    this.block1 = this.barrelGroup.create(350, 672, 'barrel').setScale(0.2).setDepth(53).setBounce(0.5)
-    this.block2 = this.barrelGroup.create(162, 240, 'barrel').setScale(0.2).setDepth(53);
+    this.block1 = this.barrels.create(350, 672, 'barrel').setScale(0.2).setDepth(53).setBounce(0.5)
+    this.block2 = this.barrels.create(682, 240, 'barrel').setScale(0.2).setDepth(53);
+    this.block3 = this.barrels.create(92, 240, 'barrel').setScale(0.2).setDepth(53);
+    this.block4 = this.barrels.create(462, 240, 'barrel').setScale(0.2).setDepth(53);
 
     this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
@@ -140,10 +146,31 @@ export class GameScene extends Phaser.Scene {
       frameRate: 6,
       repeat: -1
     })
+/*
+  let id=2
+    this.barrels[id] = {
+      attack: false,
+      alpha: 1,
+      depth: 30,
+      anim: 'profil',
+      scale: 0.38,
+      size: 200,
+      x: 1000,
+      y: 447,
+      playerId: socket.id,
+      input: {
+        left: false,
+        right: false,
+        up: false,
+        down: false,
+        a: false
+      }
+    };
+    */
 
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
-    this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(3000, 40).setOrigin(0.5, 0.5);
+    this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.ennemyzone = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.add.existing(this.ennemyzone);
@@ -170,8 +197,8 @@ export class GameScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-    this.physics.add.collider(this.barrelzone, this.barrelGroup);
-    this.physics.add.collider(this.block1, this.ennemy);
+    this.physics.add.collider(this.barrelzone, this.barrels);
+    // this.physics.add.collider(this.block1, this.ennemy);
     this.physics.add.collider(this.ennemy, this.ennemyzone);
 
     this.physics.add.overlap(
@@ -206,6 +233,11 @@ export class GameScene extends Phaser.Scene {
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
+
+this.barrels.getChildren().forEach((barrel) => {
+  console.log(barrel.alpha)
+})
+
 
   }
 
@@ -266,9 +298,12 @@ export class GameScene extends Phaser.Scene {
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
 
+
+
+
     /**
      * _________________
-     * [LOGIQUE DU BOT] (déblacement en x/y et rotation selon le joueur)
+     * [LOGIQUE DU BOT] (déblacement en x/y et rotation selon position du joueur SEULEMENT si il est en vie)
      * @param  this.ennemy.active sprite ennemi non détruit
      * @param  this.ennemy sprite de l'ennemie
      * @param  this.ennemyzone.y socle ennemie
@@ -298,9 +333,7 @@ export class GameScene extends Phaser.Scene {
           this.ennemy.flipX = true
           this.ennemy.play('walk', true)
         } else {
-          if (this.ennemy.active) {
             this.ennemy.play("attack", true)
-          }
           if (this.ennemy.anims.getFrameName().includes("attack4")) {
 
             if (this.protect.displayWidth === 1) {
@@ -337,7 +370,7 @@ export class GameScene extends Phaser.Scene {
         if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
           this.block1.body.allowGravity = true
           this.block1.setDepth(this.girlMap.depth)
-          this.barrelzone.y = this.zone.y
+          // this.barrelzone.y = this.zone.y
           this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
         }
       }
@@ -364,7 +397,6 @@ export class GameScene extends Phaser.Scene {
         }
       }
       this.girlMap.anims.play("attack", true)
-
     }
     /**
      * [FIN ATTAQUE JOUEUR]
@@ -495,7 +527,7 @@ export class GameScene extends Phaser.Scene {
           this.block1.setVelocityX(0)
           this.block1.setDepth(this.girlMap.depth)
           this.block1.setAngle(0)
-          this.barrelzone.y = this.zone.y
+          // this.barrelzone.y = this.zone.y
         }
       }
     }
