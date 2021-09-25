@@ -25,6 +25,9 @@ export class GameScene extends Phaser.Scene {
   private cKey: Phaser.Input.Keyboard.Key
   private spaceBar: Phaser.Input.Keyboard.Key
   private ennemy: Phaser.Physics.Arcade.Sprite;
+  private ennemy2: Phaser.Physics.Arcade.Sprite;
+  private ennemy3: Phaser.Physics.Arcade.Sprite;
+  private ennemy4: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
   // private block1: Phaser.Physics.Arcade.Image;
@@ -59,7 +62,7 @@ export class GameScene extends Phaser.Scene {
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
 
 
-    this.abonner = this.add.text(this.game.scale.width - 530 , this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    this.abonner = this.add.text(this.game.scale.width - 530, this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
     this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '19px Georgia, "Goudy Bookletter 1911", Times, serif' }).setScrollFactor(0).setDepth(202).setAlpha(1);
     // this.fakehear = this.add.text(-300, 870, 'FAKHEAR', { font: '38px Arial' }).setScrollFactor(0).setDepth(203).setAlpha(1);
     this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
@@ -87,10 +90,11 @@ export class GameScene extends Phaser.Scene {
     this.block2 = this.barrels.create(682, 566, 'barrel').setScale(0.2);
     this.block3 = this.barrels.create(92, 566, 'barrel').setScale(0.2);
     this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
-    this.block1['test'] = 42
-    console.log(this.block1['test'])
 
-    this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2).setBounce(0.5)
+    this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
+    this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
+    this.ennemy3 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
+    this.ennemy4 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
     // this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
@@ -157,34 +161,32 @@ export class GameScene extends Phaser.Scene {
       frameRate: 6,
       repeat: -1
     })
-/*
-  let id=2
-    this.barrels[id] = {
-      attack: false,
-      alpha: 1,
-      depth: 30,
-      anim: 'profil',
-      scale: 0.38,
-      size: 200,
-      x: 1000,
-      y: 447,
-      playerId: socket.id,
-      input: {
-        left: false,
-        right: false,
-        up: false,
-        down: false,
-        a: false
-      }
-    };
-    */
+    /*
+      let id=2
+        this.barrels[id] = {
+          attack: false,
+          alpha: 1,
+          depth: 30,
+          anim: 'profil',
+          scale: 0.38,
+          size: 200,
+          x: 1000,
+          y: 447,
+          playerId: socket.id,
+          input: {
+            left: false,
+            right: false,
+            up: false,
+            down: false,
+            a: false
+          }
+        };
+        */
 
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
-    this.ennemyzone = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
-    this.physics.add.existing(this.ennemyzone);
     // this.physics.add.existing(this.block1);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
@@ -192,19 +194,12 @@ export class GameScene extends Phaser.Scene {
       this.zone.body.immovable = true;
       this.zone.depth = 30;
     }
-    if (this.ennemyzone.body instanceof Phaser.Physics.Arcade.Body) {
-      this.ennemyzone.body.friction.x = 0;
-      this.ennemyzone.body.allowGravity = false;
-      this.ennemyzone.body.immovable = true;
-      this.ennemyzone.depth = 30;
-    }
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
     // this.physics.add.collider(this.girlMap, this.barrels);
     // this.physics.add.collider(this.barrelzone, this.barrels);
     // this.physics.add.collider(this.block1, this.ennemy);
-    this.physics.add.collider(this.ennemy, this.ennemyzone);
 
     this.physics.add.overlap(
       this.girlMap,
@@ -239,21 +234,53 @@ export class GameScene extends Phaser.Scene {
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
-  // this.barrelzone = this.add.zone(0, 80, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
-this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
-  barrel['barrelzone'] = this.add.zone(barrel.x,barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
-  var RandomRGB = Phaser.Display.Color.RandomRGB;
-  barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
+    // this.barrelzone = this.add.zone(0, 80, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
+    this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
+      barrel['barrelzone'] = this.add.zone(barrel.x, barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
+      var RandomRGB = Phaser.Display.Color.RandomRGB;
+      barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
 
-    this.physics.add.existing(barrel['barrelzone']);
-    if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
-      barrel['barrelzone'].body.friction.x = 0;
-      barrel['barrelzone'].body.allowGravity = false;
-      barrel['barrelzone'].body.immovable = true;
-      barrel['barrelzone'].depth = 30;
-    }
-  this.physics.add.collider(barrel['barrelzone'], barrel);
-})
+      this.physics.add.existing(barrel['barrelzone']);
+      if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
+        barrel['barrelzone'].body.friction.x = 0;
+        barrel['barrelzone'].body.allowGravity = false;
+        barrel['barrelzone'].body.immovable = true;
+        barrel['barrelzone'].depth = 30;
+      }
+      this.physics.add.collider(barrel['barrelzone'], barrel);
+    })
+
+
+    this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
+
+      ennemy['ennemyzone'] = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+      this.physics.add.existing(ennemy['ennemyzone']);
+
+      if (ennemy['ennemyzone'].body instanceof Phaser.Physics.Arcade.Body) {
+        ennemy['ennemyzone'].body.friction.x = 0;
+        ennemy['ennemyzone'].body.allowGravity = false;
+        ennemy['ennemyzone'].body.immovable = true;
+        ennemy['ennemyzone'].depth = 30;
+      }
+      this.physics.add.collider(ennemy, ennemy['ennemyzone']);
+      console.log(ennemy)
+
+      /*
+      barrel['barrelzone'] = this.add.zone(barrel.x, barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
+      var RandomRGB = Phaser.Display.Color.RandomRGB;
+      barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
+
+      this.physics.add.existing(barrel['barrelzone']);
+      if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
+        barrel['barrelzone'].body.friction.x = 0;
+        barrel['barrelzone'].body.allowGravity = false;
+        barrel['barrelzone'].body.immovable = true;
+        barrel['barrelzone'].depth = 30;
+      }
+      this.physics.add.collider(barrel['barrelzone'], barrel);
+      */
+    })
+
   }
 
 
@@ -312,41 +339,44 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
-     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+    let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+    let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2, this.ennemy3, this.ennemy4]);
 
     /**
      * _________________
      * [LOGIQUE DU BOT] (déblacement en x/y et rotation selon position du joueur SEULEMENT si il est en vie)
      * @param  this.ennemy.active sprite ennemi non détruit
      * @param  this.ennemy sprite de l'ennemie
-     * @param  this.ennemyzone.y socle ennemie
+     * @param  this.ennemy.ennemyzone.y socle ennemie
      * @param  this.zone.y socle joueur
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-    if (this.ennemy.active) {
-      var distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemyzone);
+    if (closestEnnemy.active) {
+      var distance = Phaser.Math.Distance.BetweenPoints(this.zone, closestEnnemy['ennemyzone']);
+      // ennemy['ennemyzone'].body.immovable = true;
+
       if (distance < 1000) {
-        if (this.ennemyzone.y !== this.zone.y) {
-          if (this.zone.y < this.ennemyzone.y) {
-            this.ennemyzone.y -= 1
+        if (this.ennemy['ennemyzone'].y !== this.zone.y) {
+          if (this.zone.y < this.ennemy['ennemyzone'].y) {
+            this.ennemy['ennemyzone'].y -= 1
           } else {
-            this.ennemyzone.y += 1
+            this.ennemy['ennemyzone'].y += 1
           }
         }
         if (distance > 160 && this.ennemy.x < this.girlMap.x) {
 
-          this.ennemyzone.x = this.ennemy.x
+          this.ennemy['ennemyzone'].x = this.ennemy.x
           this.ennemy.x += 1.5
           this.ennemy.flipX = false
           this.ennemy.play('walk', true)
         } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
-          this.ennemyzone.x = this.ennemy.x
+          this.ennemy['ennemyzone'].x = this.ennemy.x
           this.ennemy.x -= 1.5
           this.ennemy.flipX = true
           this.ennemy.play('walk', true)
         } else {
-            this.ennemy.play("attack", true)
+          this.ennemy.play("attack", true)
           if (this.ennemy.anims.getFrameName().includes("attack4")) {
 
             if (this.protect.displayWidth === 1) {
@@ -399,7 +429,7 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
               y: -100,
               repeat: 0,
               duration: 900,
-              onComplete: () => (this.ennemy.destroy(), this.ennemyzone.destroy()),
+              onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
             });
           }
           this.ennemy.alpha -= 0.03
@@ -599,14 +629,14 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
         this.abonner.setAlpha(0),
         this.imageFakhear.setAlpha(0),
         this.pannelBottom.setAlpha(0)
-      ) :  (
-        this.pannelRight.setAlpha(1),
-        this.info.setAlpha(1),
-        this.abonner.setAlpha(1),
-        this.fakehear.setAlpha(1),
-        this.imageFakhear.setAlpha(1),
-        this.pannelBottom.setAlpha(1)
-      )
+      ) : (
+          this.pannelRight.setAlpha(1),
+          this.info.setAlpha(1),
+          this.abonner.setAlpha(1),
+          this.fakehear.setAlpha(1),
+          this.imageFakhear.setAlpha(1),
+          this.pannelBottom.setAlpha(1)
+        )
     }
   }
 }
