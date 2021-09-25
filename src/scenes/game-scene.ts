@@ -196,7 +196,7 @@ export class GameScene extends Phaser.Scene {
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
     // this.physics.add.collider(this.girlMap, this.barrels);
-    // this.physics.add.collider(this.barrelzone, this.barrels);
+    this.physics.add.collider(this.barrels, this.enemies);
     // this.physics.add.collider(this.block1, this.ennemy);
 
     this.physics.add.overlap(
