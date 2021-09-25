@@ -235,21 +235,28 @@ export class GameScene extends Phaser.Scene {
   // this.barrelzone = this.add.zone(0, 80, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
 this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
     var value2 = Phaser.Math.Between(610, 920);
-  this.barrelzone = this.add.zone(barrel.x,barrel.y + 200, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
+  barrel['barrelzone'] = this.add.zone(barrel.x,barrel.y + 200, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
   var RandomRGB = Phaser.Display.Color.RandomRGB;
   barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
-    this.physics.add.existing(this.barrelzone);
-    if (this.barrelzone.body instanceof Phaser.Physics.Arcade.Body) {
-      this.barrelzone.body.friction.x = 0;
-      this.barrelzone.body.allowGravity = false;
-      this.barrelzone.body.immovable = true;
-      this.barrelzone.depth = 30;
+  // barrel['barrelzone'] = {
+  //   friction: 0,
+  //   allowGravity: false,
+  //   immovable: true,
+  //   depth: 30
+  // }
+    this.physics.add.existing(barrel['barrelzone']);
+    if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
+      barrel['barrelzone'].body.friction.x = 0;
+      barrel['barrelzone'].body.allowGravity = false;
+      barrel['barrelzone'].body.immovable = true;
+      barrel['barrelzone'].depth = 30;
     }
+    console.log(barrel)
 
     var value = Phaser.Math.Between(-374, 1116);
     //-374
 //1116
-  this.physics.add.collider(this.barrelzone, barrel);
+  this.physics.add.collider(barrel['barrelzone'], barrel);
 
 })
 // this.input.on('pointermove', function (pointer)
