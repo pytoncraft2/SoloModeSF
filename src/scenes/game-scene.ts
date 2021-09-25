@@ -536,42 +536,41 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
      */
      // var o = this.girlMap as Phaser.GameObjects.GameObject
      let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
-     this.graphics.clear()
-.lineStyle(2, 0xff3300)
-.lineBetween(closestBarrel.x, closestBarrel.y, this.girlMap.x, this.girlMap.y)
-// console.log(closest)
-closestBarrel.alpha = 0.4
 
 
-/*
 
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
 
-      if (this.block1.body.allowGravity) {
+      this.graphics.clear()
+.lineStyle(2, 0xff3300)
+.lineBetween(closestBarrel.x, closestBarrel.y, this.girlMap.x, this.girlMap.y)
+// console.log(closest)
+// closestBarrel.alpha = 0.4
+
+      if (closestBarrel.body.allowGravity) {
         console.log("allow")
-        this.block1.setVelocityX(this.girlMap.body.velocity.x)
-        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-          this.block1.body.allowGravity = false
-          this.block1.y = this.girlMap.y
+        closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
+        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
+          closestBarrel.body.allowGravity = false
+          closestBarrel.y = this.girlMap.y
         }
-      } else if (!this.block1.body.allowGravity) {
+      } else if (!closestBarrel.body.allowGravity) {
         console.log("deny")
-        this.block1.setVelocityX(this.girlMap.body.velocity.x)
-        if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-          this.block1.body.allowGravity = true
-          this.block1.setVelocityX(0)
-          this.block1.setDepth(this.girlMap.depth)
-          this.block1.setAngle(0)
+        closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
+        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
+          closestBarrel.body.allowGravity = true
+          closestBarrel.setVelocityX(0)
+          closestBarrel.setDepth(this.girlMap.depth)
+          closestBarrel.setAngle(0)
           // this.barrelzone.y = this.zone.y
         }
       }
     }
 
-    if (!this.block1.body.allowGravity) {
-      this.block1.x = this.girlMap.x
-      this.block1.y = this.girlMap.y
+    if (!closestBarrel.body.allowGravity) {
+      closestBarrel.x = this.girlMap.x
+      closestBarrel.y = this.girlMap.y
     }
-    */
 
     /**
      * [BOUCLIER + ANIMATION]
