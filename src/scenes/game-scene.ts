@@ -90,7 +90,7 @@ export class GameScene extends Phaser.Scene {
     this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
 
     this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
-    this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.6).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300)
+    this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setDragX(300).setAlpha(1).setScale(0.3)
     // this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
@@ -336,6 +336,7 @@ export class GameScene extends Phaser.Scene {
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+    let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2]);
 
     /**
      * _________________
@@ -347,45 +348,47 @@ export class GameScene extends Phaser.Scene {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-    if (this.ennemy.active) {
-      var distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemy['ennemyzone']);
-      // ennemy['ennemyzone'].body.immovable = true;
+    this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
+      if (ennemy.active) {
+        var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
+        // ennemy['ennemyzone'].body.immovable = true;
 
-      if (distance < 1000) {
-        if (this.ennemy['ennemyzone'].y !== this.zone.y) {
-          if (this.zone.y < this.ennemy['ennemyzone'].y) {
-            this.ennemy['ennemyzone'].y -= 1
-          } else {
-            this.ennemy['ennemyzone'].y += 1
-          }
-        }
-        if (distance > 160 && this.ennemy.x < this.girlMap.x) {
-
-          this.ennemy['ennemyzone'].x = this.ennemy.x
-          this.ennemy.x += 1.5
-          this.ennemy.flipX = false
-          this.ennemy.play('walk', true)
-        } else if (distance > 160 && this.ennemy.x > this.girlMap.x) {
-          this.ennemy['ennemyzone'].x = this.ennemy.x
-          this.ennemy.x -= 1.5
-          this.ennemy.flipX = true
-          this.ennemy.play('walk', true)
-        } else {
-          this.ennemy.play("attack", true)
-          if (this.ennemy.anims.getFrameName().includes("attack4")) {
-
-            if (this.protect.displayWidth === 1) {
-              this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
-              this.events.emit('health-changed', this.health)
+        if (distance < 1000) {
+          if (ennemy['ennemyzone'].y !== this.zone.y) {
+            if (this.zone.y < ennemy['ennemyzone'].y) {
+              ennemy['ennemyzone'].y -= 1
             } else {
-              //Diminuer la protection
+              ennemy['ennemyzone'].y += 1
             }
           }
+          if (distance > 160 && ennemy.x < this.girlMap.x) {
+
+            ennemy['ennemyzone'].x = ennemy.x
+            ennemy.x += 1.5
+            ennemy.flipX = false
+            ennemy.play('walk', true)
+          } else if (distance > 160 && ennemy.x > this.girlMap.x) {
+            ennemy['ennemyzone'].x = ennemy.x
+            ennemy.x -= 1.5
+            ennemy.flipX = true
+            ennemy.play('walk', true)
+          } else {
+            ennemy.play("attack", true)
+            if (ennemy.anims.getFrameName().includes("attack4")) {
+
+              if (this.protect.displayWidth === 1) {
+                this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
+                this.events.emit('health-changed', this.health)
+              } else {
+                //Diminuer la protection
+              }
+            }
+          }
+        } else {
+          ennemy.play("idle_walk")
         }
-      } else {
-        this.ennemy.play("idle_walk")
       }
-    }
+    });
     /**
      * [FIN LOGIQUE BOT]
      * _________________
@@ -414,7 +417,7 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.setVelocityX(0);
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && this.girlMap.depth < this.ennemy.depth + 10
-        && this.girlMap.depth > this.ennemy.depth - 10 && distance < 196) {
+        && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
             this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
@@ -497,7 +500,7 @@ export class GameScene extends Phaser.Scene {
     }
     else {
       this.girlMap.setVelocityX(0);
-      if (distance < 296) {
+      if (closestEnnemy < 296) {
         this.girlMap.anims.play('idle_attack');
       } else {
         this.girlMap.anims.play('idle_walk');
