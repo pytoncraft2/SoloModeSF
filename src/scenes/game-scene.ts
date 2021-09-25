@@ -26,8 +26,6 @@ export class GameScene extends Phaser.Scene {
   private spaceBar: Phaser.Input.Keyboard.Key
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private ennemy2: Phaser.Physics.Arcade.Sprite;
-  private ennemy3: Phaser.Physics.Arcade.Sprite;
-  private ennemy4: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
   // private block1: Phaser.Physics.Arcade.Image;
@@ -92,9 +90,7 @@ export class GameScene extends Phaser.Scene {
     this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
 
     this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
-    this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
-    this.ennemy3 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
-    this.ennemy4 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
+    this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.6).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300)
     // this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
@@ -340,7 +336,6 @@ export class GameScene extends Phaser.Scene {
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
-    let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2, this.ennemy3, this.ennemy4]);
 
     /**
      * _________________
@@ -352,8 +347,8 @@ export class GameScene extends Phaser.Scene {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-    if (closestEnnemy.active) {
-      var distance = Phaser.Math.Distance.BetweenPoints(this.zone, closestEnnemy['ennemyzone']);
+    if (this.ennemy.active) {
+      var distance = Phaser.Math.Distance.BetweenPoints(this.zone, this.ennemy['ennemyzone']);
       // ennemy['ennemyzone'].body.immovable = true;
 
       if (distance < 1000) {
