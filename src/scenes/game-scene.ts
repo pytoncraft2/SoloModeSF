@@ -201,7 +201,7 @@ export class GameScene extends Phaser.Scene {
 
     this.physics.add.overlap(
       this.girlMap,
-      this.block1,
+      this.barrels,
       girlMapBlockCollide,
       null,
       this
