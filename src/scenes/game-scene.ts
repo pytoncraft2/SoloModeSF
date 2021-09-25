@@ -28,7 +28,7 @@ export class GameScene extends Phaser.Scene {
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
   // private block1: Phaser.Physics.Arcade.Image;
-  private block1: Phaser.Physics.Arcade.Image;
+  private block1: Phaser.Physics.Arcade.Image ;
   public block2: Phaser.Physics.Arcade.Image;
   public block3: Phaser.Physics.Arcade.Image;
   public block4: Phaser.Physics.Arcade.Image;
@@ -77,10 +77,10 @@ export class GameScene extends Phaser.Scene {
       dragX: 800
     });
 
-    this.block1 = this.barrels.create(350, 672, 'barrel').setScale(0.2).setDepth(53).setBounce(0.5)
-    this.block2 = this.barrels.create(682, 340, 'barrel').setScale(0.2).setDepth(53);
-    this.block3 = this.barrels.create(92, 40, 'barrel').setScale(0.2).setDepth(53);
-    this.block4 = this.barrels.create(462, 240, 'barrel').setScale(0.2).setDepth(53);
+    this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
+    this.block2 = this.barrels.create(682, 566, 'barrel').setScale(0.2);
+    this.block3 = this.barrels.create(92, 566, 'barrel').setScale(0.2);
+    this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
     this.block1['test'] = 42
     console.log(this.block1['test'])
 
@@ -235,7 +235,7 @@ export class GameScene extends Phaser.Scene {
   // this.barrelzone = this.add.zone(0, 80, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
 this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
     var value2 = Phaser.Math.Between(610, 920);
-  this.barrelzone = this.add.zone(barrel.x,value2, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
+  this.barrelzone = this.add.zone(barrel.x,barrel.y + 200, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
   var RandomRGB = Phaser.Display.Color.RandomRGB;
   barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
     this.physics.add.existing(this.barrelzone);
@@ -310,7 +310,7 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
 
   public update(): void {
     // console.log(this.zone.y)
-    // console.log(this.girlMap.x)
+    // console.log(this.girlMap.y)
 
     //610
     //920
@@ -499,8 +499,8 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
       this.zone.body.position.y -= 2
-      this.ombre.depth = this.zone.body.position.x;
-      this.girlMap.depth = this.zone.body.position.x;
+      this.ombre.depth -= 1;
+      this.girlMap.depth -= 1;
       this.ombre.y = this.zone.y - 30
       this.ombre.x = this.zone.x
       this.girlMap.anims.play('goback', true);
@@ -510,8 +510,8 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
     } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
       if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
         this.girlMap.y += 2;
-        this.ombre.depth = this.girlMap.y;
-        this.girlMap.depth = this.girlMap.y;
+        this.ombre.depth += 1;
+        this.girlMap.depth += 1;
         this.ombre.y = this.zone.y - 30
         this.ombre.x = this.zone.x
         this.zone.y += 2;
