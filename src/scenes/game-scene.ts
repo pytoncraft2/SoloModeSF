@@ -86,19 +86,23 @@ export class GameScene extends Phaser.Scene {
       dragX: 800
     });
 
+    //ajout des tonneaux dans le groupe
     this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
     this.block2 = this.barrels.create(682, 566, 'barrel').setScale(0.2);
     this.block3 = this.barrels.create(92, 566, 'barrel').setScale(0.2);
     this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
 
+    //ajout des ennemies dans le groupe
     this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
     this.ennemy2 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
     this.ennemy3 = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
     this.ennemy4 = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
-    // this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
+
+    //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
+
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.ctrlKey = this.input.keyboard.addKey('CTRL');
@@ -161,33 +165,12 @@ export class GameScene extends Phaser.Scene {
       frameRate: 6,
       repeat: -1
     })
-    /*
-      let id=2
-        this.barrels[id] = {
-          attack: false,
-          alpha: 1,
-          depth: 30,
-          anim: 'profil',
-          scale: 0.38,
-          size: 200,
-          x: 1000,
-          y: 447,
-          playerId: socket.id,
-          input: {
-            left: false,
-            right: false,
-            up: false,
-            down: false,
-            a: false
-          }
-        };
-        */
 
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+
     // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
-    // this.physics.add.existing(this.block1);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -197,9 +180,7 @@ export class GameScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-    // this.physics.add.collider(this.girlMap, this.barrels);
     this.physics.add.collider(this.barrels, this.enemies);
-    // this.physics.add.collider(this.block1, this.ennemy);
 
     this.physics.add.overlap(
       this.girlMap,
@@ -212,7 +193,7 @@ export class GameScene extends Phaser.Scene {
     /**
      * FACE A UN TONNEAU: le joueur peut propulser le tonneau
      * @param  girl  verification de sa position
-     * @param  block reconfiguration des parametres(velocity, angularDrag...)
+     * @param  block reconfiguration des parametres du tonneau (velocity, angularDrag...)
      */
 
     function girlMapBlockCollide(girl: Phaser.Physics.Arcade.Sprite, block: Phaser.Physics.Arcade.Image) {
@@ -234,7 +215,6 @@ export class GameScene extends Phaser.Scene {
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
-    // this.barrelzone = this.add.zone(0, 80, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
       barrel['barrelzone'] = this.add.zone(barrel.x, barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
       var RandomRGB = Phaser.Display.Color.RandomRGB;
@@ -252,10 +232,8 @@ export class GameScene extends Phaser.Scene {
 
 
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
-
       ennemy['ennemyzone'] = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
       this.physics.add.existing(ennemy['ennemyzone']);
-
       if (ennemy['ennemyzone'].body instanceof Phaser.Physics.Arcade.Body) {
         ennemy['ennemyzone'].body.friction.x = 0;
         ennemy['ennemyzone'].body.allowGravity = false;
@@ -263,24 +241,7 @@ export class GameScene extends Phaser.Scene {
         ennemy['ennemyzone'].depth = 30;
       }
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
-      console.log(ennemy)
-
-      /*
-      barrel['barrelzone'] = this.add.zone(barrel.x, barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
-      var RandomRGB = Phaser.Display.Color.RandomRGB;
-      barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
-
-      this.physics.add.existing(barrel['barrelzone']);
-      if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
-        barrel['barrelzone'].body.friction.x = 0;
-        barrel['barrelzone'].body.allowGravity = false;
-        barrel['barrelzone'].body.immovable = true;
-        barrel['barrelzone'].depth = 30;
-      }
-      this.physics.add.collider(barrel['barrelzone'], barrel);
-      */
     })
-
   }
 
 
@@ -355,8 +316,6 @@ export class GameScene extends Phaser.Scene {
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
       if (ennemy.active) {
         var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
-        // ennemy['ennemyzone'].body.immovable = true;
-
         if (distance < 1000) {
           if (ennemy['ennemyzone'].y !== this.zone.y) {
             if (this.zone.y < ennemy['ennemyzone'].y) {
@@ -368,12 +327,12 @@ export class GameScene extends Phaser.Scene {
           if (distance > 160 && ennemy.x < this.girlMap.x) {
 
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x += 1.5
+            ennemy.x += 2.5
             ennemy.flipX = false
             ennemy.play('walk', true)
           } else if (distance > 160 && ennemy.x > this.girlMap.x) {
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x -= 1.5
+            ennemy.x -= 2.5
             ennemy.flipX = true
             ennemy.play('walk', true)
           } else {
