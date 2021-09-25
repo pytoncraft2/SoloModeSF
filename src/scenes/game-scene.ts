@@ -26,6 +26,7 @@ export class GameScene extends Phaser.Scene {
   private spaceBar: Phaser.Input.Keyboard.Key
   private ennemy: Phaser.Physics.Arcade.Sprite;
   private ennemy2: Phaser.Physics.Arcade.Sprite;
+  private ennemy3: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
   // private block1: Phaser.Physics.Arcade.Image;
@@ -91,6 +92,7 @@ export class GameScene extends Phaser.Scene {
 
     this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2)
     this.ennemy2 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setDragX(300).setAlpha(1).setScale(0.3)
+    this.ennemy3 = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setDragX(300).setAlpha(1).setScale(0.3)
     // this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
