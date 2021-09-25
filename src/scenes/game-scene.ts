@@ -234,16 +234,10 @@ export class GameScene extends Phaser.Scene {
 
   // this.barrelzone = this.add.zone(0, 80, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
 this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
-    var value2 = Phaser.Math.Between(610, 920);
   barrel['barrelzone'] = this.add.zone(barrel.x,barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
   var RandomRGB = Phaser.Display.Color.RandomRGB;
   barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
-  // barrel['barrelzone'] = {
-  //   friction: 0,
-  //   allowGravity: false,
-  //   immovable: true,
-  //   depth: 30
-  // }
+
     this.physics.add.existing(barrel['barrelzone']);
     if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
       barrel['barrelzone'].body.friction.x = 0;
@@ -251,21 +245,8 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
       barrel['barrelzone'].body.immovable = true;
       barrel['barrelzone'].depth = 30;
     }
-    // console.log(barrel)
-
-    var value = Phaser.Math.Between(-374, 1116);
-    //-374
-//1116
   this.physics.add.collider(barrel['barrelzone'], barrel);
-
 })
-// this.input.on('pointermove', function (pointer)
-// {
-    // cursor.setVisible(true).setPosition(pointer.x, pointer.y);
-// });
-
-
-
   }
 
 
@@ -321,17 +302,10 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
   }
 
   public update(): void {
-    // console.log(this.zone.y)
-    // console.log(this.girlMap.y)
 
-    //610
-    //920
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
      let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
-
-
-
 
     /**
      * _________________
@@ -402,7 +376,6 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
         if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
           closestBarrel.body.allowGravity = true
           closestBarrel.setDepth(this.girlMap.depth)
-          // this.barrelzone.y = this.zone.y
           this.girlMap.flipX ? closestBarrel.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : closestBarrel.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
         }
       }
@@ -507,7 +480,7 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
     /**
      * _________________
      * [DEPLACEMENT HAUT - BAS ]
-     * @param  this.cursors touches directionnelle et espace:
+     * @param  this.cursors touches directionnelle et bar d'espace:
      */
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
@@ -539,21 +512,12 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
     /**
      * [LOGIQUE INTERACTION AVEC UN TONNEAU]
      * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
-     * Porter et lacher le tonneau
+     * @param closestBarrel tonneau le plus proche
+     * Porter et lacher le tonneau: activer/desactiver gravité
      *
      */
-     // var o = this.girlMap as Phaser.GameObjects.GameObject
-
-
 
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
-
-      // this.graphics.clear()
-// .lineStyle(2, 0xff3300)
-// .lineBetween(closestBarrel.x, closestBarrel.y, this.girlMap.x, this.girlMap.y)
-// console.log(closest)
-// closestBarrel.alpha = 0.4
-
       if (closestBarrel.body.allowGravity) {
         console.log("allow")
         closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
@@ -570,8 +534,6 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
           closestBarrel.setDepth(this.girlMap.depth)
           closestBarrel.setAngle(0)
           closestBarrel.barrelzone.y = this.zone.y
-          // this.barrelzone.y = this.zone.y
-          console.log(closestBarrel)
         }
       }
     }
@@ -623,8 +585,6 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
      * [TOGGLE AFFICHAGE + PANNEL VIEWER (Twitch)]
      */
     if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
-      // this.graphics.clear()
-
       this.pannelBottom.alpha === 1 ? (
         this.pannelRight.setAlpha(0),
         this.info.setAlpha(0),

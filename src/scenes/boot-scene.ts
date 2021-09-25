@@ -73,12 +73,10 @@ export class BootScene extends Phaser.Scene {
     // Load sample assets
     this.load.image('bg', 'assets/fond/streetOfRage.png');
     // this.load.image('doors', 'assets/fond/doors.png');
-    this.load.image('bg2', 'assets/fond/bgMenu.png');
+    // this.load.image('bg2', 'assets/fond/bgMenu.png');
     this.load.atlas('ennemy', 'assets/personnages/dessinatrice2/dessinatrice2.png', 'assets/personnages/dessinatrice2/dessinatrice2_atlas.json');
     this.load.atlas('dessinatrice1', 'assets/personnages/dessinatrice1/dessinatrice1.png', 'assets/personnages/dessinatrice1/dessinatrice1_atlas.json');
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.image('barrel', 'assets/barrel.png')
-    this.load.image('bullet', 'assets/bullet.png');
     this.load.image('profilPanel', 'assets/liveProfilPanel.png');
 //     this.load.spritesheet('bird', 'assets/personnages/bird/bird.png', {
 // frameWidth: 240,
