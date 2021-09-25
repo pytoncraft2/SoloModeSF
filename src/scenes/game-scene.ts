@@ -34,6 +34,7 @@ export class GameScene extends Phaser.Scene {
   public block4: Phaser.Physics.Arcade.Image;
   public imageFakhear: any;
   private barrels: any;
+  private enemies: any;
   // private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   public fakehear: Phaser.GameObjects.Text;
@@ -77,6 +78,11 @@ export class GameScene extends Phaser.Scene {
       dragX: 800
     });
 
+    this.enemies = this.physics.add.group({
+      allowGravity: true,
+      dragX: 800
+    });
+
     this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
     this.block2 = this.barrels.create(682, 566, 'barrel').setScale(0.2);
     this.block3 = this.barrels.create(92, 566, 'barrel').setScale(0.2);
@@ -84,7 +90,8 @@ export class GameScene extends Phaser.Scene {
     this.block1['test'] = 42
     console.log(this.block1['test'])
 
-    this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
+    this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1).setScale(0.2).setBounce(0.5)
+    // this.ennemy = this.physics.add.sprite(200, 480, 'ennemy', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setDragX(300).setAlpha(1);
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
