@@ -321,6 +321,7 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
     //920
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
+     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
 
 
 
@@ -390,14 +391,14 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
        * @param  !this.block1.body.allowGravity : tonneau surélevé
        */
 
-      // if (!this.block1.body.allowGravity) {
-      //   if (this.block1.body instanceof Phaser.Physics.Arcade.Body) {
-      //     this.block1.body.allowGravity = true
-      //     this.block1.setDepth(this.girlMap.depth)
-      //     // this.barrelzone.y = this.zone.y
-      //     this.girlMap.flipX ? this.block1.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : this.block1.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
-      //   }
-      // }
+      if (!closestBarrel.body.allowGravity) {
+        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
+          closestBarrel.body.allowGravity = true
+          closestBarrel.setDepth(this.girlMap.depth)
+          // this.barrelzone.y = this.zone.y
+          this.girlMap.flipX ? closestBarrel.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : closestBarrel.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
+        }
+      }
       this.girlMap.setVelocityX(0);
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && this.girlMap.depth < this.ennemy.depth + 10
@@ -535,15 +536,14 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
      *
      */
      // var o = this.girlMap as Phaser.GameObjects.GameObject
-     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
 
 
 
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
 
-      this.graphics.clear()
-.lineStyle(2, 0xff3300)
-.lineBetween(closestBarrel.x, closestBarrel.y, this.girlMap.x, this.girlMap.y)
+      // this.graphics.clear()
+// .lineStyle(2, 0xff3300)
+// .lineBetween(closestBarrel.x, closestBarrel.y, this.girlMap.x, this.girlMap.y)
 // console.log(closest)
 // closestBarrel.alpha = 0.4
 
