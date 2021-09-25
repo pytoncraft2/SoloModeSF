@@ -252,6 +252,11 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
   this.physics.add.collider(this.barrelzone, barrel);
 
 })
+// this.input.on('pointermove', function (pointer)
+// {
+    // cursor.setVisible(true).setPosition(pointer.x, pointer.y);
+// });
+
 
 
   }
@@ -529,6 +534,15 @@ this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
      * Porter et lacher le tonneau
      *
      */
+     // var o = this.girlMap as Phaser.GameObjects.GameObject
+     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+     this.graphics.clear()
+.lineStyle(2, 0xff3300)
+.lineBetween(closestBarrel.x, closestBarrel.y, this.girlMap.x, this.girlMap.y)
+// console.log(closest)
+closestBarrel.alpha = 0.4
+
+
 /*
 
     if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
