@@ -316,6 +316,7 @@ export class GameScene extends Phaser.Scene {
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
       if (ennemy.active) {
         var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
+        var number = Phaser.Math.Between(2, 5);
         if (distance < 1000) {
           if (ennemy['ennemyzone'].y !== this.zone.y) {
             if (this.zone.y < ennemy['ennemyzone'].y) {
@@ -327,12 +328,12 @@ export class GameScene extends Phaser.Scene {
           if (distance > 160 && ennemy.x < this.girlMap.x) {
 
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x += 2.5
+            ennemy.x += Phaser.Math.Between(2, 5)
             ennemy.flipX = false
             ennemy.play('walk', true)
           } else if (distance > 160 && ennemy.x > this.girlMap.x) {
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x -= 2.5
+            ennemy.x -= Phaser.Math.Between(2, 5)
             ennemy.flipX = true
             ennemy.play('walk', true)
           } else {
@@ -343,6 +344,8 @@ export class GameScene extends Phaser.Scene {
                 this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
                 this.events.emit('health-changed', this.health)
               } else {
+                ennemy.flipX ? ennemy.setVelocityX(500) : ennemy.setVelocityX(-500)
+                ennemy['ennemyzone'].x = ennemy.x
                 //Diminuer la protection
               }
             }
