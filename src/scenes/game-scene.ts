@@ -99,7 +99,7 @@ export class GameScene extends Phaser.Scene {
     //ajout des ennemies dans le groupe
     // this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
     // this.ennemy4 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
-    this.ennemy = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
+    this.ennemy = this.enemies.create(0, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
     // this.ennemy = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
 
 
@@ -292,6 +292,34 @@ export class GameScene extends Phaser.Scene {
       }
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
     })
+
+   //  var target = new Phaser.Math.Vector2();
+   //
+   //  this.input.on('pointerdown', function (pointer) {
+   //
+   //    console.log("poointer")
+   //   target.x = pointer.x;
+   //   target.y = pointer.y;
+   //   this.physics.moveToObject(this.girlMap, target, 5000);
+   // },this)
+
+
+    // this.input.on('pointerdown', function (pointer) {
+    //
+    //     target.x = pointer.x;
+    //     target.y = pointer.y;
+    //
+    //     // Move at 200 px/s:
+    //     this.physics.moveToObject(source, target, 200);
+    //
+    //     debug.clear().lineStyle(1, 0x00ff00);
+    //     debug.lineBetween(0, target.y, 800, target.y);
+    //     debug.lineBetween(target.x, 0, target.x, 600);
+    //
+    // }, this);
+
+
+     // Move at 200 px/s:
 
 
   }
