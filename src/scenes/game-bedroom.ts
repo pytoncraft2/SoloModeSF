@@ -81,7 +81,7 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     //
     this.girlMap = this.physics.add.sprite(530, 306, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.3).setVelocityY(203);
     this.add.image(-300, 350, 'bedroom').setDepth(-204);
-    this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(-20);
+    this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(40);
 
     if (this.doors.body instanceof Phaser.Physics.Arcade.Body) {
     this.doors.body.allowGravity = false;
@@ -380,7 +380,7 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
      */
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
-      this.zone.body.position.y -= 2
+      this.zone.body.position.y -= 1.3
       this.ombre.depth -= 1;
       this.girlMap.depth -= 1;
       this.ombre.y = this.zone.y - 30
@@ -393,7 +393,7 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
         this.girlMap.depth += 1;
         this.ombre.y = this.zone.y - 30
         this.ombre.x = this.zone.x
-        this.zone.y += 2;
+        this.zone.y += 1.3;
         this.girlMap.anims.play('front', true);
       }
     }
