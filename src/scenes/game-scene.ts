@@ -33,7 +33,6 @@ export class GameScene extends Phaser.Scene {
   private graphics!: Phaser.GameObjects.Graphics;
   private portal: any;
   private portal2: any;
-  // private block1: Phaser.Physics.Arcade.Image;
   private block1: Phaser.Physics.Arcade.Image ;
   public block2: Phaser.Physics.Arcade.Image;
   public block3: Phaser.Physics.Arcade.Image;
@@ -97,18 +96,13 @@ export class GameScene extends Phaser.Scene {
     this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
 
     //ajout des ennemies dans le groupe
-    // this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
-    // this.ennemy4 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
     this.ennemy = this.enemies.create(0, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
-    // this.ennemy = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
 
 
-    //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54).setVisible(false);
     this.portal = this.add.image(this.girlMap.x, this.girlMap.y, 'portal').setDepth(-200);
     this.portal2 = this.add.image(this.girlMap.x - 800, this.girlMap.y, 'portal').setDepth(-200).setTintFill(0x310803, 0x311605);
-    // portal.setAngularVelocity(40)
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -178,7 +172,6 @@ export class GameScene extends Phaser.Scene {
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
 
-    // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
     this.physics.add.existing(this.portal);
     this.physics.add.existing(this.portal2);
@@ -200,21 +193,6 @@ export class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.girlMap, this.zone);
     this.physics.add.collider(this.barrels, this.enemies);
 
-    // this.physics.add.overlap(
-    //   this.girlMap,
-    //   this.portal, function(player: Phaser.Physics.Arcade.Sprite, portal: Phaser.Physics.Arcade.Image) {
-    //     // player.y < 399 ? portal.alpha = 0.5 : portal.alpha = 1
-    //     portal.alpha = 0.4
-    //   });
-    // this.physics.add.overlap(
-    //   this.girlMap,
-    //   this.portal,
-    //   girlMapPortalInteraction,
-    //   null,
-    //   this
-    // );
-
-
     this.physics.add.overlap(this.girlMap, this.portal);
     this.physics.add.overlap(this.girlMap, this.portal2);
 
@@ -232,19 +210,6 @@ export class GameScene extends Phaser.Scene {
      * @param  block reconfiguration des parametres du tonneau (velocity, angularDrag...)
      */
 
-//      function girlMapPortalInteraction(girl: Phaser.Physics.Arcade.Sprite, portal: Phaser.Physics.Arcade.Image) {
-//        portal.setScale(0.5)
-//        this.tweens.add({
-//   targets: portal,
-//   scale: 0.3,
-//   repeat: 0,
-//   duration: 900,
-//   // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-// });
-//
-//        // girl.setAlpha(0)
-//        // console.log("ovverlap")
-//      }
 
     function girlMapBlockCollide(girl: Phaser.Physics.Arcade.Sprite, block: Phaser.Physics.Arcade.Image) {
       if (this.girlMap.anims.getFrameName().includes("attack4")
@@ -292,36 +257,6 @@ export class GameScene extends Phaser.Scene {
       }
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
     })
-
-   //  var target = new Phaser.Math.Vector2();
-   //
-   //  this.input.on('pointerdown', function (pointer) {
-   //
-   //    console.log("poointer")
-   //   target.x = pointer.x;
-   //   target.y = pointer.y;
-   //   this.physics.moveToObject(this.girlMap, target, 5000);
-   // },this)
-
-
-    // this.input.on('pointerdown', function (pointer) {
-    //
-    //     target.x = pointer.x;
-    //     target.y = pointer.y;
-    //
-    //     // Move at 200 px/s:
-    //     this.physics.moveToObject(source, target, 200);
-    //
-    //     debug.clear().lineStyle(1, 0x00ff00);
-    //     debug.lineBetween(0, target.y, 800, target.y);
-    //     debug.lineBetween(target.x, 0, target.x, 600);
-    //
-    // }, this);
-
-
-     // Move at 200 px/s:
-
-
   }
 
 
@@ -379,42 +314,33 @@ export class GameScene extends Phaser.Scene {
   public update(): void {
     this.portal.body.touching.none ?
 
-            this.tweens.add({
-              targets: this.portal,
-              scale: 0.5,
-              repeat: 0,
-              duration: 900,
-              // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-            }) :
-            this.tweens.add({
-              targets: this.portal,
-              scale: 1,
-              repeat: 1,
-              duration: 900,
-              // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-            });
+      this.tweens.add({
+        targets: this.portal,
+        scale: 0.5,
+        repeat: 0,
+        duration: 900,
+      }) :
+      this.tweens.add({
+        targets: this.portal,
+        scale: 1,
+        repeat: 1,
+        duration: 900,
+      });
 
     this.portal2.body.touching.none ?
 
-            this.tweens.add({
-              targets: this.portal2,
-              scale: 0.5,
-              repeat: 0,
-              duration: 900,
-              // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-            }) :
-            this.tweens.add({
-              targets: this.portal,
-              scale: 1,
-              repeat: 1,
-              duration: 900,
-              // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-            });
-
-
-
-    // this.portal.setAlpha(1);
-
+      this.tweens.add({
+        targets: this.portal2,
+        scale: 0.5,
+        repeat: 0,
+        duration: 900,
+      }) :
+      this.tweens.add({
+        targets: this.portal,
+        scale: 1,
+        repeat: 1,
+        duration: 900,
+      });
 
     this.portal.rotation += 0.01
     this.portal2.rotation -= 0.01
@@ -422,7 +348,6 @@ export class GameScene extends Phaser.Scene {
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
-    // let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy]);
 
     /**
      * _________________
@@ -586,9 +511,9 @@ export class GameScene extends Phaser.Scene {
     else {
       this.girlMap.setVelocityX(0);
       // if (closestEnnemy < 296) {
-        // this.girlMap.anims.play('idle_attack');
+      // this.girlMap.anims.play('idle_attack');
       // } else {
-        // this.girlMap.anims.play('idle_walk');
+      // this.girlMap.anims.play('idle_walk');
       // }
     }
 
@@ -730,16 +655,16 @@ export class GameScene extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
       if (this.portal.body.touching.up) {
         this.cameras.main.fadeOut(500);
-        this.cameras.main.once('camerafadeoutcomplete', function () {
+        this.cameras.main.once('camerafadeoutcomplete', function() {
           this.scene.start('Bedroom')
-        },this);
+        }, this);
       }
 
       if (this.portal2.body.touching.up) {
         this.cameras.main.fadeOut(500);
-        this.cameras.main.once('camerafadeoutcomplete', function () {
+        this.cameras.main.once('camerafadeoutcomplete', function() {
           this.scene.start('Boss')
-        },this);
+        }, this);
       }
     }
   }
