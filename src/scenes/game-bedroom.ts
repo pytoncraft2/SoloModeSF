@@ -160,7 +160,6 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
 
     // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
-    this.physics.add.existing(this.portal);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -168,28 +167,13 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
       this.zone.depth = 30;
     }
 
+    this.physics.add.existing(this.portal);
     if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
       this.portal.body.allowGravity = false;
     }
+    this.physics.add.overlap(this.girlMap, this.portal);
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-
-    // this.physics.add.overlap(
-    //   this.girlMap,
-    //   this.portal, function(player: Phaser.Physics.Arcade.Sprite, portal: Phaser.Physics.Arcade.Image) {
-    //     // player.y < 399 ? portal.alpha = 0.5 : portal.alpha = 1
-    //     portal.alpha = 0.4
-    //   });
-    // this.physics.add.overlap(
-    //   this.girlMap,
-    //   this.portal,
-    //   girlMapPortalInteraction,
-    //   null,
-    //   this
-    // );
-
-
-    this.physics.add.overlap(this.girlMap, this.portal);
 
     //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
     var following = this.yKey
@@ -452,8 +436,12 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
 
 
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
-      this.portal.body.touching.up ? this.scene.start('Game') : console.log("rien")
+      if (this.portal.body.touching.up) {
+        this.cameras.main.fadeOut(500);
+        this.cameras.main.once('camerafadeoutcomplete', function (camera) {
+          this.scene.start('Game')
+        },this);
+      }
     }
-
-  }
+}
 }

@@ -55,7 +55,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.cameras.main.fadeIn(4000);
+    this.cameras.main.fadeIn(1000);
 
     this.barrels = {}
     //LIMITE CAMERA
@@ -699,12 +699,21 @@ export class GameScene extends Phaser.Scene {
         )
     }
 
-
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
-      this.portal.body.touching.up ? this.scene.start('Bedroom') : console.log("pas de chambre")
-      this.portal2.body.touching.up ? this.scene.start('Boss') : console.log("pas de boss")
-    }
+      if (this.portal.body.touching.up) {
+        this.cameras.main.fadeOut(500);
+        this.cameras.main.once('camerafadeoutcomplete', function () {
+          this.scene.start('Bedroom')
+        },this);
+      }
 
+      if (this.portal2.body.touching.up) {
+        this.cameras.main.fadeOut(500);
+        this.cameras.main.once('camerafadeoutcomplete', function () {
+          this.scene.start('Boss')
+        },this);
+      }
+    }
   }
 }
 

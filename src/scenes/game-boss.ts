@@ -9,13 +9,13 @@ export class BossScene extends Phaser.Scene {
 
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private health = 100
-  private doors: Phaser.Physics.Arcade.Image
+  private portal: any;
   public events: Phaser.Events.EventEmitter;
   private yKey: Phaser.Input.Keyboard.Key;
+  private eKey: Phaser.Input.Keyboard.Key;
   public follow: boolean;
   private mKey: Phaser.Input.Keyboard.Key;
   private aKey: Phaser.Input.Keyboard.Key;
-  private eKey: Phaser.Input.Keyboard.Key;
   private pKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
   private ombre: Phaser.GameObjects.Ellipse
@@ -32,13 +32,13 @@ export class BossScene extends Phaser.Scene {
   private ennemy4: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
-  private portal: any;
   // private block1: Phaser.Physics.Arcade.Image;
   private block1: Phaser.Physics.Arcade.Image ;
   public block2: Phaser.Physics.Arcade.Image;
   public block3: Phaser.Physics.Arcade.Image;
   public block4: Phaser.Physics.Arcade.Image;
   public imageFakhear: any;
+  private barrels: any;
   private enemies: any;
   // private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
@@ -55,13 +55,16 @@ export class BossScene extends Phaser.Scene {
 
   public create(): void {
 
+    this.cameras.main.fadeIn(1000);
+
+    this.barrels = {}
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
-this.physics.world.setBounds(-2074, 0, 3574, 666);
-    this.cameras.main.fadeIn(4000);
+    this.physics.world.setBounds(-2074, 0, 3574, 666);
 
     //PANNEL VIEWER (Twitch) + VIE
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+
 
 
     this.abonner = this.add.text(this.game.scale.width - 530, this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
@@ -77,26 +80,47 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     this.count = 0;
     this.follow = true;
 
+    //creation du groupe de tonneaux
+    this.barrels = this.physics.add.group({
+      allowGravity: true,
+      dragX: 800
+    });
+
+    this.enemies = this.physics.add.group({
+      allowGravity: true,
+      dragX: 800
+    });
+
+    //ajout des tonneaux dans le groupe
+    this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
+    this.block2 = this.barrels.create(682, 566, 'barrel').setScale(0.2);
+    this.block3 = this.barrels.create(92, 566, 'barrel').setScale(0.2);
+    this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
+
+    //ajout des ennemies dans le groupe
+    this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
+    this.ennemy2 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
+    this.ennemy3 = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
+    this.ennemy4 = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
 
     //
-    this.girlMap = this.physics.add.sprite(530, 306, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.3).setVelocityY(203);
-    this.add.image(-300, 350, 'bg').setDepth(-204);
-    this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(40);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
+    this.portal = this.add.image(-500, this.girlMap.y, 'portal').setDepth(200);
+    this.physics.add.existing(this.portal);
+    if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
+      this.portal.body.allowGravity = false;
+    }
+    this.physics.add.overlap(this.girlMap, this.portal);
 
-    if (this.doors.body instanceof Phaser.Physics.Arcade.Body) {
-    this.doors.body.allowGravity = false;
-    this.doors.body.immovable = true;
-  }
-    this.portal = this.add.image(530, 306, 'portal').setDepth(-200);
-    // portal.setAngularVelocity(40)
+    this.add.image(940, 390, 'bg').setDepth(-54);
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.ctrlKey = this.input.keyboard.addKey('CTRL');
     this.aKey = this.input.keyboard.addKey('A');
-    this.eKey = this.input.keyboard.addKey('E');
     this.yKey = this.input.keyboard.addKey('Y');
+    this.eKey = this.input.keyboard.addKey('E');
     this.tKey = this.input.keyboard.addKey('T');
     this.pKey = this.input.keyboard.addKey('P');
     this.cKey = this.input.keyboard.addKey('C');
@@ -156,11 +180,10 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     })
 
     //parametre du socle ennemie + socle joueur
-    this.zone = this.add.zone(530, 506, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
 
     // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
-    this.physics.add.existing(this.portal);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -168,28 +191,31 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
       this.zone.depth = 30;
     }
 
-    if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
-      this.portal.body.allowGravity = false;
-    }
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
+    this.physics.add.collider(this.barrels, this.enemies);
 
-    // this.physics.add.overlap(
-    //   this.girlMap,
-    //   this.portal, function(player: Phaser.Physics.Arcade.Sprite, portal: Phaser.Physics.Arcade.Image) {
-    //     // player.y < 399 ? portal.alpha = 0.5 : portal.alpha = 1
-    //     portal.alpha = 0.4
-    //   });
-    // this.physics.add.overlap(
-    //   this.girlMap,
-    //   this.portal,
-    //   girlMapPortalInteraction,
-    //   null,
-    //   this
-    // );
+    this.physics.add.overlap(
+      this.girlMap,
+      this.barrels,
+      girlMapBlockCollide,
+      null,
+      this
+    );
 
+    /**
+     * FACE A UN TONNEAU: le joueur peut propulser le tonneau
+     * @param  girl  verification de sa position
+     * @param  block reconfiguration des parametres du tonneau (velocity, angularDrag...)
+     */
 
-    this.physics.add.overlap(this.girlMap, this.portal);
+    function girlMapBlockCollide(girl: Phaser.Physics.Arcade.Sprite, block: Phaser.Physics.Arcade.Image) {
+      if (this.girlMap.anims.getFrameName().includes("attack4")
+        && girl.depth > block.depth - 10 && girl.depth < block.depth + 10
+      ) {
+        block.x < girl.x ? block.setAngularVelocity(20).setVelocity(-300).setDragX(300).setAngularDrag(30) : block.setAngularVelocity(20).setVelocity(300).setDragX(300).setAngularDrag(30)
+      }
+    }
 
     //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
     var following = this.yKey
@@ -201,6 +227,34 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
+
+    this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
+      barrel['barrelzone'] = this.add.zone(barrel.x, barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
+      var RandomRGB = Phaser.Display.Color.RandomRGB;
+      barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
+
+      this.physics.add.existing(barrel['barrelzone']);
+      if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
+        barrel['barrelzone'].body.friction.x = 0;
+        barrel['barrelzone'].body.allowGravity = false;
+        barrel['barrelzone'].body.immovable = true;
+        barrel['barrelzone'].depth = 30;
+      }
+      this.physics.add.collider(barrel['barrelzone'], barrel);
+    })
+
+
+    this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
+      ennemy['ennemyzone'] = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+      this.physics.add.existing(ennemy['ennemyzone']);
+      if (ennemy['ennemyzone'].body instanceof Phaser.Physics.Arcade.Body) {
+        ennemy['ennemyzone'].body.friction.x = 0;
+        ennemy['ennemyzone'].body.allowGravity = false;
+        ennemy['ennemyzone'].body.immovable = true;
+        ennemy['ennemyzone'].depth = 30;
+      }
+      this.physics.add.collider(ennemy, ennemy['ennemyzone']);
+    })
   }
 
 
@@ -256,6 +310,9 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
   }
 
   public update(): void {
+
+    this.portal.rotation += 0.01
+
     this.portal.body.touching.none ?
 
             this.tweens.add({
@@ -271,14 +328,61 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
               duration: 900,
             });
 
-    // this.portal.setAlpha(1);
-
-
-    this.portal.rotation += 0.01
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
+    let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+    let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2]);
 
+    /**
+     * _________________
+     * [LOGIQUE DU BOT] (déblacement en x/y et rotation selon position du joueur SEULEMENT si il est en vie)
+     * @param  this.ennemy.active sprite ennemi non détruit
+     * @param  this.ennemy sprite de l'ennemie
+     * @param  this.ennemy.ennemyzone.y socle ennemie
+     * @param  this.zone.y socle joueur
+     * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
+     */
+
+    this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
+      if (ennemy.active) {
+        var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
+        if (distance < 1000) {
+          if (ennemy['ennemyzone'].y !== this.zone.y) {
+            if (this.zone.y < ennemy['ennemyzone'].y) {
+              ennemy['ennemyzone'].y -= 1
+            } else {
+              ennemy['ennemyzone'].y += 1
+            }
+          }
+          if (distance > 160 && ennemy.x < this.girlMap.x) {
+
+            ennemy['ennemyzone'].x = ennemy.x
+            ennemy.x += 2.5
+            ennemy.flipX = false
+            ennemy.play('walk', true)
+          } else if (distance > 160 && ennemy.x > this.girlMap.x) {
+            ennemy['ennemyzone'].x = ennemy.x
+            ennemy.x -= 2.5
+            ennemy.flipX = true
+            ennemy.play('walk', true)
+          } else {
+            ennemy.play("attack", true)
+            if (ennemy.anims.getFrameName().includes("attack4")) {
+
+              if (this.protect.displayWidth === 1) {
+                this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
+                this.events.emit('health-changed', this.health)
+              } else {
+                //Diminuer la protection
+              }
+            }
+          }
+        } else {
+          ennemy.play("idle_walk")
+        }
+      }
+    });
     /**
      * [FIN LOGIQUE BOT]
      * _________________
@@ -296,7 +400,36 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
        * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
        * @param  !this.block1.body.allowGravity : tonneau surélevé
        */
+
+      if (!closestBarrel.body.allowGravity) {
+        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
+          closestBarrel.body.allowGravity = true
+          closestBarrel.setDepth(this.girlMap.depth)
+          this.girlMap.flipX ? closestBarrel.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : closestBarrel.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
+        }
+      }
       this.girlMap.setVelocityX(0);
+      if (this.girlMap.anims.getFrameName().includes("attack4")
+        && this.girlMap.depth < this.ennemy.depth + 10
+        && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196) {
+        if (this.count == 1) {
+          if (this.ennemy.alpha < 0.3) {
+            this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
+            this.tweens.add({
+              targets: this.ennemy,
+              alpha: 0,
+              y: -100,
+              repeat: 0,
+              duration: 900,
+              onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+            });
+          }
+          this.ennemy.alpha -= 0.03
+          this.count = 0;
+        } else {
+          this.count++
+        }
+      }
       this.girlMap.anims.play("attack", true)
     }
     /**
@@ -361,11 +494,11 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     }
     else {
       this.girlMap.setVelocityX(0);
-      // if (closestEnnemy < 296) {
-        // this.girlMap.anims.play('idle_attack');
-      // } else {
-        // this.girlMap.anims.play('idle_walk');
-      // }
+      if (closestEnnemy < 296) {
+        this.girlMap.anims.play('idle_attack');
+      } else {
+        this.girlMap.anims.play('idle_walk');
+      }
     }
 
     /**
@@ -380,12 +513,15 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
      */
 
     if (this.cursors.up.isDown && this.girlMap.body.touching.down) {
-      this.zone.body.position.y -= 1.3
+      this.zone.body.position.y -= 2
       this.ombre.depth -= 1;
       this.girlMap.depth -= 1;
       this.ombre.y = this.zone.y - 30
       this.ombre.x = this.zone.x
       this.girlMap.anims.play('goback', true);
+      this.ennemy.on('animationcomplete', () => {
+        this.ennemy.anims.play('idle_attack', true)
+      })
     } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
       if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
         this.girlMap.y += 2;
@@ -393,8 +529,7 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
         this.girlMap.depth += 1;
         this.ombre.y = this.zone.y - 30
         this.ombre.x = this.zone.x
-        this.zone.y += 1.3;
-        this.girlMap.anims.play('front', true);
+        this.zone.y += 2;
       }
     }
 
@@ -403,6 +538,39 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
      * _________________
      */
 
+    /**
+     * [LOGIQUE INTERACTION AVEC UN TONNEAU]
+     * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
+     * @param closestBarrel tonneau le plus proche
+     * Porter et lacher le tonneau: activer/desactiver gravité
+     *
+     */
+
+    if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
+      if (closestBarrel.body.allowGravity) {
+        console.log("allow")
+        closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
+        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
+          closestBarrel.body.allowGravity = false
+          closestBarrel.y = this.girlMap.y
+        }
+      } else if (!closestBarrel.body.allowGravity) {
+        console.log("deny")
+        closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
+        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
+          closestBarrel.body.allowGravity = true
+          closestBarrel.setVelocityX(0)
+          closestBarrel.setDepth(this.girlMap.depth)
+          closestBarrel.setAngle(0)
+          closestBarrel.barrelzone.y = this.zone.y
+        }
+      }
+    }
+
+    if (!closestBarrel.body.allowGravity) {
+      closestBarrel.x = this.girlMap.x
+      closestBarrel.y = this.girlMap.y
+    }
 
     /**
      * [BOUCLIER + ANIMATION]
@@ -430,6 +598,19 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     }
 
     /**
+     * [LOGIQUE PRESSION DE LA TOUCHE T]
+     */
+
+    if (this.tKey.isDown) {
+      if (this.ennemy.isTinted) {
+        this.ennemy.clearTint();
+      }
+      else {
+        this.ennemy.setTintFill(0xffffff);
+      }
+    }
+
+    /**
      * [TOGGLE AFFICHAGE + PANNEL VIEWER (Twitch)]
      */
     if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
@@ -450,10 +631,15 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
         )
     }
 
-
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
-      this.portal.body.touching.up ? this.scene.start('Game') : console.log("rien")
+      if (this.portal.body.touching.up) {
+        this.cameras.main.fadeOut(500);
+        this.cameras.main.once('camerafadeoutcomplete', function () {
+          this.scene.start('Game')
+        },this);
+      }
     }
-
   }
 }
+
+//<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
