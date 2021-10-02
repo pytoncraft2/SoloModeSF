@@ -105,7 +105,7 @@ export class GameScene extends Phaser.Scene {
     //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54).setVisible(false);
-    this.portal = this.add.image(this.girlMap.x, this.girlMap.y, 'portal');
+    this.portal = this.add.image(this.girlMap.x, this.girlMap.y, 'portal').setDepth(-200);
     // portal.setAngularVelocity(40)
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
 

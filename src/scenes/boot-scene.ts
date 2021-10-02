@@ -72,6 +72,8 @@ export class BootScene extends Phaser.Scene {
   private loadAssets() {
     // Load sample assets
     this.load.image('bg', 'assets/fond/streetOfRage.png');
+    this.load.image('bedroom', 'assets/fond/bgGrand.png');
+    this.load.image('doors', 'assets/fond/doors.png');
     // this.load.image('doors', 'assets/fond/doors.png');
     // this.load.image('bg2', 'assets/fond/bgMenu.png');
     this.load.atlas('ennemy', 'assets/personnages/dessinatrice2/dessinatrice2.png', 'assets/personnages/dessinatrice2/dessinatrice2_atlas.json');
