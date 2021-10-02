@@ -78,6 +78,7 @@ export class BootScene extends Phaser.Scene {
     this.load.atlas('dessinatrice1', 'assets/personnages/dessinatrice1/dessinatrice1.png', 'assets/personnages/dessinatrice1/dessinatrice1_atlas.json');
     this.load.image('barrel', 'assets/barrel.png')
     this.load.image('profilPanel', 'assets/liveProfilPanel.png');
+    this.load.image('portal', 'assets/portal.png');
 //     this.load.spritesheet('bird', 'assets/personnages/bird/bird.png', {
 // frameWidth: 240,
 // frameHeight:320

@@ -30,6 +30,7 @@ export class GameScene extends Phaser.Scene {
   private ennemy4: Phaser.Physics.Arcade.Sprite;
   private girlMap: Phaser.Physics.Arcade.Sprite;
   private graphics!: Phaser.GameObjects.Graphics;
+  private portal: any;
   // private block1: Phaser.Physics.Arcade.Image;
   private block1: Phaser.Physics.Arcade.Image ;
   public block2: Phaser.Physics.Arcade.Image;
@@ -93,14 +94,17 @@ export class GameScene extends Phaser.Scene {
     this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
 
     //ajout des ennemies dans le groupe
-    this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
-    this.ennemy2 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
-    this.ennemy3 = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
-    this.ennemy4 = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
+    // this.ennemy2 = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
+    // this.ennemy4 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
+    this.ennemy = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
+    // this.ennemy = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
+
 
     //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
-    this.add.image(940, 390, 'bg').setDepth(-54);
+
+    this.portal = this.add.image(0, 490, 'portal');
+    // portal.setAngularVelocity(40)
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -171,6 +175,7 @@ export class GameScene extends Phaser.Scene {
 
     // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
+    this.physics.add.existing(this.portal);
     if (this.zone.body instanceof Phaser.Physics.Arcade.Body) {
       this.zone.body.friction.x = 0;
       this.zone.body.allowGravity = false;
@@ -178,9 +183,29 @@ export class GameScene extends Phaser.Scene {
       this.zone.depth = 30;
     }
 
+    if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
+      this.portal.body.allowGravity = false;
+    }
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
     this.physics.add.collider(this.barrels, this.enemies);
+
+    // this.physics.add.overlap(
+    //   this.girlMap,
+    //   this.portal, function(player: Phaser.Physics.Arcade.Sprite, portal: Phaser.Physics.Arcade.Image) {
+    //     // player.y < 399 ? portal.alpha = 0.5 : portal.alpha = 1
+    //     portal.alpha = 0.4
+    //   });
+    // this.physics.add.overlap(
+    //   this.girlMap,
+    //   this.portal,
+    //   girlMapPortalInteraction,
+    //   null,
+    //   this
+    // );
+
+
+    this.physics.add.overlap(this.girlMap, this.portal);
 
     this.physics.add.overlap(
       this.girlMap,
@@ -195,6 +220,20 @@ export class GameScene extends Phaser.Scene {
      * @param  girl  verification de sa position
      * @param  block reconfiguration des parametres du tonneau (velocity, angularDrag...)
      */
+
+//      function girlMapPortalInteraction(girl: Phaser.Physics.Arcade.Sprite, portal: Phaser.Physics.Arcade.Image) {
+//        portal.setScale(0.5)
+//        this.tweens.add({
+//   targets: portal,
+//   scale: 0.3,
+//   repeat: 0,
+//   duration: 900,
+//   // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+// });
+//
+//        // girl.setAlpha(0)
+//        // console.log("ovverlap")
+//      }
 
     function girlMapBlockCollide(girl: Phaser.Physics.Arcade.Sprite, block: Phaser.Physics.Arcade.Image) {
       if (this.girlMap.anims.getFrameName().includes("attack4")
@@ -242,6 +281,29 @@ export class GameScene extends Phaser.Scene {
       }
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
     })
+
+        // this.add.image(400, 300, 'pic');
+       const image = this.add.image(940, 390, 'bg').setDepth(-54);
+        const shape = this.make.graphics();
+
+        //  Create an arc shape Graphics object
+        shape.fillStyle(0xffffff);
+
+        shape.slice(400, 300, 200, Phaser.Math.DegToRad(340), Phaser.Math.DegToRad(30), true);
+
+        shape.fillPath();
+
+        const mask = shape.createGeometryMask();
+
+        image.setMask(mask);
+
+        this.input.on('pointermove', function (pointer) {
+
+            shape.x = pointer.x - 400;
+            shape.y = pointer.y - 300;
+
+        });
+
   }
 
 
@@ -297,11 +359,32 @@ export class GameScene extends Phaser.Scene {
   }
 
   public update(): void {
+    this.portal.body.touching.none ?
+
+            this.tweens.add({
+              targets: this.portal,
+              scale: 0.5,
+              repeat: 0,
+              duration: 900,
+              // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+            }) :
+            this.tweens.add({
+              targets: this.portal,
+              scale: 1,
+              repeat: 1,
+              duration: 900,
+              // onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+            });
+
+    // this.portal.setAlpha(1);
+
+
+    this.portal.rotation += 0.01
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
-    let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2]);
+    // let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy]);
 
     /**
      * _________________
@@ -316,7 +399,6 @@ export class GameScene extends Phaser.Scene {
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
       if (ennemy.active) {
         var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
-        var number = Phaser.Math.Between(2, 5);
         if (distance < 1000) {
           if (ennemy['ennemyzone'].y !== this.zone.y) {
             if (this.zone.y < ennemy['ennemyzone'].y) {
@@ -328,12 +410,12 @@ export class GameScene extends Phaser.Scene {
           if (distance > 160 && ennemy.x < this.girlMap.x) {
 
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x += Phaser.Math.Between(2, 5)
+            ennemy.x += 4.5
             ennemy.flipX = false
             ennemy.play('walk', true)
           } else if (distance > 160 && ennemy.x > this.girlMap.x) {
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x -= Phaser.Math.Between(2, 5)
+            ennemy.x -= 4.5
             ennemy.flipX = true
             ennemy.play('walk', true)
           } else {
@@ -344,8 +426,6 @@ export class GameScene extends Phaser.Scene {
                 this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
                 this.events.emit('health-changed', this.health)
               } else {
-                ennemy.flipX ? ennemy.setVelocityX(500) : ennemy.setVelocityX(-500)
-                ennemy['ennemyzone'].x = ennemy.x
                 //Diminuer la protection
               }
             }
@@ -382,8 +462,9 @@ export class GameScene extends Phaser.Scene {
       }
       this.girlMap.setVelocityX(0);
       if (this.girlMap.anims.getFrameName().includes("attack4")
+      /*
         && this.girlMap.depth < this.ennemy.depth + 10
-        && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196) {
+        && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196*/) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
             this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
@@ -466,11 +547,11 @@ export class GameScene extends Phaser.Scene {
     }
     else {
       this.girlMap.setVelocityX(0);
-      if (closestEnnemy < 296) {
-        this.girlMap.anims.play('idle_attack');
-      } else {
-        this.girlMap.anims.play('idle_walk');
-      }
+      // if (closestEnnemy < 296) {
+        // this.girlMap.anims.play('idle_attack');
+      // } else {
+        // this.girlMap.anims.play('idle_walk');
+      // }
     }
 
     /**
@@ -502,6 +583,11 @@ export class GameScene extends Phaser.Scene {
         this.ombre.y = this.zone.y - 30
         this.ombre.x = this.zone.x
         this.zone.y += 2;
+        this.girlMap.anims.play('front', true);
+        this.ennemy.on('animationcomplete', () => {
+          this.ennemy.anims.play('idle_attack', true)
+        })
+
       }
     }
 
