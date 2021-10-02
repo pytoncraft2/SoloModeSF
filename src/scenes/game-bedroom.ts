@@ -1,10 +1,10 @@
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
-  key: 'Game',
+  key: 'Bedroom',
 };
 
-export class GameScene extends Phaser.Scene {
+export class BedroomScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
 
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -54,8 +54,8 @@ export class GameScene extends Phaser.Scene {
   }
 
   public create(): void {
-    this.cameras.main.fadeIn(4000);
 
+    this.cameras.main.fadeIn(4000);
     this.barrels = {}
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
@@ -104,8 +104,8 @@ export class GameScene extends Phaser.Scene {
 
     //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
-    this.add.image(940, 390, 'bg').setDepth(-54).setVisible(false);
-    this.portal = this.add.image(this.girlMap.x, this.girlMap.y, 'portal');
+    this.add.image(940, 390, 'bg').setDepth(-54).setVisible(true);
+    this.portal = this.add.image(-200, 490, 'portal');
     // portal.setAngularVelocity(40)
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
 
@@ -671,10 +671,8 @@ export class GameScene extends Phaser.Scene {
 
 
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
-      this.portal.body.touching.up ? this.scene.start('Bedroom') : console.log("rien")
+      this.portal.body.touching.up ? this.scene.start('Game') : console.log("rien")
     }
 
   }
 }
-
-//<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
