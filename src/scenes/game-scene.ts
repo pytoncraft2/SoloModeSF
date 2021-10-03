@@ -62,16 +62,16 @@ export class GameScene extends Phaser.Scene {
     this.physics.world.setBounds(-2074, 0, 3574, 666);
 
     //PANNEL VIEWER (Twitch) + VIE
-    this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(0);
 
 
-    this.abonner = this.add.text(this.game.scale.width - 530, this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
-    this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '19px Georgia, "Goudy Bookletter 1911", Times, serif' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    this.abonner = this.add.text(this.game.scale.width - 530, this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(0);
+    this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '19px Georgia, "Goudy Bookletter 1911", Times, serif' }).setScrollFactor(0).setDepth(202).setAlpha(0);
     // this.fakehear = this.add.text(-300, 870, 'FAKHEAR', { font: '38px Arial' }).setScrollFactor(0).setDepth(203).setAlpha(1);
-    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
-    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
+    this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(0);
+    this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(0);
     this.graphics = this.add.graphics()
-    this.setHealthBar(100)
+    // this.setHealthBar(100)
     this.events = new Phaser.Events.EventEmitter()
     this.events.on('health-changed', this.handleHealthChanged, this)
 
@@ -336,7 +336,7 @@ export class GameScene extends Phaser.Scene {
         duration: 900,
       }) :
       this.tweens.add({
-        targets: this.portal,
+        targets: this.portal2,
         scale: 1,
         repeat: 1,
         duration: 900,
@@ -359,6 +359,7 @@ export class GameScene extends Phaser.Scene {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
+        // var closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy]);
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
       if (ennemy.active) {
         var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
@@ -535,9 +536,6 @@ export class GameScene extends Phaser.Scene {
       this.ombre.y = this.zone.y - 30
       this.ombre.x = this.zone.x
       this.girlMap.anims.play('goback', true);
-      this.ennemy.on('animationcomplete', () => {
-        this.ennemy.anims.play('idle_attack', true)
-      })
     } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
       if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
         this.girlMap.y += 2;
@@ -547,10 +545,6 @@ export class GameScene extends Phaser.Scene {
         this.ombre.x = this.zone.x
         this.zone.y += 2;
         this.girlMap.anims.play('front', true);
-        this.ennemy.on('animationcomplete', () => {
-          this.ennemy.anims.play('idle_attack', true)
-        })
-
       }
     }
 

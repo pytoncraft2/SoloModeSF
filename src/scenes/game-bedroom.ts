@@ -19,6 +19,7 @@ export class BedroomScene extends Phaser.Scene {
   private pKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
   private ombre: Phaser.GameObjects.Ellipse
+  private fullscreen: Phaser.GameObjects.Text;
   private protect: Phaser.GameObjects.Ellipse
   private pannelRight: Phaser.GameObjects.Rectangle
   private pannelBottom: Phaser.GameObjects.Rectangle
@@ -66,6 +67,8 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
 
     this.abonner = this.add.text(this.game.scale.width - 530, this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
     this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '19px Georgia, "Goudy Bookletter 1911", Times, serif' }).setScrollFactor(0).setDepth(202).setAlpha(1);
+    this.fullscreen = this.add.text(this.game.scale.height + 190, this.game.scale.height - 190, ['↕']).setFontSize(58).setFontFamily('Trebuchet MS').setColor('#00ffff').setShadow(2, 2, "#333333", 2, true, true).setDepth(202);
+
     // this.fakehear = this.add.text(-300, 870, 'FAKHEAR', { font: '38px Arial' }).setScrollFactor(0).setDepth(203).setAlpha(1);
     this.pannelRight = this.add.rectangle(this.game.scale.width - 75, 200, 448, this.game.scale.height + 570, 0x1e1e1f).setScrollFactor(0).setDepth(201).setAlpha(1);
     this.pannelBottom = this.add.rectangle(1000, this.game.scale.height - 100, this.game.scale.width + 300, 200, 0x111112).setScrollFactor(0).setDepth(200).setAlpha(1);
@@ -104,7 +107,7 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
 
     this.anims.create({
       key: 'attack',
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 4 }),
+      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 5 }),
       frameRate: 6,
       repeat: 0
     });
@@ -125,7 +128,7 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
       key: "walk",
       frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start: 1, end: 5 }),
       frameRate: 5,
-      repeat: -1
+      repeat: 0
     });
     this.anims.create({
       key: "jump",
@@ -185,6 +188,14 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
     //ombre du joueur + protection
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
+
+
+
+    // Pleine ecran
+    this.fullscreen.setInteractive().on('pointerup', function() {
+      this.scale.isFullscreen ? this.scale.stopFullscreen() : this.scale.startFullscreen()
+    }, this);
+
   }
 
 
@@ -274,14 +285,14 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
      * @param  this.aKey.isDown [description]
      * @return                  [description]
      */
-    if (this.aKey.isDown) {
+    if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
 
       /**
        * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
        * @param  !this.block1.body.allowGravity : tonneau surélevé
        */
       this.girlMap.setVelocityX(0);
-      this.girlMap.anims.play("attack", true)
+      this.girlMap.anims.play("attack")
     }
     /**
      * [FIN ATTAQUE JOUEUR]
