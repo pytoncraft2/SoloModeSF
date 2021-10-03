@@ -49,9 +49,14 @@ export class BedroomScene extends Phaser.Scene {
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
   private lastHealth = 100
+  private firstTimeEnteringWorld: boolean
 
   constructor() {
     super(sceneConfig);
+  }
+
+  public init(data) {
+    this.firstTimeEnteringWorld = data.firstime;
   }
 
   public create(): void {
@@ -80,16 +85,25 @@ export class BedroomScene extends Phaser.Scene {
     this.count = 0;
     this.follow = true;
 
+    var size, velocity, girlPosition
+    this.firstTimeEnteringWorld ?
+      (size = 0.3,
+        velocity = 203,
+        girlPosition = { girlX: 956, girlY: 480, zoneX: 956, zoneY: 680 })
+      : (size = 0,
+        velocity = -200,
+        girlPosition = { girlX: 530, girlY: 306, zoneX: 530, zoneY: 506 })
 
-    //
-    this.girlMap = this.physics.add.sprite(530, 306, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.3).setVelocityY(203);
+    this.girlMap = this.physics.add.sprite(girlPosition.girlX, girlPosition.girlY, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(size).setVelocityY(velocity);
+
+
     this.add.image(-300, 350, 'bedroom').setDepth(-204);
     this.doors = this.physics.add.image(-300, 280, 'doors').setDepth(40);
 
     if (this.doors.body instanceof Phaser.Physics.Arcade.Body) {
-    this.doors.body.allowGravity = false;
-    this.doors.body.immovable = true;
-  }
+      this.doors.body.allowGravity = false;
+      this.doors.body.immovable = true;
+    }
     this.portal = this.add.image(530, 306, 'portal').setDepth(-200);
     // portal.setAngularVelocity(40)
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
@@ -159,7 +173,7 @@ export class BedroomScene extends Phaser.Scene {
     })
 
     //parametre du socle ennemie + socle joueur
-    this.zone = this.add.zone(530, 506, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
+    this.zone = this.add.zone(girlPosition.zoneX, girlPosition.zoneY, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
 
     // this.barrelzone = this.add.zone(660, 880, 0, 0).setSize(300, 40).setOrigin(0.5, 0.5);
     this.physics.add.existing(this.zone);
@@ -196,6 +210,17 @@ export class BedroomScene extends Phaser.Scene {
       this.scale.isFullscreen ? this.scale.stopFullscreen() : this.scale.startFullscreen()
     }, this);
 
+
+
+    if (!this.firstTimeEnteringWorld) {
+      this.tweens.add({
+        targets: this.girlMap,
+        scale: 0.3,
+        alpha: 1,
+        repeat: 0,
+        duration: 500,
+      })
+    }
   }
 
 
@@ -253,18 +278,18 @@ export class BedroomScene extends Phaser.Scene {
   public update(): void {
     this.portal.body.touching.none ?
 
-            this.tweens.add({
-              targets: this.portal,
-              scale: 0.3,
-              repeat: 0,
-              duration: 900,
-            }) :
-            this.tweens.add({
-              targets: this.portal,
-              scale: 0.5,
-              repeat: 1,
-              duration: 900,
-            });
+      this.tweens.add({
+        targets: this.portal,
+        scale: 0.3,
+        repeat: 0,
+        duration: 900,
+      }) :
+      this.tweens.add({
+        targets: this.portal,
+        scale: 0.5,
+        repeat: 1,
+        duration: 900,
+      });
 
     // this.portal.setAlpha(1);
 
@@ -357,9 +382,9 @@ export class BedroomScene extends Phaser.Scene {
     else {
       this.girlMap.setVelocityX(0);
       // if (closestEnnemy < 296) {
-        // this.girlMap.anims.play('idle_attack');
+      // this.girlMap.anims.play('idle_attack');
       // } else {
-        // this.girlMap.anims.play('idle_walk');
+      // this.girlMap.anims.play('idle_walk');
       // }
     }
 
@@ -469,10 +494,11 @@ export class BedroomScene extends Phaser.Scene {
 
       if (this.portal.body.touching.up) {
         this.cameras.main.fadeOut(500);
-        this.cameras.main.once('camerafadeoutcomplete', function (camera) {
+        this.cameras.main.once('camerafadeoutcomplete', function(camera) {
+          this.firstTimeEnteringWorld = false;
           this.scene.start('Game')
-        },this);
+        }, this);
       }
     }
-}
+  }
 }

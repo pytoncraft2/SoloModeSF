@@ -22,7 +22,7 @@ export class MainMenuScene extends Phaser.Scene {
       .setFontSize(24);
 
     new MenuButton(this, 100, 150, 'Start Game', () => {
-      this.scene.start('Bedroom');
+      this.scene.start('Bedroom', {firstime: true});
     });
     new MenuButton(this, 320, 150, 'Pleine écran', () => {
       this.scale.isFullscreen ? this.scale.stopFullscreen() : this.scale.startFullscreen()

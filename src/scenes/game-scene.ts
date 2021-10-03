@@ -99,7 +99,7 @@ export class GameScene extends Phaser.Scene {
     this.ennemy = this.enemies.create(0, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
 
 
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0).setVelocityY(203);
     this.add.image(940, 390, 'bg').setDepth(-54).setVisible(false);
     this.portal = this.add.image(this.girlMap.x, this.girlMap.y, 'portal').setDepth(-200);
     this.portal2 = this.add.image(this.girlMap.x - 800, this.girlMap.y, 'portal').setDepth(-200).setTintFill(0x310803, 0x311605);
@@ -257,6 +257,15 @@ export class GameScene extends Phaser.Scene {
       }
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
     })
+
+    this.girlMap.setVelocityY(-100)
+      this.tweens.add({
+        targets: this.girlMap,
+        scale: 0.4,
+        alpha: 1,
+        repeat: 0,
+        duration: 500,
+      })
   }
 
 
@@ -661,7 +670,7 @@ export class GameScene extends Phaser.Scene {
       if (this.portal.body.touching.up) {
         this.cameras.main.fadeOut(500);
         this.cameras.main.once('camerafadeoutcomplete', function() {
-          this.scene.start('Bedroom')
+          this.scene.start('Bedroom', {firstime: false})
         }, this);
       }
 
