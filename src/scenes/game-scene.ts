@@ -647,6 +647,17 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
+    if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+      this.girlMap.body.allowGravity = false
+    }
+      this.tweens.add({
+        targets: this.girlMap,
+        scale: 0,
+        alpha: 0,
+        repeat: 0,
+        duration: 500,
+      })
+
       if (this.portal.body.touching.up) {
         this.cameras.main.fadeOut(500);
         this.cameras.main.once('camerafadeoutcomplete', function() {

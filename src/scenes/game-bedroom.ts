@@ -58,8 +58,8 @@ export class BedroomScene extends Phaser.Scene {
 
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
-this.physics.world.setBounds(-2074, 0, 3574, 666);
-    this.cameras.main.fadeIn(4000);
+    this.physics.world.setBounds(-2074, 0, 3574, 666);
+    this.cameras.main.fadeIn(2000);
 
     //PANNEL VIEWER (Twitch) + VIE
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(1);
@@ -447,6 +447,26 @@ this.physics.world.setBounds(-2074, 0, 3574, 666);
 
 
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
+      if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+        this.girlMap.body.allowGravity = false
+      }
+      this.tweens.add({
+        targets: this.girlMap,
+        scale: 0,
+        alpha: 0,
+        repeat: 0,
+        duration: 500,
+      })
+
+      this.tweens.add({
+        targets: this.ombre,
+        scale: 0,
+        alpha: 0,
+        repeat: 0,
+        duration: 500,
+      })
+
+
       if (this.portal.body.touching.up) {
         this.cameras.main.fadeOut(500);
         this.cameras.main.once('camerafadeoutcomplete', function (camera) {
