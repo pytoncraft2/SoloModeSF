@@ -10,6 +10,7 @@ export class GameScene extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private health = 100
   public events: Phaser.Events.EventEmitter;
+  public groupeBullets: any;
   private yKey: Phaser.Input.Keyboard.Key;
   public follow: boolean;
   private mKey: Phaser.Input.Keyboard.Key;
@@ -88,6 +89,9 @@ export class GameScene extends Phaser.Scene {
       allowGravity: true,
       dragX: 800
     });
+
+
+    this.groupeBullets = this.physics.add.group();
 
     //ajout des tonneaux dans le groupe
     this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
@@ -169,6 +173,7 @@ export class GameScene extends Phaser.Scene {
       repeat: -1
     })
 
+
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
 
@@ -191,6 +196,11 @@ export class GameScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
+    this.physics.add.collider(this.ennemy,
+      this.groupeBullets,
+      bulletEnnemyCollide,
+      null,
+      this);
     this.physics.add.collider(this.barrels, this.enemies);
 
     this.physics.add.overlap(this.girlMap, this.portal);
@@ -217,6 +227,10 @@ export class GameScene extends Phaser.Scene {
       ) {
         block.x < girl.x ? block.setAngularVelocity(20).setVelocity(-300).setDragX(300).setAngularDrag(30) : block.setAngularVelocity(20).setVelocity(300).setDragX(300).setAngularDrag(30)
       }
+    }
+
+    function bulletEnnemyCollide(ennemy,bullet) {
+      ennemy.alpha < 0.2 ? this.killEnnemy() : ennemy.alpha -= 0.03
     }
 
     //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
@@ -259,14 +273,30 @@ export class GameScene extends Phaser.Scene {
     })
 
     this.girlMap.setVelocityY(-100)
-      this.tweens.add({
-        targets: this.girlMap,
-        scale: 0.4,
-        alpha: 1,
-        repeat: 0,
-        duration: 500,
-      })
+    this.tweens.add({
+      targets: this.girlMap,
+      scale: 0.4,
+      alpha: 1,
+      repeat: 0,
+      duration: 500,
+    })
+
+
+    this.girlMap['direction'] = 'right';
+
   }
+
+public killEnnemy() {
+  this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
+this.tweens.add({
+  targets: this.ennemy,
+  alpha: 0,
+  y: -100,
+  repeat: 0,
+  duration: 900,
+  onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+})
+}
 
 
   /**
@@ -320,6 +350,20 @@ export class GameScene extends Phaser.Scene {
     })
   }
 
+
+  public tirer(player) {
+    var coefDir;
+    if (player['direction'] == 'left') { coefDir = -1; } else { coefDir = 1 }
+    // on crée la balle a coté du joueur
+    var bullet = this.groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
+    // parametres physiques de la balle.
+    bullet.setCollideWorldBounds(true);
+    bullet.body.allowGravity = false;
+    bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+
+  }
+
+
   public update(): void {
     this.portal.body.touching.none ?
 
@@ -368,7 +412,7 @@ export class GameScene extends Phaser.Scene {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-        // var closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy]);
+    // var closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy]);
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
       if (ennemy.active) {
         var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
@@ -419,7 +463,7 @@ export class GameScene extends Phaser.Scene {
      * @param  this.aKey.isDown [description]
      * @return                  [description]
      */
-    if (this.aKey.isDown) {
+    if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
 
       /**
        * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
@@ -440,15 +484,16 @@ export class GameScene extends Phaser.Scene {
         && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196*/) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
-            this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
-            this.tweens.add({
-              targets: this.ennemy,
-              alpha: 0,
-              y: -100,
-              repeat: 0,
-              duration: 900,
-              onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-            });
+            // this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
+            // this.tweens.add({
+            //   targets: this.ennemy,
+            //   alpha: 0,
+            //   y: -100,
+            //   repeat: 0,
+            //   duration: 900,
+            //   onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+            // });
+            this.killEnnemy()
           }
           this.ennemy.alpha -= 0.03
           this.count = 0;
@@ -458,6 +503,17 @@ export class GameScene extends Phaser.Scene {
       }
       this.girlMap.anims.play("attack", true)
     }
+
+
+if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
+      this.tirer(this.girlMap);
+}
+
+
+
+
+
+
     /**
      * [FIN ATTAQUE JOUEUR]
      * _________________
@@ -470,6 +526,7 @@ export class GameScene extends Phaser.Scene {
      */
 
     else if (this.cursors.left.isDown) {
+      this.girlMap['direction'] = 'left';
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -483,6 +540,7 @@ export class GameScene extends Phaser.Scene {
       }
     }
     else if (this.cursors.right.isDown) {
+      this.girlMap['direction'] = 'right';
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -656,9 +714,9 @@ export class GameScene extends Phaser.Scene {
     }
 
     if (Phaser.Input.Keyboard.JustDown(this.eKey)) {
-    if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
-      this.girlMap.body.allowGravity = false
-    }
+      if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+        this.girlMap.body.allowGravity = false
+      }
       this.tweens.add({
         targets: this.girlMap,
         scale: 0,
@@ -670,7 +728,7 @@ export class GameScene extends Phaser.Scene {
       if (this.portal.body.touching.up) {
         this.cameras.main.fadeOut(500);
         this.cameras.main.once('camerafadeoutcomplete', function() {
-          this.scene.start('Bedroom', {firstime: false})
+          this.scene.start('Bedroom', { firstime: false })
         }, this);
       }
 

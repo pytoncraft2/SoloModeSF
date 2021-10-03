@@ -81,6 +81,8 @@ export class BootScene extends Phaser.Scene {
     this.load.image('barrel', 'assets/barrel.png')
     this.load.image('profilPanel', 'assets/liveProfilPanel.png');
     this.load.image('portal', 'assets/portal.png');
+    this.load.image('bullet', 'assets/bullet.png');
+
 //     this.load.spritesheet('bird', 'assets/personnages/bird/bird.png', {
 // frameWidth: 240,
 // frameHeight:320
