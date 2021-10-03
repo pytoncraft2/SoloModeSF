@@ -20,6 +20,7 @@ export class GameScene extends Phaser.Scene {
   private eKey: Phaser.Input.Keyboard.Key;
   private pKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
+  private zKey: Phaser.Input.Keyboard.Key;
   private ombre: Phaser.GameObjects.Ellipse
   private protect: Phaser.GameObjects.Ellipse
   private pannelRight: Phaser.GameObjects.Rectangle
@@ -115,6 +116,7 @@ export class GameScene extends Phaser.Scene {
     this.spaceBar = this.input.keyboard.addKey('SPACE');
     this.ctrlKey = this.input.keyboard.addKey('CTRL');
     this.aKey = this.input.keyboard.addKey('A');
+    this.zKey = this.input.keyboard.addKey('Z');
     this.eKey = this.input.keyboard.addKey('E');
     this.yKey = this.input.keyboard.addKey('Y');
     this.tKey = this.input.keyboard.addKey('T');
@@ -367,42 +369,29 @@ export class GameScene extends Phaser.Scene {
 
 
   public update(): void {
-    this.portal.body.touching.none ?
-
-      this.tweens.add({
-        targets: this.portal,
-        scale: 0.5,
-        repeat: 0,
-        duration: 900,
-      }) :
-      this.tweens.add({
-        targets: this.portal,
-        scale: 1,
-        repeat: 1,
-        duration: 900,
-      });
-
-    this.portal2.body.touching.none ?
-
-      this.tweens.add({
-        targets: this.portal2,
-        scale: 0.5,
-        repeat: 0,
-        duration: 900,
-      }) :
-      this.tweens.add({
-        targets: this.portal2,
-        scale: 1,
-        repeat: 1,
-        duration: 900,
-      });
 
     this.portal.rotation += 0.01
-    this.portal2.rotation -= 0.01
+
+    this.portal.body.touching.none ?
+
+            this.tweens.add({
+              targets: this.portal,
+              scale: 0.3,
+              repeat: 0,
+              duration: 900,
+            }) :
+            this.tweens.add({
+              targets: this.portal,
+              scale: 0.5,
+              repeat: 1,
+              duration: 900,
+            });
+
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
-    let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+    let closestBarrel: any = this.physics.closest(this.girlMap, [...this.barrels.getChildren()]);
+    let closestEnnemy: any = this.physics.closest(this.girlMap, [...this.enemies.getChildren()]);
 
     /**
      * _________________
@@ -414,7 +403,6 @@ export class GameScene extends Phaser.Scene {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-    // var closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy]);
     this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
       if (ennemy.active) {
         var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
@@ -429,12 +417,12 @@ export class GameScene extends Phaser.Scene {
           if (distance > 160 && ennemy.x < this.girlMap.x) {
 
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x += 4.5
+            ennemy.x += 2.5
             ennemy.flipX = false
             ennemy.play('walk', true)
           } else if (distance > 160 && ennemy.x > this.girlMap.x) {
             ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x -= 4.5
+            ennemy.x -= 2.5
             ennemy.flipX = true
             ennemy.play('walk', true)
           } else {
@@ -465,7 +453,7 @@ export class GameScene extends Phaser.Scene {
      * @param  this.aKey.isDown [description]
      * @return                  [description]
      */
-    if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
+    if (this.aKey.isDown) {
 
       /**
        * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
@@ -479,25 +467,24 @@ export class GameScene extends Phaser.Scene {
           this.girlMap.flipX ? closestBarrel.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : closestBarrel.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
         }
       }
+
       this.girlMap.setVelocityX(0);
       if (this.girlMap.anims.getFrameName().includes("attack4")
-      /*
-        && this.girlMap.depth < this.ennemy.depth + 10
-        && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196*/) {
+        && this.girlMap.depth < closestEnnemy.depth + 10
+        && this.girlMap.depth > closestEnnemy.depth - 10 /*&& closestEnnemy < 196*/) {
         if (this.count == 1) {
-          if (this.ennemy.alpha < 0.3) {
-            // this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
-            // this.tweens.add({
-            //   targets: this.ennemy,
-            //   alpha: 0,
-            //   y: -100,
-            //   repeat: 0,
-            //   duration: 900,
-            //   onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-            // });
-            this.killEnnemy()
+          if (closestEnnemy.alpha < 0.3) {
+            closestEnnemy.setTintFill(0xffffff).setActive(false).setFrame(0)
+            this.tweens.add({
+              targets: closestEnnemy,
+              alpha: 0,
+              y: -100,
+              repeat: 0,
+              duration: 900,
+              onComplete: () => (closestEnnemy.destroy(), closestEnnemy['ennemyzone'].destroy()),
+            });
           }
-          this.ennemy.alpha -= 0.03
+          closestEnnemy.alpha -= 0.03
           this.count = 0;
         } else {
           this.count++
@@ -506,35 +493,6 @@ export class GameScene extends Phaser.Scene {
       this.girlMap.anims.play("attack", true)
     }
 
-
-    /**
-     * [LOGIQUE D'ATTAQUE AVEC UN MISSILE]
-     * @param  Phaser.Input.Keyboard.JustDown(this.aKey [description]
-     * @return                                          [description]
-     */
-
-    if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
-
-      this.bullet = this.groupeBullets.create(this.girlMap.x + 1, this.girlMap.y - 4, 'bullet').setScale(0.2);
-      this.bullet.setCollideWorldBounds(true);
-      this.bullet.body.allowGravity = false;
-
-      this.charge = this.tweens.add({
-        targets: this.bullet,
-        scale: 8,
-        paused: false,
-        duration: 2000,
-        repeat: 0
-      });
-    }
-
-    if (Phaser.Input.Keyboard.JustUp(this.aKey)) {
-      this.charge.stop()
-
-      var coefDir;
-      if (this.girlMap['direction'] == 'left') { coefDir = -1; } else { coefDir = 1 }
-      this.bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
-    }
 
     /**
      * [FIN ATTAQUE JOUEUR]
@@ -601,11 +559,36 @@ export class GameScene extends Phaser.Scene {
     else {
       this.girlMap.setVelocityX(0);
       // if (closestEnnemy < 296) {
-      // this.girlMap.anims.play('idle_attack');
+        // this.girlMap.anims.play('idle_attack');
       // } else {
-      // this.girlMap.anims.play('idle_walk');
+        this.girlMap.anims.play('idle_walk');
       // }
     }
+
+
+    if (Phaser.Input.Keyboard.JustDown(this.zKey)) {
+
+      this.bullet = this.groupeBullets.create(this.girlMap.x + 1, this.girlMap.y - 4, 'bullet').setScale(0.2);
+      this.bullet.setCollideWorldBounds(true);
+      this.bullet.body.allowGravity = false;
+
+      this.charge = this.tweens.add({
+        targets: this.bullet,
+        scale: 8,
+        paused: false,
+        duration: 2000,
+        repeat: 0
+      });
+    }
+
+    if (Phaser.Input.Keyboard.JustUp(this.zKey)) {
+      this.charge.stop()
+
+      var coefDir;
+      if (this.girlMap['direction'] == 'left') { coefDir = -1; } else { coefDir = 1 }
+      this.bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+    }
+
 
     /**
      * [FIN DEPLACEMENT GAUCHE - DROITE - SAUT]
@@ -625,6 +608,9 @@ export class GameScene extends Phaser.Scene {
       this.ombre.y = this.zone.y - 30
       this.ombre.x = this.zone.x
       this.girlMap.anims.play('goback', true);
+      // this.ennemy.on('animationcomplete', () => {
+        // this.ennemy.anims.play('idle_attack', true)
+      // })
     } else if (this.cursors.down.isDown && this.girlMap.body.touching.down) {
       if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
         this.girlMap.y += 2;
@@ -633,7 +619,6 @@ export class GameScene extends Phaser.Scene {
         this.ombre.y = this.zone.y - 30
         this.ombre.x = this.zone.x
         this.zone.y += 2;
-        this.girlMap.anims.play('front', true);
       }
     }
 
@@ -704,7 +689,7 @@ export class GameScene extends Phaser.Scene {
     /**
      * [LOGIQUE PRESSION DE LA TOUCHE T]
      */
-
+/*
     if (this.tKey.isDown) {
       if (this.ennemy.isTinted) {
         this.ennemy.clearTint();
@@ -713,6 +698,7 @@ export class GameScene extends Phaser.Scene {
         this.ennemy.setTintFill(0xffffff);
       }
     }
+    */
 
     /**
      * [TOGGLE AFFICHAGE + PANNEL VIEWER (Twitch)]
@@ -761,7 +747,9 @@ export class GameScene extends Phaser.Scene {
         }, this);
       }
     }
+
+
   }
-}
+  }
 
 //<div>Icons made by <a href="https://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
