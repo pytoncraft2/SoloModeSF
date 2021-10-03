@@ -377,7 +377,7 @@ export class BossScene extends Phaser.Scene {
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
-    let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
+    let closestBarrel: any = this.physics.closest(this.girlMap, [...this.barrels.getChildren()]);
     let closestEnnemy: any = this.physics.closest(this.girlMap, [...this.enemies.getChildren()]);
 
     /**
@@ -454,8 +454,6 @@ export class BossScene extends Phaser.Scene {
           this.girlMap.flipX ? closestBarrel.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : closestBarrel.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
         }
       }
-
-      console.log(closestEnnemy)
 
       this.girlMap.setVelocityX(0);
       if (this.girlMap.anims.getFrameName().includes("attack4")
