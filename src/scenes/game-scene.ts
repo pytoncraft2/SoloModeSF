@@ -10,6 +10,8 @@ export class GameScene extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private health = 100
   public events: Phaser.Events.EventEmitter;
+  public charge: any;
+  public bullet: any;
   public groupeBullets: any;
   private yKey: Phaser.Input.Keyboard.Key;
   public follow: boolean;
@@ -229,7 +231,7 @@ export class GameScene extends Phaser.Scene {
       }
     }
 
-    function bulletEnnemyCollide(ennemy,bullet) {
+    function bulletEnnemyCollide(ennemy, bullet) {
       ennemy.alpha < 0.2 ? this.killEnnemy() : ennemy.alpha -= 0.03
     }
 
@@ -286,17 +288,17 @@ export class GameScene extends Phaser.Scene {
 
   }
 
-public killEnnemy() {
-  this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
-this.tweens.add({
-  targets: this.ennemy,
-  alpha: 0,
-  y: -100,
-  repeat: 0,
-  duration: 900,
-  onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
-})
-}
+  public killEnnemy() {
+    this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
+    this.tweens.add({
+      targets: this.ennemy,
+      alpha: 0,
+      y: -100,
+      repeat: 0,
+      duration: 900,
+      onComplete: () => (this.ennemy.destroy(), this.ennemy['ennemyzone'].destroy()),
+    })
+  }
 
 
   /**
@@ -355,7 +357,7 @@ this.tweens.add({
     var coefDir;
     if (player['direction'] == 'left') { coefDir = -1; } else { coefDir = 1 }
     // on crée la balle a coté du joueur
-    var bullet = this.groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
+    var bullet = this.groupeBullets.create(player.x + coefDir, player.y - 4, 'bullet').setScale(0.2);
     // parametres physiques de la balle.
     bullet.setCollideWorldBounds(true);
     bullet.body.allowGravity = false;
@@ -505,14 +507,34 @@ this.tweens.add({
     }
 
 
-if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
-      this.tirer(this.girlMap);
-}
+    /**
+     * [LOGIQUE D'ATTAQUE AVEC UN MISSILE]
+     * @param  Phaser.Input.Keyboard.JustDown(this.aKey [description]
+     * @return                                          [description]
+     */
 
+    if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
 
+      this.bullet = this.groupeBullets.create(this.girlMap.x + 1, this.girlMap.y - 4, 'bullet').setScale(0.2);
+      this.bullet.setCollideWorldBounds(true);
+      this.bullet.body.allowGravity = false;
 
+      this.charge = this.tweens.add({
+        targets: this.bullet,
+        scale: 8,
+        paused: false,
+        duration: 2000,
+        repeat: 0
+      });
+    }
 
+    if (Phaser.Input.Keyboard.JustUp(this.aKey)) {
+      this.charge.stop()
 
+      var coefDir;
+      if (this.girlMap['direction'] == 'left') { coefDir = -1; } else { coefDir = 1 }
+      this.bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+    }
 
     /**
      * [FIN ATTAQUE JOUEUR]

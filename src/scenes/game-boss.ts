@@ -10,6 +10,9 @@ export class BossScene extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private health = 100
   private portal: any;
+  private bullet: any;
+  private groupeBullets: any;
+  private charge: any;
   public events: Phaser.Events.EventEmitter;
   private yKey: Phaser.Input.Keyboard.Key;
   private eKey: Phaser.Input.Keyboard.Key;
@@ -94,6 +97,9 @@ export class BossScene extends Phaser.Scene {
       allowGravity: true,
       dragX: 800
     });
+
+    this.groupeBullets = this.physics.add.group();
+
 
     //ajout des tonneaux dans le groupe
     this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
@@ -197,6 +203,12 @@ export class BossScene extends Phaser.Scene {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
+    this.physics.add.collider(this.enemies,
+      this.groupeBullets,
+      bulletEnnemyCollide,
+      null,
+      this);
+
     this.physics.add.collider(this.barrels, this.enemies);
 
     this.physics.add.overlap(
@@ -220,6 +232,20 @@ export class BossScene extends Phaser.Scene {
         block.x < girl.x ? block.setAngularVelocity(20).setVelocity(-300).setDragX(300).setAngularDrag(30) : block.setAngularVelocity(20).setVelocity(300).setDragX(300).setAngularDrag(30)
       }
     }
+
+    function bulletEnnemyCollide(ennemy: Phaser.Physics.Arcade.Sprite, bullet:Phaser.Physics.Arcade.Image) {
+      if(bullet.scale > 4) {
+        this.killEnnemy(ennemy)
+      } else if (ennemy.alpha < 0.2) {
+        this.killEnnemy(ennemy)
+      } else {
+        ennemy.alpha -= 0.03
+      }
+
+      bullet.disableBody()
+      bullet.destroy()
+    }
+
 
     //[TOGGLE SUIVIE DU JOUEUR DE LA CAMERA]
     var following = this.yKey
@@ -260,6 +286,20 @@ export class BossScene extends Phaser.Scene {
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
     })
   }
+
+
+  public killEnnemy(ennemy) {
+    ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
+    this.tweens.add({
+      targets: ennemy,
+      alpha: 0,
+      y: -100,
+      repeat: 0,
+      duration: 900,
+      onComplete: () => (ennemy.destroy(), ennemy['ennemyzone'].destroy()),
+    })
+  }
+
 
 
   /**
@@ -336,7 +376,7 @@ export class BossScene extends Phaser.Scene {
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
     let closestBarrel: any = this.physics.closest(this.girlMap, [this.block1, this.block2, this.block3, this.block4]);
-    let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2]);
+    // let closestEnnemy: any = this.physics.closest(this.girlMap, [this.ennemy, this.ennemy2, this.ennemy3, this.ennemy4]);
 
     /**
      * _________________
@@ -415,7 +455,7 @@ export class BossScene extends Phaser.Scene {
       this.girlMap.setVelocityX(0);
       if (this.girlMap.anims.getFrameName().includes("attack4")
         && this.girlMap.depth < this.ennemy.depth + 10
-        && this.girlMap.depth > this.ennemy.depth - 10 && closestEnnemy < 196) {
+        && this.girlMap.depth > this.ennemy.depth - 10 /*&& closestEnnemy < 196*/) {
         if (this.count == 1) {
           if (this.ennemy.alpha < 0.3) {
             this.ennemy.setTintFill(0xffffff).setActive(false).setFrame(0)
@@ -436,6 +476,31 @@ export class BossScene extends Phaser.Scene {
       }
       this.girlMap.anims.play("attack", true)
     }
+
+
+    if (Phaser.Input.Keyboard.JustDown(this.aKey)) {
+
+      this.bullet = this.groupeBullets.create(this.girlMap.x + 1, this.girlMap.y - 4, 'bullet').setScale(0.2);
+      this.bullet.setCollideWorldBounds(true);
+      this.bullet.body.allowGravity = false;
+
+      this.charge = this.tweens.add({
+        targets: this.bullet,
+        scale: 8,
+        paused: false,
+        duration: 2000,
+        repeat: 0
+      });
+    }
+
+    if (Phaser.Input.Keyboard.JustUp(this.aKey)) {
+      this.charge.stop()
+
+      var coefDir;
+      if (this.girlMap['direction'] == 'left') { coefDir = -1; } else { coefDir = 1 }
+      this.bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+    }
+
     /**
      * [FIN ATTAQUE JOUEUR]
      * _________________
@@ -448,6 +513,7 @@ export class BossScene extends Phaser.Scene {
      */
 
     else if (this.cursors.left.isDown) {
+      this.girlMap['direction'] = 'left';
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -461,6 +527,7 @@ export class BossScene extends Phaser.Scene {
       }
     }
     else if (this.cursors.right.isDown) {
+      this.girlMap['direction'] = 'right';
       this.zone.x = this.girlMap.x;
       this.ombre.x = this.zone.x
       this.ombre.y = this.zone.y - 30
@@ -498,11 +565,11 @@ export class BossScene extends Phaser.Scene {
     }
     else {
       this.girlMap.setVelocityX(0);
-      if (closestEnnemy < 296) {
-        this.girlMap.anims.play('idle_attack');
-      } else {
+      // if (closestEnnemy < 296) {
+        // this.girlMap.anims.play('idle_attack');
+      // } else {
         this.girlMap.anims.play('idle_walk');
-      }
+      // }
     }
 
     /**
