@@ -44,8 +44,6 @@ export class CanyonScene extends Phaser.Scene {
   public block3: Phaser.Physics.Arcade.Image;
   public block4: Phaser.Physics.Arcade.Image;
   public imageFakhear: any;
-  private barrels: any;
-  private enemies: any;
   // private barrelGroup: Phaser.GameObjects.Group;
   private info: Phaser.GameObjects.Text;
   public fakehear: Phaser.GameObjects.Text;
@@ -68,12 +66,7 @@ export class CanyonScene extends Phaser.Scene {
 
     this.cameras.main.fadeIn(1000);
 
-    this.barrels = {}
     this.gfx = this.add.graphics();
-
-    //LIMITE CAMERA
-    this.cameras.main.setBounds(-2074, 0, 3574, 666);
-    this.physics.world.setBounds(-2074, 0, 3574, 666);
 
     //PANNEL VIEWER (Twitch) + VIE
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(0);
@@ -93,33 +86,9 @@ export class CanyonScene extends Phaser.Scene {
     this.count = 0;
     this.follow = true;
 
-    //creation du groupe de tonneaux
-    this.barrels = this.physics.add.group({
-      allowGravity: false,
-      dragX: 800
-    });
-
-    this.enemies = this.physics.add.group({
-      allowGravity: true,
-      dragX: 800
-    });
-
     this.groupeBullets = this.physics.add.group();
 
 
-    //ajout des tonneaux dans le groupe
-    this.block1 = this.barrels.create(350, 566, 'barrel').setScale(0.2).setBounce(0.5)
-    this.block2 = this.barrels.create(682, 566, 'barrel').setScale(0.2);
-    this.block3 = this.barrels.create(92, 566, 'barrel').setScale(0.2);
-    this.block4 = this.barrels.create(462, 566, 'barrel').setScale(0.2);
-
-    //ajout des ennemies dans le groupe
-    this.ennemy = this.enemies.create(350, 566, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(203).setActive(true).setAlpha(1).setScale(0.2)
-    this.ennemy2 = this.enemies.create(950, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.3)
-    this.ennemy3 = this.enemies.create(1070, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.4)
-    this.ennemy4 = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
-
-    //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(0);
     // if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
     // this.girlMap.body.allowGravity = false;
@@ -131,8 +100,8 @@ export class CanyonScene extends Phaser.Scene {
     }
     this.physics.add.overlap(this.girlMap, this.portal);
 
-    this.add.image(940, 390, 'bg').setDepth(-54);
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
+    this.bullet = this.add.image(400, 100, 'bullet').setDepth(200);
 
     this.cursors = this.input.keyboard.createCursorKeys();
     this.spaceBar = this.input.keyboard.addKey('SPACE');
@@ -143,9 +112,6 @@ export class CanyonScene extends Phaser.Scene {
     this.eKey = this.input.keyboard.addKey('E');
     this.rKey = this.input.keyboard.addKey('R');
     this.rIsDown = this.input.keyboard.checkDown(this.rKey, 250);
-if (this.rIsDown) {
-  console.log('DOOOWNN')
-}
 
 
 
@@ -221,21 +187,6 @@ if (this.rIsDown) {
 
     //collisions
     this.physics.add.collider(this.girlMap, this.zone);
-    this.physics.add.collider(this.enemies,
-      this.groupeBullets,
-      bulletEnnemyCollide,
-      null,
-      this);
-
-    this.physics.add.collider(this.barrels, this.enemies);
-
-    this.physics.add.overlap(
-      this.girlMap,
-      this.barrels,
-      girlMapBlockCollide,
-      null,
-      this
-    );
 
     /**
      * FACE A UN TONNEAU: le joueur peut propulser le tonneau
@@ -276,38 +227,34 @@ if (this.rIsDown) {
     this.ombre = this.add.ellipse(this.zone.x, this.zone.y - 30, 100, 20, 0x0009).setAlpha(0.5);
     this.protect = this.add.ellipse(this.zone.x, this.zone.y - 200, 1, 1, 0xeceae4).setAlpha(0);
 
-    this.barrels.getChildren().forEach((barrel: Phaser.Physics.Arcade.Image) => {
-      barrel['barrelzone'] = this.add.zone(barrel.x, barrel.y + 200, 0, 0).setSize(1000, 40).setOrigin(0.5, 0.5);
-      var RandomRGB = Phaser.Display.Color.RandomRGB;
-      barrel.setTint(RandomRGB().color, RandomRGB().color, RandomRGB().color)
-
-      this.physics.add.existing(barrel['barrelzone']);
-      if (barrel['barrelzone'].body instanceof Phaser.Physics.Arcade.Body) {
-        barrel['barrelzone'].body.friction.x = 0;
-        barrel['barrelzone'].body.allowGravity = false;
-        barrel['barrelzone'].body.immovable = true;
-        barrel['barrelzone'].depth = 30;
-      }
-      this.physics.add.collider(barrel['barrelzone'], barrel);
-    })
-
-
-    this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
-      ennemy['ennemyzone'] = this.add.zone(200, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
-      this.physics.add.existing(ennemy['ennemyzone']);
-      if (ennemy['ennemyzone'].body instanceof Phaser.Physics.Arcade.Body) {
-        ennemy['ennemyzone'].body.friction.x = 0;
-        ennemy['ennemyzone'].body.allowGravity = false;
-        ennemy['ennemyzone'].body.immovable = true;
-        ennemy['ennemyzone'].depth = 30;
-      }
-      this.physics.add.collider(ennemy, ennemy['ennemyzone']);
-    })
 
 
 
-    console.log(this.barrels.getChildren())
+
     console.log(this.girlMap)
+
+    // var cannonHead = this.add.image(130, 416, 'cannon_head').setDepth(1);
+    // var cannon = this.add.image(130, 464, 'cannon_body').setDepth(1);
+    var chick = this.physics.add.sprite(this.girlMap.x, this.girlMap.y - 50, 'barrel').setScale(0.1);
+    var gfx = this.add.graphics().setDefaultStyles({ lineStyle: { width: 10, color: 0xffdd00, alpha: 0.5 } });
+    var line = new Phaser.Geom.Line();
+    var angle = 0;
+
+    chick.disableBody(true, true);
+
+    this.input.on('pointermove', function (pointer) {
+        angle = Phaser.Math.Angle.BetweenPoints(this.girlMap, pointer);
+        // cannonHead.rotation = angle;
+        Phaser.Geom.Line.SetToAngle(line, this.girlMap.x, this.girlMap.y - 50, angle, 128);
+        gfx.clear().strokeLineShape(line);
+    }, this);
+
+    this.input.on('pointerup', function () {
+        chick.enableBody(true, this.girlMap.x, this.girlMap.y - 50, true, true);
+        chick.play('fly');
+        this.physics.velocityFromRotation(angle, 600, chick.body.velocity);
+    }, this);
+
   }
 
 
@@ -398,8 +345,6 @@ if (this.rIsDown) {
 
     this.protect.x = this.girlMap.x
     this.protect.y = this.girlMap.y
-    let closestBarrel: any = this.physics.closest(this.girlMap, [...this.barrels.getChildren()]);
-    let closestEnnemy: any = this.physics.closest(this.girlMap, [...this.enemies.getChildren()]);
 
     /**
      * _________________
@@ -411,49 +356,6 @@ if (this.rIsDown) {
      * @param  distance distance entre le joueur et l'ennemie + attaque celon bouclier
      */
 
-    this.enemies.getChildren().forEach((ennemy: Phaser.Physics.Arcade.Sprite) => {
-      if (ennemy.active) {
-        var distance = Phaser.Math.Distance.BetweenPoints(this.zone, ennemy['ennemyzone']);
-        if (distance < 1000) {
-          if (ennemy['ennemyzone'].y !== this.zone.y) {
-            if (this.zone.y < ennemy['ennemyzone'].y) {
-              ennemy['ennemyzone'].y -= 1
-            } else {
-              ennemy['ennemyzone'].y += 1
-            }
-          }
-          if (distance > 160 && ennemy.x < this.girlMap.x) {
-
-            ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x += 2.5
-            ennemy.flipX = false
-            ennemy.play('walk', true)
-          } else if (distance > 160 && ennemy.x > this.girlMap.x) {
-            ennemy['ennemyzone'].x = ennemy.x
-            ennemy.x -= 2.5
-            ennemy.flipX = true
-            ennemy.play('walk', true)
-          } else {
-            ennemy.play("attack", true)
-            if (ennemy.anims.getFrameName().includes("attack4")) {
-
-              if (this.protect.displayWidth === 1) {
-                this.health = Phaser.Math.Clamp(this.health - 1, 0, 100)
-                this.events.emit('health-changed', this.health)
-              } else {
-                //Diminuer la protection
-              }
-            }
-          }
-        } else {
-          ennemy.play("idle_walk")
-        }
-      }
-    });
-    /**
-     * [FIN LOGIQUE BOT]
-     * _________________
-     */
 
     /**
      * _________________
@@ -462,42 +364,7 @@ if (this.rIsDown) {
      * @return                  [description]
      */
     if (this.aKey.isDown) {
-
-      /**
-       * Si le joueur est entrain de porter le tonneau: propulse le tonneau dans la direction donné
-       * @param  !this.block1.body.allowGravity : tonneau surélevé
-       */
-
-      if (!closestBarrel.body.allowGravity) {
-        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
-          closestBarrel.body.allowGravity = true
-          closestBarrel.setDepth(this.girlMap.depth)
-          this.girlMap.flipX ? closestBarrel.setAngularVelocity(20).setVelocity(-900).setDragX(300).setAngularDrag(30) : closestBarrel.setAngularVelocity(200).setVelocity(900).setDragX(300).setAngularDrag(40)
-        }
-      }
-
       this.girlMap.setVelocityX(0);
-      if (this.girlMap.anims.getFrameName().includes("attack4")
-        && this.girlMap.depth < closestEnnemy.depth + 10
-        && this.girlMap.depth > closestEnnemy.depth - 10 /*&& closestEnnemy < 196*/) {
-        if (this.count == 1) {
-          if (closestEnnemy.alpha < 0.3) {
-            closestEnnemy.setTintFill(0xffffff).setActive(false).setFrame(0)
-            this.tweens.add({
-              targets: closestEnnemy,
-              alpha: 0,
-              y: -100,
-              repeat: 0,
-              duration: 900,
-              onComplete: () => (closestEnnemy.destroy(), closestEnnemy['ennemyzone'].destroy()),
-            });
-          }
-          closestEnnemy.alpha -= 0.03
-          this.count = 0;
-        } else {
-          this.count++
-        }
-      }
       this.girlMap.anims.play("attack", true)
     }
 
@@ -636,40 +503,6 @@ if (this.rIsDown) {
      */
 
     /**
-     * [LOGIQUE INTERACTION AVEC UN TONNEAU]
-     * @param  Phaser.Input.Keyboard.JustDown verifie si la touche est pressé une fois
-     * @param closestBarrel tonneau le plus proche
-     * Porter et lacher le tonneau: activer/desactiver gravité
-     *
-     */
-
-    if (Phaser.Input.Keyboard.JustDown(this.pKey)) {
-      if (closestBarrel.body.allowGravity) {
-        console.log("allow")
-        closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
-        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
-          closestBarrel.body.allowGravity = false
-          closestBarrel.y = this.girlMap.y
-        }
-      } else if (!closestBarrel.body.allowGravity) {
-        console.log("deny")
-        closestBarrel.setVelocityX(this.girlMap.body.velocity.x)
-        if (closestBarrel.body instanceof Phaser.Physics.Arcade.Body) {
-          closestBarrel.body.allowGravity = true
-          closestBarrel.setVelocityX(0)
-          closestBarrel.setDepth(this.girlMap.depth)
-          closestBarrel.setAngle(0)
-          closestBarrel.barrelzone.y = this.zone.y
-        }
-      }
-    }
-
-    if (!closestBarrel.body.allowGravity) {
-      closestBarrel.x = this.girlMap.x
-      closestBarrel.y = this.girlMap.y
-    }
-
-    /**
      * [BOUCLIER + ANIMATION]
      */
 
@@ -738,17 +571,38 @@ if (this.rIsDown) {
       }
     }
 
+
+
+
+    var dist = Phaser.Math.Distance.BetweenPoints(this.girlMap, this.bullet);
+    var finalDist
+
     if(this.rKey.isDown) {
 
     // Phaser.Actions.RotateAround([this.girlMap] , {x:400,y:300}, 0.01 );
-    Phaser.Actions.RotateAroundDistance([this.girlMap], {x:400,y:100}, 0.01, 250);
+    // finalDist = dist < 200 ? dist : 200
+    // console.log(dist)
+
+    Phaser.Actions.RotateAroundDistance([this.girlMap], {x:400,y:100}, 0.09, 300);
+    if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+    this.girlMap.body.allowGravity = false;
+    // this.girlMap.setVelocity(0)
+  }
 
     this.gfx.clear()
     .lineStyle(2, 0xff3300)
     .lineBetween(this.girlMap.x, this.girlMap.y, 400, 100)
 
 
+
     }
+
+    if(this.rKey.isUp) {
+      if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+        this.girlMap.body.allowGravity = true;
+      }
+    }
+
 
 
   }
