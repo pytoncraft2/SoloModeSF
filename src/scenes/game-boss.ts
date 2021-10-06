@@ -121,9 +121,9 @@ export class BossScene extends Phaser.Scene {
 
     //
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(0);
-    if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
-    this.girlMap.body.allowGravity = false;
-  }
+    // if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+    // this.girlMap.body.allowGravity = false;
+  // }
     this.portal = this.add.image(-500, this.girlMap.y, 'portal').setDepth(200);
     this.physics.add.existing(this.portal);
     if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
@@ -738,19 +738,17 @@ if (this.rIsDown) {
       }
     }
 
-    if(Phaser.Input.Keyboard.JustDown(this.rKey)) {
-      this.girlMap.anims.play('attack')
-      this.girlMap.on('animationcomplete', () => {
-        this.girlMap.anims.play('idle_walk');
-        console.log("OKY")
-      })
-    }
-    // Phaser.Actions.RotateAround([this.girlMap] , {x:400,y:300}, 0.01 );
-    // Phaser.Actions.RotateAroundDistance([this.girlMap], {x:400,y:100}, 0.01, 250);
+    if(this.rKey.isDown) {
 
-    // this.gfx.clear()
-    // .lineStyle(2, 0xff3300)
-    // .lineBetween(this.girlMap.x, this.girlMap.y, 400, 100)
+    // Phaser.Actions.RotateAround([this.girlMap] , {x:400,y:300}, 0.01 );
+    Phaser.Actions.RotateAroundDistance([this.girlMap], {x:400,y:100}, 0.01, 250);
+
+    this.gfx.clear()
+    .lineStyle(2, 0xff3300)
+    .lineBetween(this.girlMap.x, this.girlMap.y, 400, 100)
+
+
+    }
 
 
   }
