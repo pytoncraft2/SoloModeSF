@@ -1,16 +1,15 @@
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
-  key: 'Boss',
+  key: 'Canyon',
 };
 
-export class BossScene extends Phaser.Scene {
+export class CanyonScene extends Phaser.Scene {
   body: Phaser.Physics.Arcade.Body;
 
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private health = 100
   private portal: any;
-  private portalCanyon: any;
   private bullet: any;
   private groupeBullets: any;
   private charge: any;
@@ -125,20 +124,12 @@ export class BossScene extends Phaser.Scene {
     // if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
     // this.girlMap.body.allowGravity = false;
   // }
-    this.portal = this.add.image(800, this.girlMap.y, 'portal').setDepth(-53);
-    this.portalCanyon = this.add.image(-500, this.girlMap.y, 'portal').setDepth(-53).setTintFill(0xb4b170);
+    this.portal = this.add.image(-500, this.girlMap.y, 'portal').setDepth(200);
     this.physics.add.existing(this.portal);
-    this.physics.add.existing(this.portalCanyon);
     if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
       this.portal.body.allowGravity = false;
     }
-
-    if (this.portalCanyon.body instanceof Phaser.Physics.Arcade.Body) {
-      this.portalCanyon.body.allowGravity = false;
-    }
-
     this.physics.add.overlap(this.girlMap, this.portal);
-    this.physics.add.overlap(this.girlMap, this.portalCanyon);
 
     this.add.image(940, 390, 'bg').setDepth(-54);
     this.imageFakhear = this.add.image(100, 870, 'profilPanel').setScale(0.6).setScrollFactor(0).setDepth(203);
@@ -387,24 +378,7 @@ if (this.rIsDown) {
 
   public update(): void {
 
-    this.portalCanyon.rotation += 0.01
-
-    this.portalCanyon.body.touching.none ?
-
-            this.tweens.add({
-              targets: this.portalCanyon,
-              scale: 0.3,
-              repeat: 0,
-              duration: 900,
-            }) :
-            this.tweens.add({
-              targets: this.portalCanyon,
-              scale: 0.5,
-              repeat: 1,
-              duration: 900,
-            });
-
-    this.portal.rotation -= 0.01
+    this.portal.rotation += 0.01
 
     this.portal.body.touching.none ?
 
@@ -420,7 +394,6 @@ if (this.rIsDown) {
               repeat: 1,
               duration: 900,
             });
-
 
 
     this.protect.x = this.girlMap.x
@@ -763,14 +736,6 @@ if (this.rIsDown) {
           this.scene.start('Game')
         },this);
       }
-
-      if (this.portalCanyon.body.touching.up) {
-        this.cameras.main.fadeOut(500);
-        this.cameras.main.once('camerafadeoutcomplete', function () {
-          this.scene.start('Canyon')
-        },this);
-      }
-
     }
 
     if(this.rKey.isDown) {
