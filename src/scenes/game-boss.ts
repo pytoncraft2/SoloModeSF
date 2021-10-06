@@ -16,6 +16,8 @@ export class BossScene extends Phaser.Scene {
   public events: Phaser.Events.EventEmitter;
   private yKey: Phaser.Input.Keyboard.Key;
   private zKey: Phaser.Input.Keyboard.Key;
+  private rKey: Phaser.Input.Keyboard.Key;
+  private rIsDown: any
   private eKey: Phaser.Input.Keyboard.Key;
   public follow: boolean;
   private mKey: Phaser.Input.Keyboard.Key;
@@ -51,6 +53,7 @@ export class BossScene extends Phaser.Scene {
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
+  private gfx: any
   private lastHealth = 100
 
   constructor() {
@@ -66,6 +69,8 @@ export class BossScene extends Phaser.Scene {
     this.cameras.main.fadeIn(1000);
 
     this.barrels = {}
+    this.gfx = this.add.graphics();
+
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
     this.physics.world.setBounds(-2074, 0, 3574, 666);
@@ -90,7 +95,7 @@ export class BossScene extends Phaser.Scene {
 
     //creation du groupe de tonneaux
     this.barrels = this.physics.add.group({
-      allowGravity: true,
+      allowGravity: false,
       dragX: 800
     });
 
@@ -115,7 +120,10 @@ export class BossScene extends Phaser.Scene {
     this.ennemy4 = this.enemies.create(1270, 566, 'dessinatrice1', 'face2').setOrigin(0.5, 0.5).setTintFill(0x310803, 0x311605).setVelocityY(100).setActive(true).setAlpha(1).setScale(0.5)
 
     //
-    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(203);
+    this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(0);
+    if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+    this.girlMap.body.allowGravity = false;
+  }
     this.portal = this.add.image(-500, this.girlMap.y, 'portal').setDepth(200);
     this.physics.add.existing(this.portal);
     if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
@@ -133,6 +141,14 @@ export class BossScene extends Phaser.Scene {
     this.yKey = this.input.keyboard.addKey('Y');
     this.zKey = this.input.keyboard.addKey('Z');
     this.eKey = this.input.keyboard.addKey('E');
+    this.rKey = this.input.keyboard.addKey('R');
+    this.rIsDown = this.input.keyboard.checkDown(this.rKey, 250);
+if (this.rIsDown) {
+  console.log('DOOOWNN')
+}
+
+
+
     this.tKey = this.input.keyboard.addKey('T');
     this.pKey = this.input.keyboard.addKey('P');
     this.cKey = this.input.keyboard.addKey('C');
@@ -287,6 +303,11 @@ export class BossScene extends Phaser.Scene {
       }
       this.physics.add.collider(ennemy, ennemy['ennemyzone']);
     })
+
+
+
+    console.log(this.barrels.getChildren())
+    console.log(this.girlMap)
   }
 
 
@@ -548,7 +569,7 @@ export class BossScene extends Phaser.Scene {
       // if (closestEnnemy < 296) {
         // this.girlMap.anims.play('idle_attack');
       // } else {
-        this.girlMap.anims.play('idle_walk');
+        // this.girlMap.anims.play('idle_walk');
       // }
     }
 
@@ -716,6 +737,22 @@ export class BossScene extends Phaser.Scene {
         },this);
       }
     }
+
+    if(Phaser.Input.Keyboard.JustDown(this.rKey)) {
+      this.girlMap.anims.play('attack')
+      this.girlMap.on('animationcomplete', () => {
+        this.girlMap.anims.play('idle_walk');
+        console.log("OKY")
+      })
+    }
+    // Phaser.Actions.RotateAround([this.girlMap] , {x:400,y:300}, 0.01 );
+    // Phaser.Actions.RotateAroundDistance([this.girlMap], {x:400,y:100}, 0.01, 250);
+
+    // this.gfx.clear()
+    // .lineStyle(2, 0xff3300)
+    // .lineBetween(this.girlMap.x, this.girlMap.y, 400, 100)
+
+
   }
 }
 
