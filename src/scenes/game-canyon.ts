@@ -528,20 +528,6 @@ export class CanyonScene extends Phaser.Scene {
     }
 
     /**
-     * [LOGIQUE PRESSION DE LA TOUCHE T]
-     */
-/*
-    if (this.tKey.isDown) {
-      if (this.ennemy.isTinted) {
-        this.ennemy.clearTint();
-      }
-      else {
-        this.ennemy.setTintFill(0xffffff);
-      }
-    }
-    */
-
-    /**
      * [TOGGLE AFFICHAGE + PANNEL VIEWER (Twitch)]
      */
     if (Phaser.Input.Keyboard.JustDown(this.mKey)) {
