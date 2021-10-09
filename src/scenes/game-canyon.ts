@@ -10,6 +10,9 @@ export class CanyonScene extends Phaser.Scene {
   private cursors: Phaser.Types.Input.Keyboard.CursorKeys;
   private health = 100
   private portal: any;
+  private curve: any;
+  private path: any;
+  private graphics: any;
   private bullet: any;
   private groupeBullets: any;
   private charge: any;
@@ -90,9 +93,9 @@ export class CanyonScene extends Phaser.Scene {
 
 
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(0);
-    // if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
-    // this.girlMap.body.allowGravity = false;
-  // }
+    if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
+    this.girlMap.body.allowGravity = false;
+  }
     this.portal = this.add.image(-500, this.girlMap.y, 'portal').setDepth(200);
     this.physics.add.existing(this.portal);
     if (this.portal.body instanceof Phaser.Physics.Arcade.Body) {
@@ -251,9 +254,28 @@ export class CanyonScene extends Phaser.Scene {
 
     this.input.on('pointerup', function () {
         chick.enableBody(true, this.girlMap.x, this.girlMap.y - 50, true, true);
-        chick.play('fly');
         this.physics.velocityFromRotation(angle, 600, chick.body.velocity);
     }, this);
+
+    // x, y, xRadius, yRadius, startAngle, endAngle, clockwise, rotation
+    // var curve;
+
+    this.graphics = this.add.graphics();
+
+this.path = { t: 0, vec: new Phaser.Math.Vector2() };
+
+    this.curve = new Phaser.Curves.Ellipse(400, 300, 100, 260, 0, 180, false);
+    this.tweens.add({
+        targets: this.path,
+        t: 1,
+        ease: 'Linear',
+        duration: 4000,
+        repeat: -1
+    });
+
+    //  By adjusting the radius you can create a spiral effect
+
+
 
   }
 
@@ -432,7 +454,7 @@ export class CanyonScene extends Phaser.Scene {
       }
     }
     else {
-      this.girlMap.setVelocityX(0);
+      // this.girlMap.setVelocityX(0);
       // if (closestEnnemy < 296) {
         // this.girlMap.anims.play('idle_attack');
       // } else {
@@ -583,7 +605,7 @@ export class CanyonScene extends Phaser.Scene {
     // finalDist = dist < 200 ? dist : 200
     // console.log(dist)
 
-    Phaser.Actions.RotateAroundDistance([this.girlMap], {x:400,y:100}, 0.09, 300);
+    Phaser.Actions.RotateAroundDistance([this.girlMap], {x:this.bullet.x,y: this.bullet.y}, 0.09, 300);
     if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
     this.girlMap.body.allowGravity = false;
     // this.girlMap.setVelocity(0)
@@ -603,6 +625,19 @@ export class CanyonScene extends Phaser.Scene {
       }
     }
 
+    this.graphics.clear();
+
+    this.graphics.lineStyle(2, 0xffffff, 1);
+
+
+    this.curve.draw(this.graphics, 64);
+
+    this.curve.getPoint(this.path.t, this.path.vec);
+
+    this.graphics.fillStyle(0xff0000, 1);
+this.graphics.fillCircle(this.path.vec.x, this.path.vec.y, 8);
+this.girlMap.x = this.path.vec.x
+this.girlMap.y = this.path.vec.y
 
 
   }

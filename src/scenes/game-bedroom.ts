@@ -14,6 +14,7 @@ export class BedroomScene extends Phaser.Scene {
   private yKey: Phaser.Input.Keyboard.Key;
   public follow: boolean;
   private mKey: Phaser.Input.Keyboard.Key;
+  private nKey: Phaser.Input.Keyboard.Key;
   private aKey: Phaser.Input.Keyboard.Key;
   private eKey: Phaser.Input.Keyboard.Key;
   private pKey: Phaser.Input.Keyboard.Key;
@@ -118,6 +119,7 @@ export class BedroomScene extends Phaser.Scene {
     this.pKey = this.input.keyboard.addKey('P');
     this.cKey = this.input.keyboard.addKey('C');
     this.mKey = this.input.keyboard.addKey('M');
+    this.nKey = this.input.keyboard.addKey('N');
 
     this.anims.create({
       key: 'attack',
@@ -500,5 +502,10 @@ export class BedroomScene extends Phaser.Scene {
         }, this);
       }
     }
+
+
+    if (Phaser.Input.Keyboard.JustDown(this.nKey)) {
+          this.scene.start('Canyon')
+        }
   }
 }
