@@ -19,6 +19,7 @@ export class BedroomScene extends Phaser.Scene {
   private eKey: Phaser.Input.Keyboard.Key;
   private pKey: Phaser.Input.Keyboard.Key;
   private tKey: Phaser.Input.Keyboard.Key;
+  private zKey: Phaser.Input.Keyboard.Key;
   private ombre: Phaser.GameObjects.Ellipse
   private fullscreen: Phaser.GameObjects.Text;
   private protect: Phaser.GameObjects.Ellipse
@@ -119,7 +120,11 @@ export class BedroomScene extends Phaser.Scene {
     this.pKey = this.input.keyboard.addKey('P');
     this.cKey = this.input.keyboard.addKey('C');
     this.mKey = this.input.keyboard.addKey('M');
+    this.zKey = this.input.keyboard.addKey('Z');
     this.nKey = this.input.keyboard.addKey('N');
+
+
+
 
     this.anims.create({
       key: 'attack',

@@ -22,14 +22,16 @@ const gameConfig: Phaser.Types.Core.GameConfig = {
 
   scene: Scenes,
 
-  physics: {
-    default: 'arcade',
-    arcade: {
-      gravity: { y: 900 },
-      debug: true,
+    physics: {
+        arcade: {
+            debug: true,
+            gravity: { y: 900 }
+        },
+        matter: {
+            debug: true,
+            gravity: { y: 0.5 }
+        }
     },
-  },
-
   parent: 'game',
   backgroundColor: '#000000',
 };

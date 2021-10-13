@@ -1,3 +1,4 @@
+
 const sceneConfig: Phaser.Types.Scenes.SettingsConfig = {
   active: false,
   visible: false,
@@ -72,6 +73,8 @@ export class CanyonScene extends Phaser.Scene {
     this.info = this.add.text(this.game.scale.width - 285, 20, 'Chat du stream', { font: '38px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(0);
 
 
+    // this.matter.add.image(400, 550, 'portal', null, { isStatic: true });
+    console.log("matter")
 
     this.abonner = this.add.text(this.game.scale.width - 530, this.game.scale.height - 150, '❤️ Viewer: 400', { font: '23px Arial' }).setScrollFactor(0).setDepth(202).setAlpha(0);
     this.fakehear = this.add.text(this.game.scale.height - 765, this.game.scale.height - 150, 'FAKHEAR', { font: '19px Georgia, "Goudy Bookletter 1911", Times, serif' }).setScrollFactor(0).setDepth(202).setAlpha(0);
@@ -88,6 +91,7 @@ export class CanyonScene extends Phaser.Scene {
 
     this.groupeBullets = this.physics.add.group();
 
+    // console.log(Anims())
 
     this.girlMap = this.physics.add.sprite(956, 480, 'dessinatrice1', 'face1').setOrigin(0.5, 0.5).setScale(0.4).setVelocityY(0);
     // if (this.girlMap.body instanceof Phaser.Physics.Arcade.Body) {
@@ -120,58 +124,6 @@ export class CanyonScene extends Phaser.Scene {
     this.cKey = this.input.keyboard.addKey('C');
     this.mKey = this.input.keyboard.addKey('M');
 
-    this.anims.create({
-      key: 'attack',
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'attack', start: 1, end: 4 }),
-      frameRate: 6,
-      repeat: 0
-    });
-    this.anims.create({
-      key: "goback",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'dos', start: 1, end: 7 }),
-      frameRate: 7,
-      repeat: 0
-    });
-
-    this.anims.create({
-      key: "front",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'face', start: 1, end: 5 }),
-      frameRate: 6,
-      repeat: 0
-    });
-    this.anims.create({
-      key: "walk",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start: 1, end: 5 }),
-      frameRate: 5,
-      repeat: -1
-    });
-    this.anims.create({
-      key: "jump",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'jump', start: 0, end: 5 }),
-      frameRate: 7,
-      repeat: 0
-    });
-
-    this.anims.create({
-      key: "idle_walk",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'walk', start: 5, end: 5 }),
-      frameRate: 1,
-      repeat: -1
-    });
-
-    this.anims.create({
-      key: "idle_attack",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'run', start: 1, end: 1 }),
-      frameRate: 1,
-      repeat: 0
-    });
-
-    this.anims.create({
-      key: "run",
-      frames: this.anims.generateFrameNames('dessinatrice1', { prefix: 'run', start: 1, end: 4 }),
-      frameRate: 6,
-      repeat: -1
-    })
 
     //parametre du socle ennemie + socle joueur
     this.zone = this.add.zone(956, 780, 210, 210).setSize(150, 40).setOrigin(0.5, 0.5);
@@ -526,6 +478,20 @@ export class CanyonScene extends Phaser.Scene {
           onComplete: function() { console.log('FIN'); arguments[1][0].setAlpha(0.5); },
         })
     }
+
+    /**
+     * [LOGIQUE PRESSION DE LA TOUCHE T]
+     */
+/*
+    if (this.tKey.isDown) {
+      if (this.ennemy.isTinted) {
+        this.ennemy.clearTint();
+      }
+      else {
+        this.ennemy.setTintFill(0xffffff);
+      }
+    }
+    */
 
     /**
      * [TOGGLE AFFICHAGE + PANNEL VIEWER (Twitch)]
