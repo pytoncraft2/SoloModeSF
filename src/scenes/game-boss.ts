@@ -96,7 +96,7 @@ export class BossScene extends Phaser.Scene {
 
     //creation du groupe de tonneaux
     this.barrels = this.physics.add.group({
-      allowGravity: false,
+      allowGravity: true,
       dragX: 800
     });
 

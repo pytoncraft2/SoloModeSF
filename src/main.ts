@@ -1,36 +1,22 @@
 import * as Phaser from 'phaser';
 import Scenes from './scenes';
-import MoveToPlugin from 'phaser3-rex-plugins/plugins/moveto-plugin.js';
 
 const gameConfig: Phaser.Types.Core.GameConfig = {
   title: 'Sample',
 
   type: Phaser.AUTO,
-  plugins: {
-    global: [{
-        key: 'rexMoveTo',
-        plugin: MoveToPlugin,
-        start: true
-    },
-    ]
-},
-
   scale: {
     width: window.innerWidth,
     height: window.innerHeight,
   },
 
   scene: Scenes,
-
     physics: {
+    default: 'arcade',
         arcade: {
-            debug: true,
+            debug: false,
             gravity: { y: 900 }
         },
-        matter: {
-            debug: true,
-            gravity: { y: 0.5 }
-        }
     },
   parent: 'game',
   backgroundColor: '#000000',

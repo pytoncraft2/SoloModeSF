@@ -65,7 +65,7 @@ export class BedroomScene extends Phaser.Scene {
 
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
-    this.physics.world.setBounds(-2074, 0, 3574, 666);
+    // this.physics.world.setBounds(-2074, 0, 3574, 666);
     this.cameras.main.fadeIn(2000);
 
     //PANNEL VIEWER (Twitch) + VIE
