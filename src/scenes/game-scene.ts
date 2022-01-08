@@ -51,6 +51,7 @@ export class GameScene extends Phaser.Scene {
   private zone: Phaser.GameObjects.Zone
   private barrelzone: Phaser.GameObjects.Zone
   private ennemyzone: Phaser.GameObjects.Zone
+  private tweenSaut: Phaser.Tweens.Tween
   private lastHealth = 100
 
   constructor() {
@@ -60,6 +61,7 @@ export class GameScene extends Phaser.Scene {
   public create(): void {
     this.cameras.main.fadeIn(1000);
 
+    this.tweenSaut;
     this.barrels = {}
     //LIMITE CAMERA
     this.cameras.main.setBounds(-2074, 0, 3574, 666);
@@ -313,6 +315,51 @@ export class GameScene extends Phaser.Scene {
 
   }
 
+  public saut(scene: Phaser.Scene, player: any, chargeSaut: Number|Boolean, isOnGround: Boolean, isInAir: Boolean) : void {
+    console.log("coucouc")
+  var puissance
+  console.log(chargeSaut);
+  if (chargeSaut) {
+    if (player.body.speed < 3) {
+      player.play('sautPreparation')
+    }
+    player.tweenSaut = scene.tweens.addCounter({
+      from: 0,
+      to: 100,
+      duration: 800,
+    })
+
+    chargeSaut = false;
+  } else {
+      puissance = player.tweenSaut.getValue()
+    if (player.tweenSaut.isPlaying()) {
+      player.tweenSaut.stop()
+    }
+    if (player.body.speed < 1) {
+      player.play('saut')
+    } else {
+      player.play('jump')
+    }
+
+    if (isOnGround) {
+      // player.setVelocity( player.body.speed > 3 ? (player.flipX ? -puissance * 5: puissance * 5) : 0, -puissance * 5)
+      player.setVelocityY(-puissance * 10)
+      player.jumpCounter = 0;
+    } else if (isInAir) {
+      if (player.jumpCounter == 0) {
+        player.jumpCounter++;
+        player.setVelocityY(-puissance * 5)
+        scene.tweens.add({
+          targets: player,
+          angle: player.direction == "droite" ? 720 : -720,
+          duration: 360
+        })
+      }
+    }
+  }
+}
+
+
   public update(): void {
 
 
@@ -506,27 +553,27 @@ export class GameScene extends Phaser.Scene {
       }
     }
     else if (this.spaceBar.isDown) {
-      if (!this.tweens.isTweening(this.ombre)) {
-        this.tweens.add({
-          targets: this.ombre,
-          scaleX: 0.25,
-          scaleY: 0.5,
-          yoyo: true,
-          repeat: 0,
-          duration: 600,
-        });
-      }
-
-      this.zone.x = this.girlMap.x;
-      this.ombre.x = this.zone.x
-      this.ombre.y = this.zone.y - 30
-
-      if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
-        this.girlMap.anims.play('jump');
-      }
-      if (this.girlMap.body.touching.down) {
-        this.girlMap.setVelocityY(-590);
-      }
+      // if (!this.tweens.isTweening(this.ombre)) {
+      //   this.tweens.add({
+      //     targets: this.ombre,
+      //     scaleX: 0.25,
+      //     scaleY: 0.5,
+      //     yoyo: true,
+      //     repeat: 0,
+      //     duration: 600,
+      //   });
+      // }
+      //
+      // this.zone.x = this.girlMap.x;
+      // this.ombre.x = this.zone.x
+      // this.ombre.y = this.zone.y - 30
+      //
+      // if (!this.girlMap.anims.getFrameName().includes("jump") && this.girlMap.body.touching.down) {
+      //   this.girlMap.anims.play('jump');
+      // }
+      // if (this.girlMap.body.touching.down) {
+      //   this.girlMap.setVelocityY(-590);
+      // }
     }
     else {
       this.girlMap.setVelocityX(0);
@@ -538,6 +585,14 @@ export class GameScene extends Phaser.Scene {
     }
 
 
+
+    if (Phaser.Input.Keyboard.JustDown(this.spaceBar)) {
+      this.saut(this, this.girlMap, true, this.girlMap.body.touching.down, !this.girlMap.body.touching.down)
+    }
+
+    if (Phaser.Input.Keyboard.JustUp(this.spaceBar)) {
+      this.saut(this, this.girlMap, false, this.girlMap.body.touching.down, !this.girlMap.body.touching.down)
+    }
 
     /**
      * [FIN DEPLACEMENT GAUCHE - DROITE - SAUT]
